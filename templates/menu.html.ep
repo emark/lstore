@@ -1,0 +1,19 @@
+% layout 'menulist';
+% title 'Menu editor';
+Storesto's Menu
+<%= form_for menu=>begin %>
+% foreach my $recipe (keys %{$recipes}){ 
+<LI><a href="/recipe/view/<%= $recipe %>"><%= $recipes->{$recipe}{'NAME'} %></a>
+    <%= hidden_field 'recipeid'=>($recipe) %>
+    <%= text_field 'yield'=>(value=>$recipes->{$recipe}{'YIELD'},size=>2)%> pcs. <a href="<%= url_for 'kitchen' %>?recipeid=<%= $recipe %>&action=del">Delete</a>
+</LI>
+%}
+<%= submit_button 'Save menu' %>
+<% end %>
+
+<!--OL>
+<%# foreach my $ingredientid(keys %{$ingredients}) {%>
+<LI><%#= $ingredients->{$ingredientid}{'INGREDIENT'} %> - <i><%#= $ingredients->{$ingredientid}{'VALUE'}*$serving %> (<%#= $ingredients->{$ingredientid}{'MEASURE'} %>)</i></LI>
+<%# } %>
+</OL-->
+

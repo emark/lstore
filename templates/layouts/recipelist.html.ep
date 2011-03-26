@@ -1,0 +1,11 @@
+<!doctype html><html>
+  <head><title><%= title %></title></head>
+  <body>
+    <P align=center style="font-size:16pt">
+      <%== content %>
+      <P><%= link_to 'Back to Kitchen'=>'kitchen' %></P>
+      </P>
+    </P>
+  </body>
+</html>
+

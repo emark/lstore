@@ -1,0 +1,12 @@
+<!doctype html><html>
+  <head><title><%= title %></title></head>
+  <body>
+    <P align=right><a href="mailto:<%= $teamail %>"><%= $teamail %></a></P>
+    <P align=left><a href="<%= url_for('welcome') %>">Logout</a> or <a href="<%= url_for 'kitchen' %>">Refresh</a></P>
+    <P align=center style="font-size:16pt">
+      <%== content %>
+      </P>
+    </P>
+  </body>
+</html>
+

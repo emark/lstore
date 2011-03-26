@@ -1,0 +1,16 @@
+<!doctype html><html>
+  <head><title><%= title %></title></head>
+  <body>
+    <P align=right><a href="mailto:<%= $teamail %>"><%= $teamail %></a></P>
+    <P align=center style="font-size:16pt">
+      <%= content %>
+      <%= form_for kitchen=>(method=>'get')=>begin %>
+      <center>
+	login: <%= text_field 'login' %><br/><br/>
+	pass: <%= password_field 'pass' %><br/><br/>
+	<%= submit_button 'Cooking now!' %>
+      </center>
+      <% end %>
+    </P>
+  </body>
+</html>

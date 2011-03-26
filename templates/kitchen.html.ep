@@ -1,0 +1,20 @@
+% layout 'kitchen';
+% title 'Storesto\'s kitchen';
+Your Storesto's kitchen<br>Let's cooking!
+<P align=left>Recipes:<UL>
+% foreach my $recipe (keys %{$recipes}){ 
+<LI><%= form_for kitchen=>begin %><a href="/recipe/view/<%= $recipe %>"><%= $recipes->{$recipe}{'NAME'} %></a>
+    <%= hidden_field 'recipeid'=>($recipe) %>
+% if(!$recipes->{$recipe}{'YIELD'}) {
+    <%= hidden_field 'action'=>'add' %>
+    <%= submit_button 'Add' %>
+%}else{
+    <%= hidden_field 'action'=>'del' %>
+    <%= submit_button 'Delete' %>
+%}
+<%= $recipes->{$recipe}{'YIELD'}%>
+</LI>
+<% end %>
+%}
+<P>See <a href="<%= url_for('menu') %>">menu</a></P>
+

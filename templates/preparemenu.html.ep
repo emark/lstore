@@ -1,0 +1,10 @@
+% layout 'productlist';
+% title 'Instructions';
+<P ALIGN=center><h2>Instructions list</h2></P>
+% my $recipe='';
+% foreach my $instructionid (keys %{$instructions}){ 
+% if($recipe ne $instructions->{$instructionid}{'RECIPE'}){$recipe=$instructions->{$instructionid}{'RECIPE'};
+<h4><%= $recipe %> (<%= $instructions->{$instructionid}{'YIELD'} %>)</h4>
+%}
+<%= $instructions->{$instructionid}{'STEP'} %>. <i><%= $instructions->{$instructionid}{'DESCRIBE'} %></i> <B><%= $instructions->{$instructionid}{'INGREDIENT'} %></B> <%= $instructions->{$instructionid}{'VALUE'} %>  <%= $instructions->{$instructionid}{'WAIT'} %> <br/>
+%}

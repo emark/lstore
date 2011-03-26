@@ -1,0 +1,15 @@
+% layout 'recipelist';
+% title 'Recipe book';
+Recipe List for <%= $recipename %>
+<P align=left>For 1 pcs.</P>
+<OL>
+<% foreach my $ingredientid(keys %{$ingredients}) {%>
+<LI><%= $ingredients->{$ingredientid}{'INGREDIENT'} %> - <i><%= $ingredients->{$ingredientid}{'VALUE'} %> (<%= $ingredients->{$ingredientid}{'MEASURE'} %>)</i></LI>
+<% } %>
+</OL>
+<P align=left>Instruction</P>
+<% foreach my $instructionid(keys %{$instructions}) {%>
+<%= $instructions->{$instructionid}{'STEP'} %>. <i><%= $instructions->{$instructionid}{'DESCRIBE'} %></i> <%= $instructions->{$instructionid}{'WAIT'} %><br/>
+<% } %>
+</UL>
+
