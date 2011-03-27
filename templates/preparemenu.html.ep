@@ -7,5 +7,8 @@
 % if($recipe ne $instructions->{$key->[0]}{'RECIPE'}){$recipe=$instructions->{$key->[0]}{'RECIPE'};
 <h4><%= $recipe %> (<%= $instructions->{$key->[0]}{'YIELD'} %>)</h4>
 %}
-<%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> <B><%= $instructions->{$key->[0]}{'INGREDIENT'} %></B> <%= $instructions->{$key->[0]}{'VALUE'} %>  <%= $instructions->{$key->[0]}{'WAIT'} %> <br/>
-%}
+% if($instructions->{$key->[0]}{'STEP'}!=$step){$step=$instructions->{$key->[0]}{'STEP'};
+<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> <%= $instructions->{$key->[0]}{'WAIT'} %> / <b><%= $instructions->{$key->[0]}{'INGREDIENT'} %></b> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/ 
+% }else{
+  <b><%= $instructions->{$key->[0]}{'INGREDIENT'} %></b> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/
+% }} 

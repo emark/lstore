@@ -5,7 +5,7 @@ Storesto's Menu
 % foreach my $recipe (keys %{$recipes}){ 
 <LI><a href="/recipe/view/<%= $recipe %>"><%= $recipes->{$recipe}{'NAME'} %></a>
     <%= hidden_field 'recipeid'=>($recipe) %>
-    <%= text_field 'yield'=>(value=>$recipes->{$recipe}{'YIELD'},size=>2)%> pcs. <a href="<%= url_for 'kitchen' %>?recipeid=<%= $recipe %>&action=del">Delete</a>
+    <%= text_field 'yield'=>(value=>$recipes->{$recipe}{'YIELD'},size=>2)%> pcs. <a href="<%= url_for 'kitchen' %>?recipeid=<%= $recipe %>&action=del&return=menu">Delete</a>
 </LI>
 %}
 <%= submit_button 'Save menu' %>
