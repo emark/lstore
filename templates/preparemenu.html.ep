@@ -2,9 +2,10 @@
 % title 'Instructions';
 <P ALIGN=center><h2>Instructions list</h2></P>
 % my $recipe='';
-% foreach my $instructionid (keys %{$instructions}){ 
-% if($recipe ne $instructions->{$instructionid}{'RECIPE'}){$recipe=$instructions->{$instructionid}{'RECIPE'};
-<h4><%= $recipe %> (<%= $instructions->{$instructionid}{'YIELD'} %>)</h4>
+% my $step=0;
+% foreach my $key (@{$ascsort}){ 
+% if($recipe ne $instructions->{$key->[0]}{'RECIPE'}){$recipe=$instructions->{$key->[0]}{'RECIPE'};
+<h4><%= $recipe %> (<%= $instructions->{$key->[0]}{'YIELD'} %>)</h4>
 %}
-<%= $instructions->{$instructionid}{'STEP'} %>. <i><%= $instructions->{$instructionid}{'DESCRIBE'} %></i> <B><%= $instructions->{$instructionid}{'INGREDIENT'} %></B> <%= $instructions->{$instructionid}{'VALUE'} %>  <%= $instructions->{$instructionid}{'WAIT'} %> <br/>
+<%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> <B><%= $instructions->{$key->[0]}{'INGREDIENT'} %></B> <%= $instructions->{$key->[0]}{'VALUE'} %>  <%= $instructions->{$key->[0]}{'WAIT'} %> <br/>
 %}

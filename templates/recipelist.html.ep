@@ -8,8 +8,12 @@ Recipe List for <%= $recipename %>
 <% } %>
 </OL>
 <P align=left>Instruction</P>
-<% foreach my $instructionid(keys %{$instructions}) {%>
-<%= $instructions->{$instructionid}{'STEP'} %>. <i><%= $instructions->{$instructionid}{'DESCRIBE'} %></i> <%= $instructions->{$instructionid}{'WAIT'} %><br/>
-<% } %>
+% my $step=0;
+% foreach my $key(@{$ascsort}) {
+% if($instructions->{$key->[0]}{'STEP'}!=$step){$step=$instructions->{$key->[0]}{'STEP'};
+<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> <%= $instructions->{$key->[0]}{'WAIT'} %> / <%= $instructions->{$key->[0]}{'INGREDIENT'} %> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/ 
+% }else{
+  <%= $instructions->{$key->[0]}{'INGREDIENT'} %> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/
+% }} 
 </UL>
 
