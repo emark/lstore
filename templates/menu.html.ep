@@ -3,6 +3,7 @@
     <meta http-equiv="Pragma" content="no-cache">
 <% end %>
 % if(%{$recipes}){
+<P align=center><a href="/menu/products">Что нужно купить?</a> <a href="/menu/prepare">Как приготовить?</a> <a href="/menu/helptable">Что из чего?</a></P>
 <%= form_for menu=>(method=>'post')=>begin %>
 <TABLE BORDER=0 align=center cellspacing=2 cellpadding=5>
 <TR bgcolor=#F0F0F0><TD>Блюда</TD><TD>Количество</TD></TR>
@@ -17,5 +18,5 @@
 </td></tr></TABLE>
 <% end %>
 %}else{
-<P align=center>Здесь пока пусто. Нужно вернуться на кухню и добавить блюда.</P>
+<P align=center>Здесь пока пусто. Нужно вернуться на <a href="<%= url_for 'kitchen' %>">кухню</a> и добавить блюда.</P>
 %}

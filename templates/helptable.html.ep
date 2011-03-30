@@ -1,6 +1,6 @@
 % layout 'helptableview';
 % title 'Help table';
-<P ALIGN=center><h2>Ingredient table</h2></P>
+<P ALIGN=center><h2>Таблица ингредиентов</h2></P>
 <table border=1>
 <tr><td>&nbsp;</td>
 %	foreach my $key(keys %{$ingredients}){#Печатаем список ингредиентов
@@ -9,9 +9,9 @@
 </tr>
 % my $currentrecipeid=0;
 % my @printingredients=();
-% foreach my $key(@{$ascsort}) {
+% foreach my $ascsort(@{$ascsort}) {
 % 	#foreach my $recipeid(keys %{$recipes}){#Печатаем список блюд
-% 		if($recipes->{$recipeid}{'RECIPEID'}!=$currentrecipeid){$currentrecipeid=$recipes->{$recipeid}{'RECIPEID'};
+% 		if($recipes->{$ascsort->[0]}{'RECIPEID'}!=$currentrecipeid){$currentrecipeid=$recipes->{$ascsort->[0]}{'RECIPEID'};
 %		    if(@printingredients){
 %			foreach my $ingredientid(keys %{$ingredients}){			
 			    <td align=center>
@@ -25,15 +25,16 @@
 %			@printingredients=(); 
 			</tr>
 %		     }
-		    <tr><td><%= $recipes->{$recipeid}{'RECIPE'} %>, <%=  $recipes->{$recipeid}{'YIELD'} %></td>
+		    <tr><td><%= $recipes->{$ascsort->[0]}{'RECIPE'} %>, <%= $recipes->{$ascsort->[0]}{'YIELD'} %></td>
 %		}else{
 %		}
 %		foreach my $ingredientid(keys %{$ingredients}){
-%			if ($ingredientid==$recipes->{$recipeid}{'INGREDIENTID'}){
-%				$printingredients[$ingredientid]=$recipes->{$recipeid}{'VALUE'};
+%			if ($ingredientid==$recipes->{$ascsort->[0]}{'INGREDIENTID'}){
+%				$printingredients[$ingredientid]=$recipes->{$ascsort->[0]}{'VALUE'};
 %			}
 %		}
-%	}
+%	#}
+%}
 %if(@printingredients){
 %			foreach my $ingredientid(keys %{$ingredients}){			
 			    <td align=center>

@@ -3,8 +3,7 @@
   <body>
     <P><%= link_to 'Вернуться на кухню'=>'kitchen' %> или <%= link_to 'Обновить страницу'=>'menu' %></P>
     <h3><P align=center>Меню</P></h3>
-    <P align=center><a href="/menu/products">Что нужно купить?</a> <a href="/menu/prepare">Как приготовить?</a> <a href="/menu/helptable">Что из чего?</a></P>
-    <P align=center style="font-size:16pt">
+    <P align=center>
       <%== content %>
       </P>
   </body>
