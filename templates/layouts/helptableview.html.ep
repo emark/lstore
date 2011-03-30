@@ -6,6 +6,6 @@
 </head>
 <body>
     <%== content %>
-    <P><%= link_to 'Back to Menu'=>'menu' %> or <%= link_to 'Refresh'=>'menu' %></P>
+    <P><%= link_to 'Back to Menu'=>'menu' %> or <%= link_to 'Refresh'=>'/menu/helptable' %></P>
 </body>
 </html>

@@ -1,7 +1,6 @@
 % layout 'addrecipe', title 'Создаем новый рецепт';
 <P align=center>Новый рецепт</P>
 <%= form_for '/recipe/add/0' =>(method=>'get')=>begin %>
-<%= hidden_field 'recipe'=>1 %><br/>
 Название <%= text_field 'recipe' %><br/>
 Описание <%= text_area 'recipe' %><br/>
 Выход блюда <%= text_field 'recipe'=>(size=>4) %> гр.<br/>
@@ -12,7 +11,7 @@
 % 	foreach my $key (keys %{$ingredients}){
 	  <option value="<%= $ingredients->{$key}{'ID'} %>"><%= $ingredients->{$key}{'NAME'} %>, <%= $ingredients->{$key}{'MEASURE'} %>
 %	}
-</select> <%= text_field 'recipe'=>(size=>3) %><br/>
+</select> <%= text_field 'value'=>(size=>3) %><br/>
 %}
 <P>Инструкции по приготовлению:</P>
 

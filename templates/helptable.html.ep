@@ -3,13 +3,14 @@
 <P ALIGN=center><h2>Ingredient table</h2></P>
 <table border=1>
 <tr><td>&nbsp;</td>
-%	foreach my $key(keys %{$ingredients}){
+%	foreach my $key(keys %{$ingredients}){#Печатаем список ингредиентов
 <td align=center><%= $ingredients->{$key}{'INGREDIENT'}%><br/><%= $ingredients->{$key}{'TOTAL'}%> <%= $ingredients->{$key}{'MEASURE'}%></td>
 %	}
 </tr>
 % my $currentrecipeid=0;
 % my @printingredients=();
-% 	foreach my $recipeid(keys %{$recipes}){
+% foreach my $key(@{$ascsort}) {
+% 	#foreach my $recipeid(keys %{$recipes}){#Печатаем список блюд
 % 		if($recipes->{$recipeid}{'RECIPEID'}!=$currentrecipeid){$currentrecipeid=$recipes->{$recipeid}{'RECIPEID'};
 %		    if(@printingredients){
 %			foreach my $ingredientid(keys %{$ingredients}){			
