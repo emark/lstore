@@ -2,11 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><%= title %></title>
+    <title><%== title %></title>
 </head>
 <body>
     <%== content %>
-    <P><a href="">Распечатать</a> <a href="">Отправить по email</a></P>
-    <P><%= link_to 'Назад в Меню'=>'menu' %> or <%= link_to 'Refresh'=>'menu' %></P>
+    <P><%= link_to 'Вернуться на кухню'=>'kitchen' %> или <%= link_to 'посмотреть меню'=>'menu' %></P>
 </body>
 </html>

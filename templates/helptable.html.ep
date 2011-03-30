@@ -4,7 +4,7 @@
 <table border=1>
 <tr><td>&nbsp;</td>
 %	foreach my $key(keys %{$ingredients}){
-<td><%= $ingredients->{$key}{'INGREDIENT'}%><br/><%= $ingredients->{$key}{'TOTAL'}%> <%= $ingredients->{$key}{'MEASURE'}%></td>
+<td align=center><%= $ingredients->{$key}{'INGREDIENT'}%><br/><%= $ingredients->{$key}{'TOTAL'}%> <%= $ingredients->{$key}{'MEASURE'}%></td>
 %	}
 </tr>
 % my $currentrecipeid=0;

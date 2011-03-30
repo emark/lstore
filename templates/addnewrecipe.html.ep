@@ -1,0 +1,20 @@
+% layout 'addrecipe', title 'Создаем новый рецепт';
+<P align=center>Новый рецепт</P>
+<%= form_for '/recipe/add/0' =>(method=>'get')=>begin %>
+<%= hidden_field 'recipe'=>1 %><br/>
+Название <%= text_field 'recipe' %><br/>
+Описание <%= text_area 'recipe' %><br/>
+Выход блюда <%= text_field 'recipe'=>(size=>4) %> гр.<br/>
+<P>Индигриенты :)</P>
+% for (my $i=0;$i<5;$i++){
+    <select name="ingredients">
+    <option value=0 defaul>--------
+% 	foreach my $key (keys %{$ingredients}){
+	  <option value="<%= $ingredients->{$key}{'ID'} %>"><%= $ingredients->{$key}{'NAME'} %>, <%= $ingredients->{$key}{'MEASURE'} %>
+%	}
+</select> <%= text_field 'recipe'=>(size=>3) %><br/>
+%}
+<P>Инструкции по приготовлению:</P>
+
+<%= submit_button %>
+<%= end %>

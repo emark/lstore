@@ -1,6 +1,6 @@
 % layout 'productlist';
-% title 'Product List';
-<P ALIGN=center><h2>Products list</h2></P>
+% title 'Список продуктов';
+<P ALIGN=center><h2>Список продуктов</h2></P>
 % foreach my $ingredient (keys %{$ingredients}){ 
 <LI><%= $ingredients->{$ingredient}{'NAME'} %> - <%= $ingredients->{$ingredient}{'SUM'} %> <%= $ingredients->{$ingredient}{'MEASURE'} %>
 </LI>

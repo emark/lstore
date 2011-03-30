@@ -1,19 +1,20 @@
 % layout 'recipelist';
-% title 'Recipe book';
-Recipe List for <%= $recipename %>
-<P align=left>For 1 pcs.</P>
+% title 'Книга рецептов';
+<P align=center style="font-size:26px">Рецепт блюда "<%= $recipename %>"</P>
+<P align=left>Ингредиенты для одной порции</P>
 <OL>
 <% foreach my $ingredientid(keys %{$ingredients}) {%>
 <LI><%= $ingredients->{$ingredientid}{'INGREDIENT'} %> - <i><%= $ingredients->{$ingredientid}{'VALUE'} %> (<%= $ingredients->{$ingredientid}{'MEASURE'} %>)</i></LI>
 <% } %>
 </OL>
-<P align=left>Instruction</P>
+<P align=left>Приготовление блюда:</P>
 % my $step=0;
+% my $totalwait=0;
 % foreach my $key(@{$ascsort}) {
 % if($instructions->{$key->[0]}{'STEP'}!=$step){$step=$instructions->{$key->[0]}{'STEP'};
-<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> <%= $instructions->{$key->[0]}{'WAIT'} %> / <%= $instructions->{$key->[0]}{'INGREDIENT'} %> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/ 
+<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> - <%= $instructions->{$key->[0]}{'WAIT'} %> мин. <br/> --- <%= $instructions->{$key->[0]}{'INGREDIENT'} %> <%= $instructions->{$key->[0]}{'VALUE'} %> <%= $instructions->{$key->[0]}{'MEASURE'} %>
+% $totalwait=$totalwait+$instructions->{$key->[0]}{'WAIT'};
 % }else{
-  <%= $instructions->{$key->[0]}{'INGREDIENT'} %> (<%= $instructions->{$key->[0]}{'VALUE'} %>)/
-% }} 
-</UL>
-
+  <br/> --- <%= $instructions->{$key->[0]}{'INGREDIENT'} %> <%= $instructions->{$key->[0]}{'VALUE'} %> <%= $instructions->{$key->[0]}{'MEASURE'} %>
+% }}
+<P>Общее время готовки: <%= $totalwait %> мин.</P>

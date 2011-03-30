@@ -1,20 +1,22 @@
 % layout 'kitchen';
-% title 'Storesto\'s kitchen';
-Your Storesto's kitchen<br>Let's cooking!
-<P align=left>Recipes:<UL>
+% title 'Кухня "Сто ресторанов"';
+Добро пожаловать на кухню Storesto's kitchen.<br/>
+<p align=center style="font-size:14px"><i>Давай вместе что-нибудь приготовим!</i></p>
+<P>Вы можете <a href="<%= url_for('menu') %>">посмотреть меню</a> или <a href="/recipe/add/new">создать новый рецепт</a></P>
+<P align=left>Рецепты:</P>
+<TABLE BORDER=0>
 % foreach my $recipe (keys %{$recipes}){ 
-<LI><%= form_for kitchen=>begin %><a href="/recipe/view/<%= $recipe %>"><%= $recipes->{$recipe}{'NAME'} %></a>
-    <%= hidden_field 'recipeid'=>($recipe) %>
+<TR><TD>%</TD><TD><%= form_for kitchen=>(method=>'post')=>begin %><a href="/recipe/view/<%= $recipe %>"><%= $recipes->{$recipe}{'NAME'} %></a> <%= $recipes->{$recipe}{'WEIGHT'} %>
+    <%= hidden_field 'recipeid'=>($recipe) %></TD><TD>
 % if(!$recipes->{$recipe}{'YIELD'}) {
     <%= hidden_field 'action'=>'add' %>
-    <%= submit_button 'Add' %>
+    <%= submit_button 'Добавить в меню' %>
 %}else{
     <%= hidden_field 'action'=>'del' %>
-    <%= submit_button 'Delete' %>
+    <%= submit_button 'Удалить из меню' %>
 %}
 <%= $recipes->{$recipe}{'YIELD'}%>
-</LI>
+</TD></TR>
 <% end %>
 %}
-<P>See <a href="<%= url_for('menu') %>">menu</a></P>
-
+</TABLE>
