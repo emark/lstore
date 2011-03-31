@@ -40,7 +40,8 @@ post '/kitchen' => sub{
 
 get '/' => sub {
   my $self = shift;
-  $self->render(status=>'503',text=>'Sorry, service is temporary unavailable.');
+  $self->stash(teamail=>'team@storesto.ru');
+  $self->render('default');
 };
 
 get '/recipe/:action/:id' => sub{

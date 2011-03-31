@@ -1,6 +1,7 @@
 <!doctype html><html>
   <head><title><%= title %></title></head>
   <body>
+    <a href="/">Storesto</a>
     <P align=right><a href="mailto:<%= $teamail %>"><%= $teamail %></a></P>
     <P align=center style="font-size:16pt">
       <%== content %>

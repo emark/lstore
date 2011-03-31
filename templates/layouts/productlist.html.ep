@@ -5,6 +5,7 @@
     <title><%= title %></title>
 </head>
 <body>
+    <a href="/">Storesto</a>
     <%== content %>
     <P><a href="">Распечатать</a> <a href="">Отправить по email</a></P>
     <P><%= link_to 'Назад в Меню'=>'menu' %> or <%= link_to 'Refresh'=>'menu' %></P>

@@ -1,6 +1,7 @@
 <!doctype html><html>
   <head><title><%= title %></title></head>
   <body>
+    <a href="/">Storesto</a>
     <P><%= link_to 'Вернуться на кухню'=>'kitchen' %> или <%= link_to 'Обновить страницу'=>'menu' %></P>
     <h3><P align=center>Меню</P></h3>
     <P align=center>
