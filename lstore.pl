@@ -4,7 +4,10 @@ use Mojolicious::Lite;
 use DBI;
 use utf8;
 
-our $dbh = DBI->connect("dbi:mysql:dbname=STORESTO;host=localhost",'root', 'admin',
+open (DBCONF,"< db.conf") || die "Error open dbconfig file";
+my $dbconf=<DBCONF>;
+close DBCONF;
+our $dbh = DBI->connect($dbconf,'locumtes_STORE86', '123456',
 			{ PrintError => 0, RaiseError => 1 });
 $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
