@@ -9,7 +9,7 @@
 количество порций: <%= $instructions->{$key->[0]}{'YIELD'} %><br/>
 %}
 % if($instructions->{$key->[0]}{'STEP'}!=$step){$step=$instructions->{$key->[0]}{'STEP'};
-<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'DESCRIBE'} %></i> - <%= $instructions->{$key->[0]}{'WAIT'} %> мин.<br/> --- <%= $instructions->{$key->[0]}{'INGREDIENT'} %> <%= $instructions->{$key->[0]}{'VALUE'} %> <%= $instructions->{$key->[0]}{'MEASURE'} %>
+<br/><%= $instructions->{$key->[0]}{'STEP'} %>. <i><%= $instructions->{$key->[0]}{'IDESCRIBE'} %></i> - <%= $instructions->{$key->[0]}{'WAIT'} %> мин.<br/> --- <%= $instructions->{$key->[0]}{'INGREDIENT'} %> <%= $instructions->{$key->[0]}{'VALUE'} %> <%= $instructions->{$key->[0]}{'MEASURE'} %>
 % }else{
   <br/> --- <%= $instructions->{$key->[0]}{'INGREDIENT'} %> <%= $instructions->{$key->[0]}{'VALUE'} %> <%= $instructions->{$key->[0]}{'MEASURE'} %>
 % }} 
