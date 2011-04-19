@@ -8,7 +8,7 @@ use utf8;
 open (DBCONF,"< db.conf") || die "Error open dbconfig file";
 my @dbconf=<DBCONF>;
 close DBCONF;
-chomp $dbconf[2];
+chomp @dbconf;
 our $dbh = DBI->connect($dbconf[0],$dbconf[1],$dbconf[2],
 			{ PrintError => 0, RaiseError => 1 });
 $dbh->{'mysql_enable_utf8'} = 1;
@@ -16,7 +16,7 @@ $dbh->do('SET NAMES utf8');
 
 get '/' => sub{
     my $self=shift;
-    $self->render(text=>'Hello storesto!');
+    $self->render(text=>'Hello storesto! Coming soon!');
 };
 
 get 'kitchen'=>sub{
@@ -30,7 +30,7 @@ __DATA__
 
 @@ kitchen.html.ep
 % layout 'kitchenarea', title 'My kitchen';
-<%= link_to 'Create recipe'=>'recipe' %>
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open refrigirator'=>'ingredients' %>
 
 @@ layouts/kitchenarea.html.ep
 <title><%= title %></title>
