@@ -42,6 +42,7 @@ get '/ingredients/:action/:id'=>sub{
   $self->stash(ingredients=>$ingredients);
   $self->render(text=>'Ingredient deleted successfully');
 };
+
 post '/ingredients/'=>sub{
   my $self=shift;
   my $ingredient=$self->param('ingredient');
@@ -54,9 +55,81 @@ post '/ingredients/'=>sub{
   $self->render('ingrediens');
 };
 
+get '/recipe'=>sub{
+  my $self=shift;
+  $self->stash(recipe=>'',
+	       recipeid=>0);
+  my $tags=$dbh->selectall_hashref("SELECT ID,NAME FROM TAGS",'ID');
+  $self->stash(tags=>$tags,
+	       ingredients=>0);
+  $self->render('recipe');
+};
+
+post '/recipe'=>sub{
+  my $self=shift;
+  my $recipe=$self->param('recipe');
+  my $recipeid=$self->param('recipeid') || 0;
+  my $tags={};
+  my $ingredients={};
+  my $SQL='';
+  my @quantity=$self->param('quantity');
+  my @ingredientid=$self->param('ingredientid') || 0;
+  for(my $n=0;$n<@ingredientid;$n++){
+    if($quantity[$n]){
+      $SQL=$SQL." VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])"
+    }
+  }
+  my @tagid=$self->param('tagid');
+  foreach(@tagid){
+    $SQL=$SQL." TAGS.ID=$_ OR "
+  }
+  if($recipe && !$recipeid){
+    $dbh->do("INSERT INTO RECIPES(ID,NAME) VALUES (NULL,\"$recipe\")");
+    $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE $SQL TAGS.ID=0",'ID');
+  }elsif($recipeid && $SQL){
+    $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID) $SQL");
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE $SQL TAGS.ID=0",'ID');
+  }else{
+    $tags=$dbh->selectall_hashref("SELECT ID,NAME FROM TAGS",'ID');
+  }
+  $self->stash(recipe=>$recipe,
+	       recipeid=>$recipeid,
+	       ingredients=>$ingredients,
+	       tags=>$tags,);
+  $self->render('recipe');
+};
+
 app->secret('storestosecret');
 app->start;
 __DATA__
+
+@@ recipe.html.ep
+%layout 'default', title 'My recipe\'s book';
+%#	Create recipe form
+%if(!$recipeid){
+  <%= form_for 'recipe'=>(method=>'post')=>begin %>
+  <%= text_field 'recipe' %>
+  <%= submit_button 'Add' %>
+%#	Show ingredients tags
+<P>What includes</P>
+%	foreach (keys %{$tags}){
+  <%= check_box 'tagid'=>($tags->{$_}{'ID'})%><%= $tags->{$_}{'NAME'}%><br/>
+%	}
+  <% end %>
+%}else{
+  <h2><%= $recipe %></h2>
+%#	Show ingredients for recipe
+  <%= form_for 'recipe'=>(method=>'post')=>begin %>
+  <%= hidden_field 'recipeid'=>$recipeid %>
+<table>
+%	foreach (keys %{$ingredients}){
+<tr><td><%= hidden_field 'ingredientid'=>($ingredientid->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><%= text_field 'quantity'=>(size=>5) %></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+%	}
+</table>
+  <%= submit_button 'Create recipe' %>
+  <% end %>
+%}
 
 @@ kitchen.html.ep
 % layout 'default', title 'My kitchen';
@@ -81,19 +154,3 @@ __DATA__
 <P><%= link_to 'Back to my kitchen'=>'kitchen'%></P>
 <%= content %>
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
