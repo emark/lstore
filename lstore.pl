@@ -24,14 +24,14 @@ get '/kitchen'=>sub{
   $self->render('kitchen');
 };
 
-get '/ingredients'=>sub{
+get '/icebox'=>sub{
   my $self=shift;
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID",'ID');
   $self->stash(ingredients=>$ingredients);
-  $self->render('ingredients');
+  $self->render('icebox');
 };
 
-get '/ingredients/:action/:id'=>sub{
+get '/icebox/:action/:id'=>sub{
   my $self=shift;
   my $action=$self->param('action');
   my $id=$self->param('id');
@@ -40,28 +40,38 @@ get '/ingredients/:action/:id'=>sub{
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID",'ID');
   $self->stash(ingredients=>$ingredients);
-  $self->render(text=>'Ingredient deleted successfully');
+  $self->render('icebox');
 };
 
-post '/ingredients/'=>sub{
+post '/icebox'=>sub{
   my $self=shift;
   my $ingredient=$self->param('ingredient');
   my $measure=$self->param('measure');
+  my $tag=$self->param('tag');
+  my $ingredientid=0;
+  my $tagid=0;
   if($ingredient && $measure){
     $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID) VALUES(NULL,\"$ingredient\",$measure)");
+    $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
+    $tagid=$dbh->do("SELECT ID FROM TAGS WHERE TAGS.NAME=\"$tag\"");
+    if(!$tagid){
+      $dbh->do("INSERT INTO TAGS(ID,NAME) VALUES(NULL,\"$tag\")");
+      $tagid=$dbh->last_insert_id('','','TAGS','ID');
+    }
+    $dbh->do("INSERT INTO ROUTER2(ID,INGREDIENTID,TAGID) VALUES(NULL,$ingredientid,$tagid)");
   }
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFt JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
   $self->stash(ingredients=>$ingredients);
-  $self->render('ingrediens');
+  $self->render('icebox');
 };
 
 get '/recipe'=>sub{
   my $self=shift;
-  $self->stash(recipe=>'',
-	       recipeid=>0);
-  my $tags=$dbh->selectall_hashref("SELECT ID,NAME FROM TAGS",'ID');
+  my $tags=$dbh->selectall_hashref("SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN ROUTER2 ON TAGS.ID=ROUTER2.TAGID",'ID');
   $self->stash(tags=>$tags,
-	       ingredients=>0);
+	       ingredients=>0,
+	       recipe=>'',
+	       recipeid=>undef);
   $self->render('recipe');
 };
 
@@ -73,30 +83,31 @@ post '/recipe'=>sub{
   my $ingredients={};
   my $SQL='';
   my @quantity=$self->param('quantity');
-  my @ingredientid=$self->param('ingredientid') || 0;
+  my @ingredientid=$self->param('ingredientid');
   for(my $n=0;$n<@ingredientid;$n++){
     if($quantity[$n]){
-      $SQL=$SQL." VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])"
+      $SQL=$SQL."(NULL,$recipeid,$ingredientid[$n],$quantity[$n]),"
     }
-  }
+  }chop $SQL;
+	  #$self->stash(sql=>$SQL,n=>$n);Test
   my @tagid=$self->param('tagid');
   foreach(@tagid){
     $SQL=$SQL." TAGS.ID=$_ OR "
   }
-  if($recipe && !$recipeid){
+  if($recipe && !$recipeid){#Create recipename
     $dbh->do("INSERT INTO RECIPES(ID,NAME) VALUES (NULL,\"$recipe\")");
     $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE $SQL TAGS.ID=0",'ID');
-  }elsif($recipeid && $SQL){
-    $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID) $SQL");
-    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE $SQL TAGS.ID=0",'ID');
-  }else{
+  }elsif($recipeid && $SQL){#Insert ingredients 
+    $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES $SQL");
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,RECIPES.NAME AS RECIPE,ROUTER1.QUANTITY FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE RECIPES.ID=$recipeid",'ID');
+  }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT ID,NAME FROM TAGS",'ID');
   }
   $self->stash(recipe=>$recipe,
 	       recipeid=>$recipeid,
 	       ingredients=>$ingredients,
-	       tags=>$tags,);
+	       tags=>$tags);
   $self->render('recipe');
 };
 
@@ -121,10 +132,11 @@ __DATA__
   <h2><%= $recipe %></h2>
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
+  <%= hidden_field 'recipe'=>$recipe %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table>
 %	foreach (keys %{$ingredients}){
-<tr><td><%= hidden_field 'ingredientid'=>($ingredientid->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><%= text_field 'quantity'=>(size=>5) %></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value=<%= $ingredients->{$_}{'QUANTITY'} %> ></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 </table>
   <%= submit_button 'Create recipe' %>
@@ -133,19 +145,21 @@ __DATA__
 
 @@ kitchen.html.ep
 % layout 'default', title 'My kitchen';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open refrigirator'=>'ingredients' %>
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open refrigirator'=>'icebox' %>
 
-@@ ingredients.html.ep
+@@ icebox.html.ep
 % layout 'default',title 'My refrigirator';
 %#	Create new ingredient
-<%= form_for 'ingredients'=>(method=>'post')=>begin %>
+<%= form_for 'icebox'=>(method=>'post')=>begin %>
+<i>What add?</i><br/>
 <%= text_field 'ingredient' %>
-<%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%>
+<%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
+<%= text_field 'tags' %>
 <%= submit_button 'Add' %>
 <% end %>
 %#	Generate ingredients refs
 %foreach my $key(keys %{$ingredients}){
-  <%= $ingredients->{$key}{'INGREDIENT'}%>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, <%= link_to 'Delete'=>"ingredients/delete/$ingredients->{$key}{'ID'}" %><br/>
+  <%= $ingredients->{$key}{'INGREDIENT'}%>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, <a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
 %}
 
 @@ layouts/default.html.ep
