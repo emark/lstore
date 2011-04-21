@@ -21,7 +21,25 @@ get '/' => sub{
 
 get '/kitchen'=>sub{
   my $self=shift;
+  my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES','ID');
+  $self->stash(recipes=>$recipes,
+	       menu=>'',
+	       menuid=>0);
   $self->render('kitchen');
+};
+
+post '/kitchen'=>sub{
+  my $self=shift;
+  my @recipeid=$self->param('recipeid');
+  my $SQL;
+  foreach(@recipeid){
+    $SQL=$SQL."RECIPES.ID=$_ OR ";
+  }
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE $SQL RECIPES.ID=0",'ID');
+  $self->stash(recipes=>$recipes,
+	       menu=>'',
+	       menuid=>0);
+  $self->render('menu');
 };
 
 get '/icebox'=>sub{
@@ -75,6 +93,11 @@ get '/recipe'=>sub{
   $self->render('recipe');
 };
 
+get '/recipe/:action/:id'=>sub{
+  my $self=shift;
+  
+};
+
 post '/recipe'=>sub{
   my $self=shift;
   my $recipe=$self->param('recipe');
@@ -95,10 +118,10 @@ post '/recipe'=>sub{
   foreach(@tagid){
     $SQL=$SQL." ROUTER2.TAGID=$_ OR "
   }
-	  $self->stash(sql=>$SQL,q=>$quantity_hook);#Test
+	  #$self->stash(sql=>$SQL,q=>$quantity_hook);#Test
   if(@tagid){#Select ingredients for recipe
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID WHERE $SQL ROUTER2.TAGID=0",'ID');
-  }elsif($quantity_hook && $recipe){#Create recipe,router1 if quantity>0
+  }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
     $dbh->do("INSERT INTO RECIPES(ID,NAME) VALUES(NULL,\"$recipe\")");
     $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
     for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
@@ -106,8 +129,16 @@ post '/recipe'=>sub{
         $SQL=$SQL."(NULL,$recipeid,$ingredientid[$n],$quantity[$n]),"
       }
     }chop $SQL;#Drop last character ','
-	  $self->stash(sql=>$SQL);#Test
+	  #$self->stash(sql=>$SQL);#Test
     $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES $SQL");
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
+  }elsif($quantity_hook && $recipeid && $recipe){#Update recipe, router1
+    $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\" WHERE ID=$recipeid");
+    for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
+      if($quantity[$n] && $quantity[$n]!=0){
+	$dbh->do("UPDATE ROUTER1 SET QUANTITY=$quantity[$n] WHERE RECIPEID=$recipeid AND INGREDIENTID=$ingredientid[$n]");
+      }
+    }
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
   }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN ROUTER2 ON TAGS.ID=ROUTER2.TAGID','ID');
@@ -119,9 +150,111 @@ post '/recipe'=>sub{
   $self->render('recipe');
 };
 
+get '/menu/:action/:id'=>sub{
+  my $self=shift;
+  my $action=$self->param('action');
+  my $menuid=$self->param('id');
+  my $menu='';
+  my $recipes={};
+  if($action eq 'edit'){
+    $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid");
+    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+  }
+  $self->stash(recipes=>$recipes,
+	       menu=>$menu,
+	       menuid=>$menuid);
+  $self->render('menu');
+};
+
+post '/menu'=>sub{
+  my $self=shift;
+  my $menu=$self->param('menu');
+  my $menuid=$self->param('menuid');
+  my @recipeid=$self->param('recipeid');
+  my @amount=$self->param('amount');
+  my $recipes={};
+  my $SQL='';
+  my $amount_hook=0;
+  foreach(@amount){#Hook for defined amount
+    if($_ && $_>0){
+      $amount_hook=1;
+    }
+  }
+  if($amount_hook && $menu && !$menuid){#Create menu,router3 if quantity>0
+    $dbh->do("INSERT INTO MENU(ID,NAME) VALUES(NULL,\"$menu\")");
+    $menuid=$dbh->last_insert_id('','','MENU','ID');
+    for(my $n=0;$n<@recipeid;$n++){#Create SQL INSERT query for ROUTER3
+      if($amount[$n] && $amount[$n]!=0){
+        $SQL=$SQL."(NULL,$menuid,$recipeid[$n],$amount[$n]),"
+    }
+  }chop $SQL;#Drop last character ','
+	  #$self->stash(sql=>$SQL);#Test
+    $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES $SQL");
+    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+  }elsif($amount_hook && $menuid && $menu){#Update menu, router3
+    $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE ID=$menuid");
+    for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
+      if($amount[$n] && $amount[$n]!=0){
+	$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=$recipeid[$n] AND MENUID=$menuid");
+      }
+    }
+    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+  }else{#If new menu,select recipes
+    foreach(@recipeid){
+    $SQL=$SQL."RECIPES.ID=$_ OR ";
+    }
+    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE $SQL RECIPES.ID=0",'ID');
+  }
+  $self->stash(recipes=>$recipes,
+	       menu=>$menu,
+	       menuid=>$menuid);
+  $self->render('menu');
+};
+
+get '/restopub'=>sub{
+  my $self=shift;
+  my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
+  $self->stash(menus=>$menus);
+  $self->render('restopub');
+};
+
+get '/restopub/:action/:id'=>sub{
+  my $self=shift;
+  my $action=$self->param('action');
+  my $menuid=$self->param('id');
+  if($action eq 'delete'){
+    $dbh->do("DELETE FROm MENU WHERE ID=$menuid");
+  }
+  my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
+  $self->stash(menus=>$menus);
+  $self->render('restopub');
+};
+
 app->secret('storestosecret');
 app->start;
 __DATA__
+
+@@ restopub.html.ep
+% layout 'default',title 'My resto pub';
+%#	Show menus for my pub
+%	foreach (keys %{$menus}){
+  <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a><br/>
+%	}
+
+@@ menu.html.ep
+% layout 'default',title 'My menu';
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open my icebox'=>'icebox' %> / <%= link_to 'My resto pub'=>'restopub'%>
+<%= form_for 'menu'=>(method=>'post')=>begin %>
+<input type=text name='menu' value="<%= $menu %>">
+<input type=hidden name='menuid' value=<%= $menuid %>>
+<table>
+%foreach my $key(keys %{$recipes}){
+  <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>></td></tr>
+%}
+</table>
+<%= submit_button 'Save menu' %>
+<% end %>
+
 
 @@ recipe.html.ep
 %layout 'default', title 'My recipe\'s book';
@@ -152,10 +285,18 @@ __DATA__
 
 @@ kitchen.html.ep
 % layout 'default', title 'My kitchen';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open my icebox'=>'icebox' %>
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open my icebox'=>'icebox' %> / <%= link_to 'My resto pub'=>'restopub'%>
+<%= form_for 'kitchen'=>(method=>'post')=>begin %>
+<table>
+%foreach my $key(keys %{$recipes}){
+  <tr><td><a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %></td></tr>
+%}
+</table>
+<%= submit_button 'Create menu' %>
+<% end %>
 
 @@ icebox.html.ep
-% layout 'default',title 'My refrigirator';
+% layout 'default',title 'My icebox';
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <i>What add?</i><br/>
