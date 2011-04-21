@@ -28,6 +28,20 @@ get '/kitchen'=>sub{
   $self->render('kitchen');
 };
 
+get '/kitchen/:action/:id'=>sub{
+  my $self=shift;
+  my $action=$self->param('action');
+  my $recipeid=$self->param('id');
+  if($action eq 'delete'){
+    $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid");
+  }
+  my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES','ID');
+  $self->stash(recipes=>$recipes,
+	       menu=>'',
+	       menuid=>0);
+  $self->render('kitchen');
+};
+
 post '/kitchen'=>sub{
   my $self=shift;
   my @recipeid=$self->param('recipeid');
@@ -95,7 +109,14 @@ get '/recipe'=>sub{
 
 get '/recipe/:action/:id'=>sub{
   my $self=shift;
-  
+  my $recipeid=$self->param('id');
+  my $recipe=$dbh->selectrow_array("SELECT RECIPES.NAME FROM RECIPES WHERE RECIPES.ID=$recipeid");
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
+  $self->stash(tags=>{},
+	       ingredients=>$ingredients,
+	       recipe=>$recipe,
+	       recipeid=>$recipeid);
+  $self->render('recipe');
 };
 
 post '/recipe'=>sub{
@@ -235,15 +256,15 @@ app->start;
 __DATA__
 
 @@ restopub.html.ep
-% layout 'default',title 'My resto pub';
+% layout 'default',title 'Restopub';
 %#	Show menus for my pub
 %	foreach (keys %{$menus}){
   <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a><br/>
 %	}
 
 @@ menu.html.ep
-% layout 'default',title 'My menu';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open my icebox'=>'icebox' %> / <%= link_to 'My resto pub'=>'restopub'%>
+% layout 'default',title 'Menu';
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
 <%= form_for 'menu'=>(method=>'post')=>begin %>
 <input type=text name='menu' value="<%= $menu %>">
 <input type=hidden name='menuid' value=<%= $menuid %>>
@@ -257,7 +278,7 @@ __DATA__
 
 
 @@ recipe.html.ep
-%layout 'default', title 'My recipe\'s book';
+%layout 'default', title 'Recipes';
 %#	Select ingredients from tags
 %#<%= test %>
 %if(!%{$ingredients}){
@@ -272,7 +293,7 @@ __DATA__
 %}else{
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
-  <%= text_field 'recipe' %>
+<input type=text name=recipe value="<%= $recipe %>">
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table>
 %	foreach (keys %{$ingredients}){
@@ -284,19 +305,19 @@ __DATA__
 %}
 
 @@ kitchen.html.ep
-% layout 'default', title 'My kitchen';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open my icebox'=>'icebox' %> / <%= link_to 'My resto pub'=>'restopub'%>
+% layout 'default', title 'Kitchen';
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>
 %foreach my $key(keys %{$recipes}){
-  <tr><td><a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %></td></tr>
+  <tr><td><a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %></td><td><a href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>">Delete</a></td></tr>
 %}
 </table>
 <%= submit_button 'Create menu' %>
 <% end %>
 
 @@ icebox.html.ep
-% layout 'default',title 'My icebox';
+% layout 'default',title 'Icebox';
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <i>What add?</i><br/>
