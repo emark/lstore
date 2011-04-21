@@ -177,16 +177,19 @@ post '/recipe'=>sub{
   $self->render('recipe');
 };
 
-get '/menu/:action/:id'=>sub{
+get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   my $self=shift;
   my $action=$self->param('action');
   my $menuid=$self->param('id');
+  my $routeid=$self->param('routeid');
   my $menu='';
   my $recipes={};
-  if($action eq 'edit'){
-    $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid");
-    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+  if($action eq 'edit'){    
+  }elsif($action eq 'cut'){#Cutting recipes from menu
+    $dbh->do("DELETE FROM ROUTER3 WHERE ROUTER3.ID=$routeid");
   }
+  $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid");
+  $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
   $self->stash(recipes=>$recipes,
 	       menu=>$menu,
 	       menuid=>$menuid);
@@ -250,7 +253,7 @@ get '/restopub/:action/:id'=>sub{
   my $action=$self->param('action');
   my $menuid=$self->param('id');
   if($action eq 'delete'){
-    $dbh->do("DELETE FROm MENU WHERE ID=$menuid");
+    $dbh->do("DELETE FROM MENU WHERE ID=$menuid");
   }
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
   $self->stash(menus=>$menus);
@@ -276,7 +279,11 @@ __DATA__
 <input type=hidden name='menuid' value=<%= $menuid %>>
 <table>
 %foreach my $key(keys %{$recipes}){
-  <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>></td></tr>
+  <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>>
+%	if($menuid && $recipes){
+	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Cut</a>
+%	}
+  </td></tr>
 %}
 </table>
 <%= submit_button 'Save menu' %>
