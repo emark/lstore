@@ -244,7 +244,8 @@ post '/menu'=>sub{
 get '/restopub'=>sub{
   my $self=shift;
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
-  $self->stash(menus=>$menus);
+  $self->stash(menus=>$menus,
+	       ingredients=>{});
   $self->render('restopub');
 };
 
@@ -252,11 +253,15 @@ get '/restopub/:action/:id'=>sub{
   my $self=shift;
   my $action=$self->param('action');
   my $menuid=$self->param('id');
+  my $ingredients={};
   if($action eq 'delete'){
     $dbh->do("DELETE FROM MENU WHERE ID=$menuid");
+  }elsif($action eq 'buy'){
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID, INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,SUM(ROUTER3.AMOUNT*ROUTER1.QUANTITY) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid GROUP BY INGREDIENTS.ID",'ID');
   }
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
-  $self->stash(menus=>$menus);
+  $self->stash(menus=>$menus,
+	       ingredients=>$ingredients);
   $self->render('restopub');
 };
 
@@ -266,10 +271,17 @@ __DATA__
 
 @@ restopub.html.ep
 % layout 'default',title 'Restopub';
+<%#= test %>
+% if(!%{$ingredients}){
 %#	Show menus for my pub
 %	foreach (keys %{$menus}){
-  <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a><br/>
+  <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a> <a href="/restopub/buy/<%= $menus->{$_}{'ID'} %>">Buy</a><br/>
 %	}
+% }else{
+%	foreach (keys %{$ingredients}){
+  <i><%= $ingredients->{$_}{'INGREDIENT'} %></i> <%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %><br/>
+%	}  
+% }
 
 @@ menu.html.ep
 % layout 'default',title 'Menu';
@@ -288,7 +300,6 @@ __DATA__
 </table>
 <%= submit_button 'Save menu' %>
 <% end %>
-
 
 @@ recipe.html.ep
 %layout 'default', title 'Recipes';
@@ -347,6 +358,6 @@ __DATA__
 @@ layouts/default.html.ep
 <title><%= title %></title>
 <body>
-<P><%= link_to 'Back to my kitchen'=>'kitchen'%></P>
+<P><%= link_to 'My kitchen'=>'kitchen'%></P>
 <%= content %>
 </body>
