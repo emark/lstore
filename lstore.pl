@@ -14,6 +14,12 @@ our $dbh = DBI->connect($dbconf[0],$dbconf[1],$dbconf[2],
 $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
 
+app->hook(before_dispatch => sub {
+               my $self = shift;
+               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+	       }
+	  );
+
 get '/' => sub{
     my $self=shift;
     $self->render(text=>'Hello storesto! Coming soon!');
