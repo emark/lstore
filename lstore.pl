@@ -220,7 +220,7 @@ post '/menu'=>sub{
   }chop $SQL;#Drop last character ','
 	  #$self->stash(sql=>$SQL);#Test
     $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES $SQL");
-    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+    $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
   }elsif($amount_hook && $menuid && $menu){#Update menu, router3
     $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE ID=$menuid");
     for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
@@ -228,7 +228,7 @@ post '/menu'=>sub{
 	$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=$recipeid[$n] AND MENUID=$menuid");
       }
     }
-    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
+    $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid",'ID');
   }else{#If new menu,select recipes
     foreach(@recipeid){
     $SQL=$SQL."RECIPES.ID=$_ OR ";
