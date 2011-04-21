@@ -65,19 +65,30 @@ post '/kitchen'=>sub{
 get '/icebox'=>sub{
   my $self=shift;
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
-  $self->stash(ingredients=>$ingredients);
+  $self->stash(ingredients=>$ingredients,
+	       ingredient=>'',
+	       ingredientid=>'',
+	       tag=>'');
   $self->render('icebox');
 };
 
 get '/icebox/:action/:id'=>sub{
   my $self=shift;
   my $action=$self->param('action');
-  my $id=$self->param('id');
+  my $ingredientid=$self->param('id');
+  my $ingredient='';
+  my $tag='';
   if($action eq 'delete'){
-    $dbh->do("DELETE FROM INGREDIENTS WHERE ID=$id");
+    $dbh->do("DELETE FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid");
+  }elsif($action eq 'edit'){
+    $ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.NAME FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid");
+    $tag=$dbh->selectrow_array("SELECT TAGS.NAME FROM ROUTER2 LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID WHERE ROUTER2.INGREDIENTID=$ingredientid");
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
-  $self->stash(ingredients=>$ingredients);
+  $self->stash(ingredients=>$ingredients,
+	       ingredient=>$ingredient,
+	       ingredientid=>$ingredientid,
+	       tag=>$tag);
   $self->render('icebox');
 };
 
@@ -86,9 +97,9 @@ post '/icebox'=>sub{
   my $ingredient=$self->param('ingredient');
   my $measure=$self->param('measure');
   my $tag=$self->param('tag');
-  my $ingredientid=0;
+  my $ingredientid=$self->param('ingredientid');
   my $tagid=0;
-  if($ingredient && $measure){
+  if($ingredient && $measure && $tag && !$ingredientid){
     $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID) VALUES(NULL,\"$ingredient\",$measure)");
     $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
     $tagid=$dbh->selectrow_array("SELECT ID FROM TAGS WHERE TAGS.NAME=\"$tag\"");
@@ -97,9 +108,14 @@ post '/icebox'=>sub{
       $tagid=$dbh->last_insert_id('','','TAGS','ID');
     }
     $dbh->do("INSERT INTO ROUTER2(ID,INGREDIENTID,TAGID) VALUES(NULL,$ingredientid,$tagid)");
+  }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
+    $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure WHERE INGREDIENTS.ID=$ingredientid");
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
-  $self->stash(ingredients=>$ingredients);
+  $self->stash(ingredients=>$ingredients,
+	       ingredient=>$ingredient,
+	       ingredientid=>'',
+	       tag=>$tag);
   $self->render('icebox');
 };
 
@@ -345,14 +361,15 @@ __DATA__
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <i>What add?</i><br/>
-<%= text_field 'ingredient' %>
+<input type=text name=ingredient value="<%= $ingredient %>">
 <%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
-<%= text_field 'tag' %>
-<%= submit_button 'Add' %>
+<input type=text name=tag value="<%= $tag %>">
+<input type=hidden name=ingredientid value=<%= $ingredientid %>>
+<%= submit_button 'Save' %>
 <% end %>
 %#	Generate ingredients refs
 %foreach my $key(keys %{$ingredients}){
-  <%= $ingredients->{$key}{'INGREDIENT'}%>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
+  <a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
 %}
 
 @@ layouts/default.html.ep
