@@ -1,0 +1,26 @@
+%layout 'default', title 'Recipes';
+%#	Select ingredients from tags
+%#<%= test %>
+%if(!%{$ingredients}){
+<P>What prepare for?</P>
+  <%= form_for 'recipe'=>(method=>'post')=>begin %>
+%#	Show ingredients tags
+%	foreach (keys %{$tags}){
+  <%= check_box 'tagid'=>($tags->{$_}{'ID'})%><%= $tags->{$_}{'NAME'}%><br/>
+%	}
+  <%= submit_button 'Let\'s start' %>
+  <% end %>
+%}else{
+%#	Show ingredients for recipe
+  <%= form_for 'recipe'=>(method=>'post')=>begin %>
+<input type=text name=recipe value="<%= $recipe %>">
+  <%= hidden_field 'recipeid'=>$recipeid %>
+<table>
+%	foreach (keys %{$ingredients}){
+<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value=<%= $ingredients->{$_}{'QUANTITY'} %> ></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+%	}
+</table>
+  <%= submit_button 'Save recipe' %>
+  <% end %>
+%}
+

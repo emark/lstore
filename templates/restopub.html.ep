@@ -1,0 +1,13 @@
+% layout 'default',title 'Restopub';
+<%#= test %>
+% if(!%{$ingredients}){
+%#	Show menus for my pub
+%	foreach (keys %{$menus}){
+  <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a> <a href="/restopub/buy/<%= $menus->{$_}{'ID'} %>">Buy</a><br/>
+%	}
+% }else{
+%	foreach (keys %{$ingredients}){
+  <i><%= $ingredients->{$_}{'INGREDIENT'} %></i> <%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %><br/>
+%	}  
+% }
+

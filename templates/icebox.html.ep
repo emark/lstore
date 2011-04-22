@@ -1,0 +1,15 @@
+% layout 'default',title 'Icebox';
+%#	Create new ingredient
+<%= form_for 'icebox'=>(method=>'post')=>begin %>
+<i>What add?</i><br/>
+<input type=text name=ingredient value="<%= $ingredient %>">
+<%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
+<input type=text name=tag value="<%= $tag %>">
+<input type=hidden name=ingredientid value=<%= $ingredientid %>>
+<%= submit_button 'Save' %>
+<% end %>
+%#	Generate ingredients refs
+%foreach my $key(keys %{$ingredients}){
+  <a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
+%}
+

@@ -1,0 +1,17 @@
+% layout 'default',title 'Menu';
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
+<%= form_for 'menu'=>(method=>'post')=>begin %>
+<input type=text name='menu' value="<%= $menu %>">
+<input type=hidden name='menuid' value=<%= $menuid %>>
+<table>
+%foreach my $key(keys %{$recipes}){
+  <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>>
+%	if($menuid && $recipes){
+	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Cut</a>
+%	}
+  </td></tr>
+%}
+</table>
+<%= submit_button 'Save menu' %>
+<% end %>
+

@@ -1,0 +1,5 @@
+<title><%= title %></title>
+<body>
+<P><%= link_to 'My kitchen'=>'kitchen'%></P>
+<%= content %>
+</body>

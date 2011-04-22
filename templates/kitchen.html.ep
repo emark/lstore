@@ -1,0 +1,11 @@
+% layout 'default', title 'Kitchen';
+<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
+<%= form_for 'kitchen'=>(method=>'post')=>begin %>
+<table>
+%foreach my $key(keys %{$recipes}){
+  <tr><td><a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %></td><td><a href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>">Delete</a></td></tr>
+%}
+</table>
+<%= submit_button 'Create menu' %>
+<% end %>
+
