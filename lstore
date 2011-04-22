@@ -51,7 +51,7 @@ get '/kitchen/:action/:id'=>sub{
 post '/kitchen'=>sub{
   my $self=shift;
   my @recipeid=$self->param('recipeid');
-  my $SQL;
+  my $SQL='';
   foreach(@recipeid){
     $SQL=$SQL."RECIPES.ID=$_ OR ";
   }
@@ -283,98 +283,3 @@ get '/restopub/:action/:id'=>sub{
 
 app->secret('storestosecret');
 app->start;
-__DATA__
-
-@@ restopub.html.ep
-% layout 'default',title 'Restopub';
-<%#= test %>
-% if(!%{$ingredients}){
-%#	Show menus for my pub
-%	foreach (keys %{$menus}){
-  <a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a> <a href="/restopub/delete/<%= $menus->{$_}{'ID'} %>"> Delete</a> <a href="/restopub/buy/<%= $menus->{$_}{'ID'} %>">Buy</a><br/>
-%	}
-% }else{
-%	foreach (keys %{$ingredients}){
-  <i><%= $ingredients->{$_}{'INGREDIENT'} %></i> <%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %><br/>
-%	}  
-% }
-
-@@ menu.html.ep
-% layout 'default',title 'Menu';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
-<%= form_for 'menu'=>(method=>'post')=>begin %>
-<input type=text name='menu' value="<%= $menu %>">
-<input type=hidden name='menuid' value=<%= $menuid %>>
-<table>
-%foreach my $key(keys %{$recipes}){
-  <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>>
-%	if($menuid && $recipes){
-	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Cut</a>
-%	}
-  </td></tr>
-%}
-</table>
-<%= submit_button 'Save menu' %>
-<% end %>
-
-@@ recipe.html.ep
-%layout 'default', title 'Recipes';
-%#	Select ingredients from tags
-%#<%= test %>
-%if(!%{$ingredients}){
-<P>What prepare for?</P>
-  <%= form_for 'recipe'=>(method=>'post')=>begin %>
-%#	Show ingredients tags
-%	foreach (keys %{$tags}){
-  <%= check_box 'tagid'=>($tags->{$_}{'ID'})%><%= $tags->{$_}{'NAME'}%><br/>
-%	}
-  <%= submit_button 'Let\'s start' %>
-  <% end %>
-%}else{
-%#	Show ingredients for recipe
-  <%= form_for 'recipe'=>(method=>'post')=>begin %>
-<input type=text name=recipe value="<%= $recipe %>">
-  <%= hidden_field 'recipeid'=>$recipeid %>
-<table>
-%	foreach (keys %{$ingredients}){
-<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value=<%= $ingredients->{$_}{'QUANTITY'} %> ></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
-%	}
-</table>
-  <%= submit_button 'Save recipe' %>
-  <% end %>
-%}
-
-@@ kitchen.html.ep
-% layout 'default', title 'Kitchen';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
-<%= form_for 'kitchen'=>(method=>'post')=>begin %>
-<table>
-%foreach my $key(keys %{$recipes}){
-  <tr><td><a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %></td><td><a href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>">Delete</a></td></tr>
-%}
-</table>
-<%= submit_button 'Create menu' %>
-<% end %>
-
-@@ icebox.html.ep
-% layout 'default',title 'Icebox';
-%#	Create new ingredient
-<%= form_for 'icebox'=>(method=>'post')=>begin %>
-<i>What add?</i><br/>
-<input type=text name=ingredient value="<%= $ingredient %>">
-<%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
-<input type=text name=tag value="<%= $tag %>">
-<input type=hidden name=ingredientid value=<%= $ingredientid %>>
-<%= submit_button 'Save' %>
-<% end %>
-%#	Generate ingredients refs
-%foreach my $key(keys %{$ingredients}){
-  <a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
-%}
-
-@@ layouts/default.html.ep
-<title><%= title %></title>
-<body>
-<P><%= link_to 'My kitchen'=>'kitchen'%></P>
-<%= content %>
-</body>

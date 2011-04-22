@@ -3,7 +3,7 @@
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <i>What add?</i><br/>
 <input type=text name=ingredient value="<%= $ingredient %>">
-<%= select_field measure=>[['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
+<%= select_field measure=>[['---'=>0],['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
 <input type=text name=tag value="<%= $tag %>">
 <input type=hidden name=ingredientid value=<%= $ingredientid %>>
 <%= submit_button 'Save' %>
