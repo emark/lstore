@@ -22,7 +22,7 @@ app->hook(before_dispatch => sub {
 
 get '/' => sub{
     my $self=shift;
-    $self->render(text=>'Hello storesto! Coming soon!');
+    $self->render(text=>'Hello storesto! Coming soon! Invites here: team@storesto.ru');
 };
 
 get '/kitchen'=>sub{

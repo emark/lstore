@@ -1,6 +1,24 @@
 /*Storesto stylesheet*/
 body{
-    /*background-image: url('/bg.jpg'),*/
+    /*background-image: url('/media/bg.jpg');*/
     background-color:#E6F2DC;
     font-family: sans-serif,serif,monospace;
+}
+
+a:link,a:hover,a:active,a:visited{
+    color: #B52B4D;
+}
+
+form{
+    
+}
+
+#main{
+    margin: 0 0 0 350px;
+}
+#menu{
+    font-size: 20pt;
+}
+#content{
+    font-size: 16pt;
 }

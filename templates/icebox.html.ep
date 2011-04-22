@@ -12,4 +12,3 @@
 %foreach my $key(keys %{$ingredients}){
   <a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
 %}
-

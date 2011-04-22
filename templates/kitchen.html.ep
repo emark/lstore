@@ -1,5 +1,4 @@
 % layout 'default', title 'Kitchen';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>
 %foreach my $key(keys %{$recipes}){
@@ -8,4 +7,3 @@
 </table>
 <%= submit_button 'Create menu' %>
 <% end %>
-

@@ -8,6 +8,7 @@
 % }else{
 %	foreach (keys %{$ingredients}){
   <i><%= $ingredients->{$_}{'INGREDIENT'} %></i> <%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %><br/>
-%	}  
+%	}
+  <%= text_field 'mailbox'=>(size=>15) %>
+  <%= submit_button 'Send' %>
 % }
-

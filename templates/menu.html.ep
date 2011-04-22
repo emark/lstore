@@ -1,5 +1,4 @@
 % layout 'default',title 'Menu';
-<%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Open icebox'=>'icebox' %> / <%= link_to 'Go to restopub'=>'restopub'%>
 % if(!%{$recipes}){
 <P>Please, select some recipes.</P>
 %}else{

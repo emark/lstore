@@ -1,6 +1,12 @@
 <title><%= title %></title>
 <%= stylesheet '/styles.css' %>
 <body>
-<P><%= link_to 'My kitchen'=>'kitchen'%></P>
-<%= content %>
+<%= tag 'div', id=>'main'=>begin %>
+  <%= tag 'div', id=>'menu'=>begin %>
+    <%= link_to 'My kitchen'=>'kitchen'%> / <%= link_to 'Icebox'=>'icebox' %> / <%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Restopub'=>'restopub'%>
+  <% end %>
+  <%= tag 'div', id=>'content'=>begin %>
+    <%= content %>
+  <% end %>
+<% end %>
 </body>

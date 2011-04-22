@@ -23,4 +23,3 @@
   <%= submit_button 'Save recipe' %>
   <% end %>
 %}
-
