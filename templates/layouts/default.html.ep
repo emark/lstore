@@ -1,5 +1,6 @@
 <title><%= title %></title>
-<body background="/bg.jpg">
+<%= stylesheet '/styles.css' %>
+<body>
 <P><%= link_to 'My kitchen'=>'kitchen'%></P>
 <%= content %>
 </body>
