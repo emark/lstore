@@ -1,9 +1,9 @@
 <title><%= title %></title>
 <%= stylesheet '/styles.css' %>
-<body>
+<body>  
 <%= tag 'div', id=>'main'=>begin %>
   <%= tag 'div', id=>'menu'=>begin %>
-    <%= link_to 'My kitchen'=>'kitchen'%> / <%= link_to 'Icebox'=>'icebox' %> / <%= link_to 'Create recipe'=>'recipe' %> / <%= link_to 'Restopub'=>'restopub'%>
+    <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Холодильник'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Кафе'=>'cafe'%>
   <% end %>
   <%= tag 'div', id=>'content'=>begin %>
     <%= content %>

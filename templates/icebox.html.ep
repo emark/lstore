@@ -1,14 +1,17 @@
 % layout 'default',title 'Icebox';
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
-<i>What add?</i><br/>
+<%= tag 'div', class=>'form_describe'=>begin %>Что добавим?<% end %>
 <input type=text name=ingredient value="<%= $ingredient %>">
-<%= select_field measure=>[['---'=>0],['pcs'=>1],['g.'=>2],['ml.'=>3],['l.'=>4],['kg.'=>5]]%><br/><i>input tags</i><br/>
+<%= select_field measure=>[['---'=>0],['шт.'=>1],['гр.'=>2],['мл.'=>3],['л.'=>4],['кг.'=>5]]%>
+<%= tag 'div', class=>'form_describe'=>begin %>На какую полку?<% end %>
 <input type=text name=tag value="<%= $tag %>">
-<input type=hidden name=ingredientid value=<%= $ingredientid %>>
-<%= submit_button 'Save' %>
+<input type=hidden name=ingredientid value="<%= $ingredientid %>">
+<%= submit_button 'Сохранить' %>
 <% end %>
 %#	Generate ingredients refs
+<table border=0>
 %foreach my $key(keys %{$ingredients}){
-  <a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i>, [<%= $ingredients->{$key}{'TAG'} %>],<a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Delete</a><br/>
+  <tr><td><a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td>[<%= $ingredients->{$key}{'TAG'} %>]</td><td><a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Удалить</a></td></tr>
 %}
+</table>

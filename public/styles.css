@@ -4,21 +4,21 @@ body{
     background-color:#E6F2DC;
     font-family: sans-serif,serif,monospace;
 }
-
 a:link,a:hover,a:active,a:visited{
     color: #B52B4D;
 }
-
-form{
-    
-}
-
 #main{
-    margin: 0 0 0 350px;
+    /*margin: 0 0 0 350px;*/
 }
 #menu{
     font-size: 20pt;
+    padding-bottom: 35px;
 }
 #content{
     font-size: 16pt;
+    background-color: #FFF;
+    width: 600px;
+}
+.prductslist{
+    font-family: serif;
 }

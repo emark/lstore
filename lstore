@@ -80,6 +80,7 @@ get '/icebox/:action/:id'=>sub{
   my $tag='';
   if($action eq 'delete'){
     $dbh->do("DELETE FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid");
+    $ingredientid=0;
   }elsif($action eq 'edit'){
     $ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.NAME FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid");
     $tag=$dbh->selectrow_array("SELECT TAGS.NAME FROM ROUTER2 LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID WHERE ROUTER2.INGREDIENTID=$ingredientid");
@@ -257,15 +258,15 @@ post '/menu'=>sub{
   $self->render('menu');
 };
 
-get '/restopub'=>sub{
+get '/cafe'=>sub{
   my $self=shift;
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
   $self->stash(menus=>$menus,
 	       ingredients=>{});
-  $self->render('restopub');
+  $self->render('cafe');
 };
 
-get '/restopub/:action/:id'=>sub{
+get '/cafe/:action/:id'=>sub{
   my $self=shift;
   my $action=$self->param('action');
   my $menuid=$self->param('id');
@@ -278,7 +279,7 @@ get '/restopub/:action/:id'=>sub{
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
   $self->stash(menus=>$menus,
 	       ingredients=>$ingredients);
-  $self->render('restopub');
+  $self->render('cafe');
 };
 
 app->secret('storestosecret');

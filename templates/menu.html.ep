@@ -9,11 +9,11 @@
     %foreach my $key(keys %{$recipes}){
       <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>> шт.
 %	if($menuid && $recipes){
-	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Cut</a>
+	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить</a>
 %	}
     </td></tr>
 %	}
     </table>
-    <%= submit_button 'Save menu' %>
+    <%= submit_button 'Сохранить' %>
     <% end %>
 %}

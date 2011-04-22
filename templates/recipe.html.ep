@@ -1,25 +1,26 @@
-%layout 'default', title 'Recipes';
+%layout 'default', title 'Новый рецепт';
 %#	Select ingredients from tags
-%#<%= test %>
 %if(!%{$ingredients}){
-<P>What prepare for?</P>
+%#	Show ingredients tags
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
+<table border=0><tr><td colspan=2>Из чего будем готовить?</td></tr>
 %#	Show ingredients tags
 %	foreach (keys %{$tags}){
-  <%= check_box 'tagid'=>($tags->{$_}{'ID'})%><%= $tags->{$_}{'NAME'}%><br/>
+<tr><td><%= check_box 'tagid'=>($tags->{$_}{'ID'})%></td><td align=left><%= $tags->{$_}{'NAME'}%></td></tr>
 %	}
-  <%= submit_button 'Let\'s start' %>
+<tr><td colspan=2><%= submit_button 'Итак, начнем' %></td></tr>
+</table>
   <% end %>
 %}else{
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
-<input type=text name=recipe value="<%= $recipe %>">
   <%= hidden_field 'recipeid'=>$recipeid %>
-<table>
+<table border=0>
+<tr><td>Как назовём?</td><td align=right><input type=text name=recipe value="<%= $recipe %>"></td></tr>
 %	foreach (keys %{$ingredients}){
-<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value=<%= $ingredients->{$_}{'QUANTITY'} %> ></td><td><%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value="<%= $ingredients->{$_}{'QUANTITY'} %>"> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 </table>
-  <%= submit_button 'Save recipe' %>
+  <%= submit_button 'Сохранить' %>
   <% end %>
 %}

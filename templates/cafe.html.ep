@@ -1,0 +1,18 @@
+% layout 'default',title 'Кафе';
+<%#= test %>
+% if(!%{$ingredients}){
+%#	Show menus for my cafe
+<table class=productslist>
+%	foreach (keys %{$menus}){
+ <tr><td><a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a></td><td><a href="/cafe/buy/<%= $menus->{$_}{'ID'} %>">Что купить</a></td><td><a href="/cafe/delete/<%= $menus->{$_}{'ID'} %>">Удалить меню</a></td></tr>
+%	}
+</table>
+% }else{
+%#	Print ingredients list
+<table class=productslist><tr><td>Продукт</td><td>Количество</td></tr>
+%	foreach (keys %{$ingredients}){
+  <tr><td><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+%	}
+</table>
+  <%#= text_field 'mailbox'=>(size=>15) %> <%#= submit_button 'Отправить' %>
+% }
