@@ -216,14 +216,14 @@ get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   my $action=$self->param('action');
   my $menuid=$self->param('id');
   my $routeid=$self->param('routeid');
-  my $addrecipe=$self->param('addrecipe');
+  my $addrecipe=$self->param('addrecipe') || undef;
   my $addrecipes={};
   my $menu='';
   my $recipes={};
   if($action eq 'edit'){    
   }elsif($action eq 'cut'){#Cutting recipes from menu
     $dbh->do("DELETE FROM ROUTER3 WHERE ROUTER3.ID=$routeid");
-  }elsif($action eq 'add'){
+  }elsif($action eq 'add' && $addrecipe){
     $addrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE RECIPES.NAME LIKE '%$addrecipe%'",'ID');
   }
   $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid");
