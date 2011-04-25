@@ -58,7 +58,8 @@ post '/kitchen'=>sub{
   my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE $SQL RECIPES.ID=0",'ID');
   $self->stash(recipes=>$recipes,
 	       menu=>'',
-	       menuid=>0);
+	       menuid=>0,
+	       addrecipes=>{});
   $self->render('menu');
 };
 
