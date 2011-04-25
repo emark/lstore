@@ -1,13 +1,14 @@
 % layout 'default',title 'Icebox';
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
-<%= tag 'div', class=>'form_describe'=>begin %>Что добавим?<% end %>
-<input type=text name=ingredient value="<%= $ingredient %>">
-<%= select_field measure=>[['---'=>0],['шт.'=>1],['гр.'=>2],['мл.'=>3],['л.'=>4],['кг.'=>5]]%>
-<%= tag 'div', class=>'form_describe'=>begin %>На какую полку?<% end %>
-<input type=text name=tag value="<%= $tag %>">
-<input type=hidden name=ingredientid value="<%= $ingredientid %>">
-<%= submit_button 'Сохранить' %>
+<%= tag 'div'=>(align=>'center')=>begin %>Что добавим?
+  <input type=text name=ingredient value="<%= $ingredient %>">
+  <%= select_field measure=>[['---'=>0],['шт.'=>1],['гр.'=>2],['мл.'=>3],['л.'=>4],['кг.'=>5]]%>
+  На какую полку?
+  <input type=text name=tag value="<%= $tag %>">
+  <input type=hidden name=ingredientid value="<%= $ingredientid %>">
+  <%= submit_button 'Сохранить' %>
+  <% end %>
 <% end %>
 %#	Generate ingredients refs
 <table border=0>

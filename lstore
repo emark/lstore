@@ -130,11 +130,16 @@ get '/recipe'=>sub{
   $self->render('recipe');
 };
 
-get '/recipe/:action/:id'=>sub{
+get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   my $self=shift;
+  my $action=$self->param('action');
   my $recipeid=$self->param('id');
+  my $routerid=$self->param('routerid');
+  if($action eq 'cut'){
+    $dbh->do("DELETE FROM ROUTER1 WHERE ROUTER1.ID=$routerid");
+  }
   my $recipe=$dbh->selectrow_array("SELECT RECIPES.NAME FROM RECIPES WHERE RECIPES.ID=$recipeid");
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
   $self->stash(tags=>{},
 	       ingredients=>$ingredients,
 	       recipe=>$recipe,
