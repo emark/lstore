@@ -13,7 +13,14 @@
 %	}
     </td></tr>
 %	}
+    %foreach my $key(keys %{$addrecipes}){
+      <tr><td><%= hidden_field 'recipeid'=>$addrecipes->{$key}{'ID'} %><%= $addrecipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=""> порций</td></tr>
+%	}
+
     </table>
     <%= submit_button 'Сохранить' %> <%= link_to 'Что купить'=>"/cafe/buy/$menuid" %> <%= link_to 'Удалить меню'=>"/cafe/delete/$menuid" %>
+    <% end %>
+    <%= tag 'div'=>begin %>
+    <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value=""><%= submit_button 'Добавить' %><% end %>
     <% end %>
 %}
