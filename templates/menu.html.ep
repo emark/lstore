@@ -1,4 +1,5 @@
 % layout 'default',title 'Menu';
+<%#= $test %>
 % if(!%{$recipes}){
 <P>Please, select some recipes.</P>
 %}else{

@@ -1,12 +1,31 @@
-<title><%= title %></title>
-<%= stylesheet '/styles.css' %>
-<body>  
-<%= tag 'div', id=>'main'=>begin %>
-  <%= tag 'div', id=>'menu'=>begin %>
-    <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Холодильник'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Кафе'=>'cafe'%>
-  <% end %>
-  <%= tag 'div', id=>'content'=>begin %>
-    <%= content %>
-  <% end %>
-<% end %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title><%= title %></title>
+	<meta name="title" content="" />
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link rel="stylesheet" href="styles.css" type="text/css" media="screen, projection" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+	<div id="header">
+	  <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Кладовая'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Готовим'=>'cafe'%>
+	</div><!-- #header-->
+
+	<div id="content">
+	      <%= content %>
+	</div><!-- #content-->
+
+</div><!-- #wrapper -->
+
+<div id="footer">
+	<strong>Footer:</strong> Mus elit Morbi mus enim lacus at quis Nam eget morbi. Et semper urna urna non at cursus dolor vestibulum neque enim. Tellus interdum at laoreet laoreet lacinia lacinia sed Quisque justo quis. Hendrerit scelerisque lorem elit orci tempor tincidunt enim Phasellus dignissim tincidunt. Nunc vel et Sed nisl Vestibulum odio montes Aliquam volutpat pellentesque. Ut pede sagittis et quis nunc gravida porttitor ligula.
+</div><!-- #footer -->
+
 </body>
+</html>
