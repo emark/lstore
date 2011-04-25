@@ -2,7 +2,7 @@
 <%#= test %>
 % if(!%{$ingredients}){
 %#	Show menus for my cafe
-<table width=100%>
+<table>
 %	foreach (keys %{$menus}){
  <tr><td><a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a></td><td><a href="/cafe/buy/<%= $menus->{$_}{'ID'} %>">Что купить</a></td><td><a href="/cafe/delete/<%= $menus->{$_}{'ID'} %>">Удалить меню</a></td></tr>
 %	}

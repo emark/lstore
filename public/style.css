@@ -25,6 +25,9 @@ p {
 img {
 	border: none;
 }
+table{
+	width:100%;
+}
 input {
 	vertical-align: middle;
 }
