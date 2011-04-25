@@ -1,8 +1,9 @@
 %layout 'default', title 'Новый рецепт';
+<%#= test %>
 %#	Select ingredients from tags
 %if(!%{$ingredients}){
 %#	Show ingredients tags
-  <%= form_for 'recipe'=>(method=>'post')=>begin %>
+  <%= form_for recipe=>(method=>'post')=>begin %>
 <%= tag 'div',id=>'caption1'=>(align=>'center')=>begin %>Из чего будем готовить?<% end %>
 <table border=0>
 %#	Show ingredients tags
@@ -21,12 +22,18 @@
 <tr><td>Как назовём блюдо?</td><td align=left colspan=2><input type=text name=recipe value="<%= $recipe %>"></td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value="<%= $ingredients->{$_}{'QUANTITY'} %>"> <%= $ingredients->{$_}{'MEASURE'} %>
-%	if($recipeid && $ingredients){
-	  </td><td><a href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>">Исключить</a>
-%	}
+%		if($recipeid && $ingredients){
+	    </td><td><a href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>">Исключить</a>
+%		}
 </td></tr>
+%	}
+%	foreach (keys %{$addingredients}){
+<tr><td><%= hidden_field 'ingredientid'=>($addingredients->{$_}{'ID'}) %><%= $addingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=5 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 </table>
   <%= submit_button 'Сохранить' %>
+  <% end %>
+  <%= tag 'div'=>begin %>
+  <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""><%= submit_button 'Добавить' %><% end %>
   <% end %>
 %}
