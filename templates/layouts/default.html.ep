@@ -6,6 +6,7 @@
 	<meta name="title" content="" />
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
+	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
 	<%= stylesheet '/style.css' %>
 </head>
 
@@ -24,7 +25,8 @@
 </div><!-- #wrapper -->
 
 <div id="footer" align=center>
-	team@storesto.ru
+	team@storesto.ru<br>
+	<a href="http://storesto.reformal.ru" target=_blank>http://storesto.reformal.ru</a>
 </div><!-- #footer -->
 
 </body>
