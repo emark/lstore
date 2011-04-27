@@ -1,0 +1,8 @@
+% layout 'default', title 'Login';
+<%= tag 'div'=>(align=>'center')=>begin %>
+    <%= form_for login=>(method=>'get')=>begin %>
+    e-mail: <%= text_field 'email' %>
+    pass: <%= password_field 'pass' %>
+    <%= submit_button %>
+    <% end %>
+<% end %>

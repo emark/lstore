@@ -1,0 +1,3 @@
+% layout 'default', title 'Welcome';
+<%= tag 'div'=>(align=>'center')=>begin %>Hello to StoResto. It's your famouse kitchen book!<% end %>
+<%= tag 'div'=>(align=>'center')=>begin %>Please, <%= link_to login=>'login' %> first or <%= link_to logout=>'logout' %>.<% end %>

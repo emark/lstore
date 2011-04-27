@@ -14,19 +14,20 @@ our $dbh = DBI->connect($dbconf[0],$dbconf[1],$dbconf[2],
 $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
 
-app->hook(before_dispatch => sub {
-               my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
-	       }
-	  );
+#app->hook(before_dispatch => sub {
+#               my $self = shift;
+#               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+#	       }
+#	  );
 
 get '/' => sub{
     my $self=shift;
-    $self->render(text=>'Hello storesto! Coming soon! Invites here: team@storesto.ru');
-};
+    $self->render;
+}=>'index';
 
 get '/kitchen'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES','ID');
   $self->stash(recipes=>$recipes,
 	       menu=>'',
@@ -36,6 +37,7 @@ get '/kitchen'=>sub{
 
 get '/kitchen/:action/:id'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $action=$self->param('action');
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
@@ -50,6 +52,7 @@ get '/kitchen/:action/:id'=>sub{
 
 post '/kitchen'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my @recipeid=$self->param('recipeid');
   my $SQL='';
   foreach(@recipeid){
@@ -65,6 +68,7 @@ post '/kitchen'=>sub{
 
 get '/icebox'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
@@ -75,6 +79,7 @@ get '/icebox'=>sub{
 
 get '/icebox/:action/:id'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $action=$self->param('action');
   my $ingredientid=$self->param('id');
   my $ingredient='';
@@ -96,6 +101,7 @@ get '/icebox/:action/:id'=>sub{
 
 post '/icebox'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $ingredient=$self->param('ingredient');
   my $measure=$self->param('measure');
   my $tag=$self->param('tag');
@@ -127,6 +133,7 @@ post '/icebox'=>sub{
 
 get '/recipe'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN INGREDIENTS ON TAGS.ID=INGREDIENTS.TAGID','ID');
   $self->stash(tags=>$tags,
 	       ingredients=>{},
@@ -138,6 +145,7 @@ get '/recipe'=>sub{
 
 get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $action=$self->param('action');
   my $recipeid=$self->param('id');
   my $routerid=$self->param('routerid');
@@ -160,6 +168,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
 
 post '/recipe'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $recipe=$self->param('recipe');
   my $recipeid=$self->param('recipeid') || 0;
   my $tags={};
@@ -217,6 +226,7 @@ post '/recipe'=>sub{
 
 get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $action=$self->param('action');
   my $menuid=$self->param('id');
   my $routeid=$self->param('routeid');
@@ -241,6 +251,7 @@ get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
 
 post '/menu'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $menu=$self->param('menu');
   my $menuid=$self->param('menuid');
   my @recipeid=$self->param('recipeid');
@@ -290,6 +301,7 @@ post '/menu'=>sub{
 
 get '/cafe'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $menus=$dbh->selectall_hashref('SELECT MENU.ID,MENU.NAME AS MENU FROM MENU','ID');
   $self->stash(menus=>$menus,
 	       ingredients=>{});
@@ -298,6 +310,7 @@ get '/cafe'=>sub{
 
 get '/cafe/:action/:id'=>sub{
   my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
   my $action=$self->param('action');
   my $menuid=$self->param('id');
   my $ingredients={};
@@ -311,6 +324,22 @@ get '/cafe/:action/:id'=>sub{
 	       ingredients=>$ingredients);
   $self->render('cafe');
 };
+
+get '/login'=>sub{
+  my $self=shift;
+  my $email=$self->param('email') || '';
+  my $pass=$self->param('pass') || '';
+  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'");
+  return $self->render unless $check;
+  $self->session(name=>$email);
+  $self->redirect_to('kitchen');
+}=>'login';
+
+get '/logout'=>sub{
+  my $self=shift;
+  $self->session(expires=>1);
+  $self->redirect_to('index');
+}=>'logout';
 
 app->secret('storestosecret');
 app->start;

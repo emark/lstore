@@ -13,7 +13,7 @@
 <body>
 
 <div id="wrapper">
-	<div id=label align=center>StoResto.ru</div>
+	<div id=label align=center><a href="/">StoResto.ru</a></div>
 	<div id="header" align=center>
 	  <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Кладовая'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Готовим'=>'cafe'%>
 	</div><!-- #header-->
