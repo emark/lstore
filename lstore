@@ -65,7 +65,7 @@ post '/kitchen'=>sub{
 
 get '/icebox'=>sub{
   my $self=shift;
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
@@ -84,9 +84,9 @@ get '/icebox/:action/:id'=>sub{
     $ingredientid=0;
   }elsif($action eq 'edit'){
     $ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.NAME FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid");
-    $tag=$dbh->selectrow_array("SELECT TAGS.NAME FROM ROUTER2 LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID WHERE ROUTER2.INGREDIENTID=$ingredientid");
+    $tag=$dbh->selectrow_array("SELECT TAGS.NAME FROM INGREDIENTS LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID WHERE INGREDIENTS.ID=$ingredientid");
   }
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
@@ -99,31 +99,35 @@ post '/icebox'=>sub{
   my $ingredient=$self->param('ingredient');
   my $measure=$self->param('measure');
   my $tag=$self->param('tag');
-  my $ingredientid=$self->param('ingredientid');
+  my $ingredientid=$self->param('ingredientid') || undef;
   my $tagid=0;
-  if($ingredient && $measure && $tag && !$ingredientid){
-    $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID) VALUES(NULL,\"$ingredient\",$measure)");
-    $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
+  if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
     $tagid=$dbh->selectrow_array("SELECT ID FROM TAGS WHERE TAGS.NAME=\"$tag\"");
     if(!$tagid){
       $dbh->do("INSERT INTO TAGS(ID,NAME) VALUES(NULL,\"$tag\")");
       $tagid=$dbh->last_insert_id('','','TAGS','ID');
     }
-    $dbh->do("INSERT INTO ROUTER2(ID,INGREDIENTID,TAGID) VALUES(NULL,$ingredientid,$tagid)");
+    $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAGID) VALUES(NULL,\"$ingredient\",$measure,$tagid)");
   }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
-    $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure WHERE INGREDIENTS.ID=$ingredientid");
+    $tagid=$dbh->selectrow_array("SELECT ID FROM TAGS WHERE TAGS.NAME=\"$tag\"");#If new tag
+    if(!$tagid){
+      $dbh->do("INSERT INTO TAGS(ID,NAME) VALUES(NULL,\"$tag\")");
+      $tagid=$dbh->last_insert_id('','','TAGS','ID');
+    }
+    $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAGID=$tagid WHERE INGREDIENTS.ID=$ingredientid");
+    $self->stash(sql=>"UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAGID=$tagid WHERE INGREDIENTS.ID=$ingredientid")
   }
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID LEFT JOIN TAGS ON ROUTER2.TAGID=TAGS.ID",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
-	       ingredientid=>'',
+	       ingredientid=>$ingredientid,
 	       tag=>$tag);
   $self->render('icebox');
 };
 
 get '/recipe'=>sub{
   my $self=shift;
-  my $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN ROUTER2 ON TAGS.ID=ROUTER2.TAGID','ID');
+  my $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN INGREDIENTS ON TAGS.ID=INGREDIENTS.TAGID','ID');
   $self->stash(tags=>$tags,
 	       ingredients=>{},
 	       recipe=>'',
@@ -142,7 +146,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   if($action eq 'cut'){
     $dbh->do("DELETE FROM ROUTER1 WHERE ROUTER1.ID=$routerid");
   }elsif($action eq 'add' && $addingredient){
-    $addingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID WHERE INGREDIENTS.NAME LIKE '%$addingredient%'",'ID');
+    $addingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.NAME LIKE '%$addingredient%'",'ID');
   }
   my $recipe=$dbh->selectrow_array("SELECT RECIPES.NAME FROM RECIPES WHERE RECIPES.ID=$recipeid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
@@ -172,11 +176,11 @@ post '/recipe'=>sub{
   	  #$self->stash(sql=>$SQL,n=>$n);Test
   my @tagid=$self->param('tagid');
   foreach(@tagid){
-    $SQL=$SQL." ROUTER2.TAGID=$_ OR "
+    $SQL=$SQL." INGREDIENTS.TAGID=$_ OR "
   }
 	  #$self->stash(sql=>$SQL,q=>$quantity_hook);#Test
   if(@tagid){#Select ingredients for recipe
-    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON INGREDIENTS.ID=ROUTER2.INGREDIENTID WHERE $SQL ROUTER2.TAGID=0",'ID');
+    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE $SQL INGREDIENTS.TAGID=0",'ID');
   }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
     $dbh->do("INSERT INTO RECIPES(ID,NAME) VALUES(NULL,\"$recipe\")");
     $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
@@ -201,7 +205,7 @@ post '/recipe'=>sub{
     }
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
   }else{#If new recipe,select ingredients tags
-    $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN ROUTER2 ON TAGS.ID=ROUTER2.TAGID','ID');
+    $tags=$dbh->selectall_hashref('SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN INGREDIENTS ON TAGS.ID=INGREDIENTS.TAGID','ID');
   }
   $self->stash(recipe=>$recipe,
 	       recipeid=>$recipeid,

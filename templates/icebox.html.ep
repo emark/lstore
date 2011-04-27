@@ -1,4 +1,5 @@
 % layout 'default',title 'Icebox';
+<%#= test %>
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <%= tag 'div'=>(align=>'center')=>begin %>Что добавим?
