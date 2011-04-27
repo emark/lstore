@@ -1,2 +1,3 @@
 db.conf
-public/media/*
+public/media/
+script.sql
