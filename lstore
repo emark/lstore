@@ -248,7 +248,7 @@ get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   }elsif($action eq 'cut'){#Cutting recipes from menu
     $dbh->do("DELETE FROM ROUTER3 WHERE ROUTER3.ID=$routeid AND ROUTER3.MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
   }elsif($action eq 'add' && $addrecipe){
-    $addrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE RECIPES.NAME LIKE '%$addrecipe%' AND RECIPES.UISERID=$uid",'ID');
+    $addrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE RECIPES.NAME LIKE '%$addrecipe%' AND RECIPES.USERID=$uid",'ID');
   }
   $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
   $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
@@ -290,7 +290,7 @@ post '/menu'=>sub{
     $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
     for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
       if($amount[$n] && $amount[$n]!=0){
-	my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid[$n] AND RECIPES.USERID=$uid) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USER.ID=$uid)");
+	my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid[$n] AND RECIPES.USERID=$uid) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
 	if($status!=1){
 	  $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES(NULL,$menuid,$recipeid[$n],$amount[$n])");
 	}

@@ -33,7 +33,7 @@
 </table>
   <%= submit_button 'Сохранить' %>
   <% end %>
-  <%= tag 'div'=>begin %>
+  <%= tag 'P'=>begin %>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""><%= submit_button 'Добавить продукт' %><% end %>
   <% end %>
 %}

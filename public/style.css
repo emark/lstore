@@ -13,7 +13,7 @@ body {
 	background-image: url('/media/bg.jpg');
 }
 a {
-	color: blue;
+	color: #245199;
 	outline: none;
 	text-decoration: underline;
 }
@@ -28,6 +28,9 @@ img {
 }
 table{
 	width:100%;
+	border: dashed;
+	border-color: #D4E256;
+	padding: 10px 10px 10px 10px;
 }
 input {
 	vertical-align: middle;
@@ -40,28 +43,27 @@ input {
 	height: 100%;
 }
 
-/* Label
------------------------------------------------------------------------------*/
-#label {
-	height: 25px;
-	background: #FFE680;
-	font-size: large;
-}
-
 /* Header
 -----------------------------------------------------------------------------*/
 #header {
 	height: 150px;
-	background: #FFE680;
+	background: #FFD21E;
 	font-size: large;
 }
-
+.button{
+	background-color: #E5E5E5;
+	padding: 10px 10px 10px 10px;
+	margin: 5px 5px 5px 5px;
+	border: dotted 1px;
+	border-color: #A0A0A0;
+}
 
 /* Middle
 -----------------------------------------------------------------------------*/
 #content {
-	padding: 15px 0 100px 20px;
-	background-color:#D4E256;
+	padding: 15px 20px 100px 20px;
+	background-color:#CDD326;/*#D4E256;*/
+	font-size: small;
 }
 
 
@@ -71,5 +73,4 @@ input {
 	width: 940px;
 	margin: -100px auto 0;
 	height: 100px;
-	/*background: #BFF08E;*/
 }

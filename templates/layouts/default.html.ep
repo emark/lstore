@@ -15,7 +15,10 @@
 <div id="wrapper">
 	<div id="header" align=center>
 	  <P><a href="/"><img src="/media/logo.png" border=0></a><br/>
-	  <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Кладовая'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Готовим'=>'cafe'%>
+	  <%= link_to kitchen=>{foo=>'bar'}=>(class=>'button')=>begin %>Кухня<% end %>
+	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'button')=>begin %>Кладовая<% end %>
+	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'button')=>begin %>Рецепт<% end %>
+	  <%= link_to cafe=>{foo=>'bar'}=>(class=>'button')=>begin %>Готовим<% end %>
 	  </P>
 	</div><!-- #header-->
 
