@@ -56,6 +56,14 @@ input {
 	margin: 5px 5px 5px 5px;
 	border: dotted 1px;
 	border-color: #A0A0A0;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	font-family: Tahoma, Helvetica, Arial, Sans-Serif;
+	font-weight: bold;
+	font-size: 20px;
+	text-decoration: none;
 }
 
 /* Middle
