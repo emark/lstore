@@ -13,9 +13,10 @@
 <body>
 
 <div id="wrapper">
-	<div id=label align=center><a href="/">StoResto.ru</a></div>
 	<div id="header" align=center>
+	  <P><a href="/"><img src="/media/logo.png" border=0></a><br/>
 	  <%= link_to 'Кухня'=>'kitchen'%> / <%= link_to 'Кладовая'=>'icebox' %> / <%= link_to 'Новый рецепт'=>'recipe' %> / <%= link_to 'Готовим'=>'cafe'%>
+	  </P>
 	</div><!-- #header-->
 
 	<div id="content">
