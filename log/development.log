@@ -933,3 +933,134 @@ Thu Apr 28 17:15:13 2011 debug Mojolicious::Plugin::RequestTimer:48 [6381]: 200 
 Thu Apr 28 17:15:14 2011 debug Mojolicious::Plugin::RequestTimer:24 [6381]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
 Thu Apr 28 17:15:14 2011 debug Mojolicious::Routes:418 [6381]: Dispatching callback.
 Thu Apr 28 17:15:14 2011 debug Mojolicious::Plugin::RequestTimer:48 [6381]: 200 OK (0.095593s, 10.461/s).
+Thu Apr 28 17:23:22 2011 info Mojo::Server::Daemon:322 [7390]: Server listening (http://*:3000)
+Thu Apr 28 17:23:34 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET / (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:34 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:34 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.120001s, 8.333/s).
+Thu Apr 28 17:23:36 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:36 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:36 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.068591s, 14.579/s).
+Thu Apr 28 17:23:38 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:38 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:38 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.048529s, 20.606/s).
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /cafe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.045603s, 21.928/s).
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET / (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:39 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.058760s, 17.018/s).
+Thu Apr 28 17:23:41 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:23:41 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:23:41 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.050767s, 19.698/s).
+Thu Apr 28 17:25:00 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:00 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:00 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.042980s, 23.267/s).
+Thu Apr 28 17:25:02 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET / (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:02 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:02 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.031978s, 31.271/s).
+Thu Apr 28 17:25:09 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /login (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:09 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:09 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.051660s, 19.357/s).
+Thu Apr 28 17:25:45 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /cafe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:45 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:45 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.054535s, 18.337/s).
+Thu Apr 28 17:25:46 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:46 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:46 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.057761s, 17.313/s).
+Thu Apr 28 17:25:47 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:47 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:47 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.074154s, 13.485/s).
+Thu Apr 28 17:25:52 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:25:52 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:25:52 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.045480s, 21.988/s).
+Thu Apr 28 17:26:10 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:26:10 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:26:10 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.058982s, 16.954/s).
+Thu Apr 28 17:27:38 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:38 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:38 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.065979s, 15.156/s).
+Thu Apr 28 17:27:40 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET / (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:40 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:40 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.035041s, 28.538/s).
+Thu Apr 28 17:27:42 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /login (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:42 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:42 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.047116s, 21.224/s).
+Thu Apr 28 17:27:47 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:47 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:48 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.062479s, 16.005/s).
+Thu Apr 28 17:27:49 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:49 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:49 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.044766s, 22.338/s).
+Thu Apr 28 17:27:50 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:27:50 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:27:50 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.056310s, 17.759/s).
+Thu Apr 28 17:28:44 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:28:44 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:28:44 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.045441s, 22.007/s).
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.056837s, 17.594/s).
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:28:46 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.044609s, 22.417/s).
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe/edit/2 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.085155s, 11.743/s).
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe/edit/2 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:28:48 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.034942s, 28.619/s).
+Thu Apr 28 17:29:07 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:07 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:07 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.122276s, 8.178/s).
+Thu Apr 28 17:29:08 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:08 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:08 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.052349s, 19.103/s).
+Thu Apr 28 17:29:12 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:12 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:12 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.096112s, 10.405/s).
+Thu Apr 28 17:29:13 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:13 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:13 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.065543s, 15.257/s).
+Thu Apr 28 17:29:15 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /cafe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:15 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:15 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.109837s, 9.104/s).
+Thu Apr 28 17:29:17 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /menu/edit/1 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:17 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:17 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.050146s, 19.942/s).
+Thu Apr 28 17:29:19 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /cafe/buy/1 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:19 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:20 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.110619s, 9.040/s).
+Thu Apr 28 17:29:22 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /cafe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:22 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:22 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.055741s, 17.940/s).
+Thu Apr 28 17:29:24 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /menu/edit/1 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:24 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:24 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.053907s, 18.550/s).
+Thu Apr 28 17:29:26 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:26 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:26 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.029600s, 33.784/s).
+Thu Apr 28 17:29:28 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:28 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:28 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.078019s, 12.817/s).
+Thu Apr 28 17:29:32 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:29:32 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:29:32 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.035579s, 28.106/s).
+Thu Apr 28 17:30:33 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:33 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:33 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.057443s, 17.409/s).
+Thu Apr 28 17:30:34 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:34 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:34 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.045285s, 22.082/s).
+Thu Apr 28 17:30:39 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /icebox (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:39 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:39 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.061731s, 16.199/s).
+Thu Apr 28 17:30:39 2011 error Mojo::Server::Daemon:188 [7390]: Unknown error, probably harmless.
+Thu Apr 28 17:30:39 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:39 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:40 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.062807s, 15.922/s).
+Thu Apr 28 17:30:42 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /kitchen (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:42 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:42 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.029954s, 33.385/s).
+Thu Apr 28 17:30:43 2011 debug Mojolicious::Plugin::RequestTimer:24 [7390]: GET /recipe/edit/2 (Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0).
+Thu Apr 28 17:30:43 2011 debug Mojolicious::Routes:418 [7390]: Dispatching callback.
+Thu Apr 28 17:30:43 2011 debug Mojolicious::Plugin::RequestTimer:48 [7390]: 200 OK (0.068207s, 14.661/s).

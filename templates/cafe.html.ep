@@ -1,4 +1,4 @@
-% layout 'default',title 'Готовим';
+% layout 'default',title 'Мы здесь готовим';
 <%#= test %>
 % if(!%{$ingredients}){
 %#	Show menus for my cafe

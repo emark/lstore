@@ -1,4 +1,4 @@
-% layout 'default',title 'Icebox';
+% layout 'default',title 'Кладовая - здесь хранятся продукты';
 <%#= test %>
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>

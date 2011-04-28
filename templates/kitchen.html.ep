@@ -1,4 +1,4 @@
-% layout 'default', title 'Kitchen';
+% layout 'default', title 'На кухне есть все рецепты';
 <%#= test %>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>

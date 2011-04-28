@@ -1,4 +1,4 @@
-% layout 'default',title 'Menu';
+% layout 'default',title 'Меню';
 <%#= $test %>
 % if(!%{$recipes}){
 <%= tag 'div',id=>'caption1'=>(align=>'center')=>begin %>Please, select some recipes.<% end %>

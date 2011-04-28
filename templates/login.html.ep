@@ -1,4 +1,4 @@
-% layout 'default', title 'Login';
+% layout 'default', title 'Вход только для избранных';
 <%= tag 'div'=>(align=>'center')=>begin %>
     <%= form_for login=>(method=>'get')=>begin %>
     e-mail: <%= text_field 'email' %>
