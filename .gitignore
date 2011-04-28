@@ -1,3 +1,4 @@
 db.conf
 public/media/*
+log/*
 script.sql
