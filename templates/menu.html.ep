@@ -5,26 +5,24 @@
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>
-    <table border=0><tr><td colspan=2>Меню <input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
+    <table border=0><tr><td>Меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
     %foreach my $key(keys %{$recipes}){
       <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>> порций
 %	if($menuid && $recipes){
-	  </td><td><a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить</a>
+	  &nbsp;<a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить рецепт</a>
 %	}
     </td></tr>
 %	}
     %foreach my $key(keys %{$addrecipes}){
-      <tr><td><%= hidden_field 'recipeid'=>$addrecipes->{$key}{'ID'} %><%= $addrecipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=""> порций</td></tr>
+      <tr class=temporary><td><%= hidden_field 'recipeid'=>$addrecipes->{$key}{'ID'} %><%= $addrecipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=""> порций</td></tr>
 %	}
 
-    </table>
-    <%= tag 'P'=>begin %>
-    <%= submit_button 'Сохранить' %>
-    <% end %><%# form finish%>
+    <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %><%# form finish%></td></tr></table><br/>
+    <%= tag 'div'=>begin %>
     <%= link_to 'Что купить'=>"/cafe/buy/$menuid" %>
     <%= link_to 'Удалить меню'=>"/cafe/delete/$menuid" %>
     <% end %>
     <%= tag 'P'=>begin %>
-    <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value=""><%= submit_button 'Добавить блюдо' %><% end %>
+    <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value="">&nbsp;<%= submit_button 'Добавить блюдо' %><% end %>
     <% end %>
 %}

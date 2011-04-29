@@ -9,9 +9,9 @@
 </table>
 % }else{
 %#	Print ingredients list
-<table class=productslist><tr><td>Продукт</td><td>Количество</td></tr>
+<table class=productslist align=center><tr><td align=center><b>Список продуктов для меню</b></td></tr>
 %	foreach (keys %{$ingredients}){
-  <tr><td><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+  <tr><td  align=center><%= $ingredients->{$_}{'INGREDIENT'} %>&nbsp;--- <%= $ingredients->{$_}{'SUM'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 </table>
   <%#= text_field 'mailbox'=>(size=>15) %> <%#= submit_button 'Отправить' %>

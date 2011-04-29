@@ -7,6 +7,8 @@
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
+	<link  href="http://fonts.googleapis.com/css?family=Lobster:regular&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
+	<link  href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
 	<%= stylesheet '/style.css' %>
 </head>
 
@@ -14,11 +16,11 @@
 
 <div id="wrapper">
 	<div id="header" align=center>
-	  <P><a href="/"><img src="/media/logo.png" border=0></a><br/>
-	  <%= link_to kitchen=>{foo=>'bar'}=>(class=>'button')=>begin %>Кухня<% end %>
-	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'button')=>begin %>Кладовая<% end %>
-	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'button')=>begin %>Рецепт<% end %>
-	  <%= link_to cafe=>{foo=>'bar'}=>(class=>'button')=>begin %>Готовим<% end %>
+	  <%= link_to 'StoResto'=>'/'=>(class=>'menu') %>
+	  <%= link_to kitchen=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кухня<% end %>
+	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
+	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
+	  <%= link_to cafe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Готовим<% end %>
 	  </P>
 	</div><!-- #header-->
 
@@ -29,8 +31,8 @@
 </div><!-- #wrapper -->
 
 <div id="footer" align=center>
-	team@storesto.ru<br>
-	<a href="http://storesto.reformal.ru" target=_blank>http://storesto.reformal.ru</a>
+	<%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'%>&nbsp;
+	<%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru' %>
 </div><!-- #footer -->
 
 </body>

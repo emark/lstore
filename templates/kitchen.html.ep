@@ -3,8 +3,6 @@
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>
 %foreach my $key(keys %{$recipes}){
-  <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;<a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><a href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>">Удалить</a></td></tr>
+  <tr><td class=recipelist><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;<a href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a></td><td><a href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>">Удалить</a></td></tr>
 %}
-</table>
-<%= submit_button 'Новое меню' %>
-<% end %>
+<tr><td colspan=2 align=left><br/><%= submit_button 'Новое меню' %><% end %></td></tr></table>

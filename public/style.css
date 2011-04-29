@@ -28,12 +28,22 @@ img {
 }
 table{
 	width:100%;
-	border: dashed;
+	/*border: dashed;*/
 	border-color: #D4E256;
 	padding: 10px 10px 10px 10px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: #D4E256;
 }
 input {
 	vertical-align: middle;
+	font-size: large;
+}
+select{
+	vertical-align: middle;
+	font-size: large;
 }
 #wrapper {
 	width: 940px;
@@ -46,11 +56,11 @@ input {
 /* Header
 -----------------------------------------------------------------------------*/
 #header {
-	height: 150px;
+	height: 100px;
 	background: #FFD21E;
-	font-size: large;
+	padding-top: 30px;
 }
-.button{
+.menu{
 	background-color: #E5E5E5;
 	padding: 10px 10px 10px 10px;
 	margin: 5px 5px 5px 5px;
@@ -60,10 +70,16 @@ input {
 	border-bottom-right-radius: 5px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-	font-family: Tahoma, Helvetica, Arial, Sans-Serif;
-	font-weight: bold;
-	font-size: 20px;
+	font-family: 'Lobster', serif;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	text-shadow: none;
 	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	line-height: 1.2;
 }
 
 /* Middle
@@ -72,8 +88,24 @@ input {
 	padding: 15px 20px 100px 20px;
 	background-color:#CDD326;/*#D4E256;*/
 	font-size: small;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
 }
-
+.temporary{
+	color: #D718F4;
+}
+.recipelist{
+	font-family: inherit;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  text-shadow: none;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 1.2;
+}
 
 /* Footer
 -----------------------------------------------------------------------------*/
