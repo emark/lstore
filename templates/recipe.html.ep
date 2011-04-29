@@ -8,9 +8,9 @@
 <table border=0>
 %#	Show ingredients tags
 %	foreach (keys %{$tags}){
-<tr><td><%= check_box 'tagid'=>($tags->{$_}{'ID'})%>&nbsp;<%= $tags->{$_}{'NAME'}%></td></tr>
+<tr><td class=ingredientlist><%= check_box 'tagid'=>($tags->{$_}{'ID'})%>&nbsp;<%= $tags->{$_}{'NAME'}%></td></tr>
 %	}
-<tr><td colspan=1><br/><%= submit_button 'Начинаем готовить' %></td></tr>
+<tr><td align=center><br/><%= submit_button 'Начинаем готовить' %></td></tr>
 </table>
   <% end %>
 %}else{
@@ -23,7 +23,7 @@
 %	foreach (keys %{$ingredients}){
 <tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=3 name=quantity value="<%= $ingredients->{$_}{'QUANTITY'} %>"> <%= $ingredients->{$_}{'MEASURE'} %>
 %		if($recipeid && $ingredients){
-	    </td><td><a href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>">Исключить продукт</a>
+	    </td><td><a class=button href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>">Исключить продукт</a>
 %		}
 </td></tr>
 %	}

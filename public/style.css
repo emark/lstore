@@ -18,7 +18,7 @@ a {
 	text-decoration: underline;
 }
 a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 }
 p {
 	margin: 0 0 18px;
@@ -57,15 +57,14 @@ select{
 -----------------------------------------------------------------------------*/
 #header {
 	height: 100px;
-	background: #FFD21E;
+	background: #FFC711;
 	padding-top: 30px;
 }
 .menu{
-	background-color: #E5E5E5;
+	background-color: transparent;
 	padding: 10px 10px 10px 10px;
 	margin: 5px 5px 5px 5px;
-	border: dotted 1px;
-	border-color: #A0A0A0;
+	border: dashed 1px #7C7C7C;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-left-radius: 5px;
@@ -74,7 +73,7 @@ select{
 	font-size: 26px;
 	font-style: normal;
 	font-weight: 400;
-	text-shadow: none;
+	text-shadow: 1px 1px 1px #FFF2CE;
 	text-decoration: none;
 	text-transform: none;
 	letter-spacing: 0em;
@@ -95,9 +94,28 @@ select{
 	color: #D718F4;
 }
 .recipelist{
-	font-family: inherit;
-  font-size: 22px;
-  font-style: normal;
+  font-size: 20px;
+  line-height: 1.2;
+  text-decoration: none;
+  vertical-align: middle;
+  color: #40541A;
+}
+.ingredientlist{
+  font-size:14px;
+  vertical-align: middle;
+  color: #40541A;
+  text-decoration:none;
+  line-height: 1.4;
+}
+.taglist{
+  font-size:14px;
+  vertical-align: middle;
+  color: #40541A;	
+}
+.menulist{
+	font-family: 'PT Serif Caption', serif;
+  font-size: 26px;
+  font-style: italic;
   font-weight: 400;
   text-shadow: none;
   text-decoration: none;
@@ -105,8 +123,28 @@ select{
   letter-spacing: 0em;
   word-spacing: 0em;
   line-height: 1.2;
+  color: #40541A;
 }
-
+.button{
+	background-color: transparent;
+	padding: 2px 2px 2px 2px;
+	border: dashed 1px #7C7C7C;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	/*font-family: 'PT Serif Caption', serif;*/
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	/*text-shadow: 1px 1px 1px #FFF2CE;*/
+	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	/*line-height: 1.2;*/
+	 color: #40541A;
+}
 /* Footer
 -----------------------------------------------------------------------------*/
 #footer {

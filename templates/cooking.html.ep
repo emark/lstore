@@ -1,10 +1,10 @@
 % layout 'default',title 'Мы здесь готовим';
 <%#= test %>
 % if(!%{$ingredients}){
-%#	Show menus for my cafe
+%#	Show menus for my cooking
 <table>
 %	foreach (keys %{$menus}){
- <tr><td><a href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a></td><td><a href="/cafe/buy/<%= $menus->{$_}{'ID'} %>">Что купить</a></td><td><a href="/cafe/delete/<%= $menus->{$_}{'ID'} %>">Удалить меню</a></td></tr>
+ <tr><td><a class=menulist href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a></td><td><a class=button href="/cooking/buy/<%= $menus->{$_}{'ID'} %>">Что купить</a></td><td><a class=button href="/cooking/delete/<%= $menus->{$_}{'ID'} %>">Удалить меню</a></td></tr>
 %	}
 </table>
 % }else{

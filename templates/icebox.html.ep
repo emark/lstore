@@ -4,7 +4,7 @@
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <%= tag 'P'=>(align=>'center')=>begin %>Что добавим?
   <input type=text name=ingredient value="<%= $ingredient %>">
-  <%= select_field measure=>[['---'=>0],['шт.'=>1],['гр.'=>2],['мл.'=>3]]%>
+  <%= select_field measure=>[['гр.'=>2],['мл.'=>3],['шт.'=>1]]%>
   На какую полку?
   <input type=text name=tag size=15 value="<%= $tag %>">
   <input type=hidden name=ingredientid value="<%= $ingredientid %>">
@@ -14,6 +14,6 @@
 %#	Generate ingredients refs
 <table>
 %foreach my $key(keys %{$ingredients}){
-  <tr><td><a href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td>[<%= $ingredients->{$key}{'TAG'} %>]</td><td><a href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Удалить</a></td></tr>
+  <tr><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td>[<%= $ingredients->{$key}{'TAG'} %>]</td><td><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Удалить</a></td></tr>
 %}
 </table>

@@ -312,17 +312,17 @@ post '/menu'=>sub{
   $self->render('menu');
 };
 
-get '/cafe'=>sub{
+get '/cooking'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
   $self->stash(menus=>$menus,
 	       ingredients=>{});
-  $self->render('cafe');
+  $self->render('cooking');
 };
 
-get '/cafe/:action/:id'=>sub{
+get '/cooking/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
@@ -337,7 +337,7 @@ get '/cafe/:action/:id'=>sub{
   my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
   $self->stash(menus=>$menus,
 	       ingredients=>$ingredients);
-  $self->render('cafe');
+  $self->render('cooking');
 };
 
 get '/login'=>sub{
