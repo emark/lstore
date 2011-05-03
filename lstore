@@ -74,7 +74,7 @@ get '/icebox'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,TAGS.ID AS TAGID,TAGS.NAME AS TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN TAGS ON INGREDIENTS.TAGID=TAGS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
@@ -141,7 +141,7 @@ get '/recipe'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $tags=$dbh->selectall_hashref("SELECT TAGS.ID,TAGS.NAME FROM TAGS RIGHT JOIN INGREDIENTS ON TAGS.ID=INGREDIENTS.TAGID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $tags=$dbh->selectall_hashref("SELECT TAGS.ID,TAGS.NAME FROM TAGS LEFT JOIN INGREDIENTS ON TAGS.ID=INGREDIENTS.TAGID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(tags=>$tags,
 	       ingredients=>{},
 	       recipe=>'',

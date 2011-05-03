@@ -4,7 +4,6 @@
 %if(!%{$ingredients}){
 %#	Show ingredients tags
   <%= form_for recipe=>(method=>'post')=>begin %>
-<%= tag 'div',id=>'caption1'=>(align=>'center')=>begin %>Из чего будем готовить?<% end %>
 <table border=0>
 %#	Show ingredients tags
 %	foreach (keys %{$tags}){

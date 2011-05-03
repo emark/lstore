@@ -8,8 +8,6 @@
 	<meta name="description" content="" />
 	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
 	<link  href="http://fonts.googleapis.com/css?family=Lobster:regular&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
-	<link  href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
-	<link  href="http://fonts.googleapis.com/css?family=PT+Serif+Caption:regular,italic&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
 	<%= stylesheet '/style.css' %>
 </head>
 
@@ -32,8 +30,8 @@
 </div><!-- #wrapper -->
 
 <div id="footer" align=center>
-	<%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'=>(class=>'menu')%>&nbsp;
-	<%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru'=>(class=>'menu')%>
+	<%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%>&nbsp;
+	<%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru'=>(style=>'color:#193D17')%>
 </div><!-- #footer -->
 
 </body>

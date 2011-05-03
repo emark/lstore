@@ -113,9 +113,9 @@ select{
   color: #40541A;	
 }
 .menulist{
-	font-family: 'PT Serif Caption', serif;
+	/*font-family: 'PT Serif Caption', serif;*/
   font-size: 26px;
-  font-style: italic;
+  /*font-style: italic;*/
   font-weight: 400;
   text-shadow: none;
   text-decoration: none;

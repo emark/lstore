@@ -9,7 +9,7 @@
     %foreach my $key(keys %{$recipes}){
       <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>> порций
 %	if($menuid && $recipes){
-	  &nbsp;<a href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить рецепт</a>
+	  &nbsp;<a class=button href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить рецепт</a>
 %	}
     </td></tr>
 %	}
