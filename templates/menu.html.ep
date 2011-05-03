@@ -20,6 +20,7 @@
     <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %><%# form finish%></td></tr></table><br/>
     <%= tag 'div'=>begin %>
     <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
+     <%= link_to 'Как готовить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
     <%= link_to 'Удалить меню'=>"/cooking/delete/$menuid"=>(class=>'button') %>
     <% end %>
     <%= tag 'P'=>begin %>
