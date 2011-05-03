@@ -7,7 +7,7 @@
 <table border=0>
 %#	Show ingredients tags
 %	foreach (keys %{$tags}){
-<tr><td class=ingredientlist><%= check_box 'tagid'=>($tags->{$_}{'ID'})%>&nbsp;<%= $tags->{$_}{'NAME'}%></td></tr>
+<tr><td class=ingredientlist><%= check_box 'tag'=>($tags->{$_}{'TAG'})%>&nbsp;<%= $tags->{$_}{'TAG'}%></td></tr>
 %	}
 <tr><td align=center><br/><%= submit_button 'Начинаем готовить' %></td></tr>
 </table>

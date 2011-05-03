@@ -14,6 +14,6 @@
 %#	Generate ingredients refs
 <table>
 %foreach my $key(keys %{$ingredients}){
-  <tr><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td>[<%= $ingredients->{$key}{'TAG'} %>]</td><td><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Удалить</a></td></tr>
+  <tr><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td><%= link_to "/icebox/tag/$ingredients->{$key}{'TAG'}"=>begin %><%= $ingredients->{$key}{'TAG'} %><% end %></td><td><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>">Удалить продукт</a></td></tr>
 %}
 </table>
