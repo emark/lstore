@@ -1,1 +1,14 @@
-% layout 'default',title 'Buy menu';
+% layout 'default',title 'Приготовление меню';
+<%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
+<P align=center><i>инструкции по приготовлению</i></P>
+<table>
+%foreach my $recipeid(keys %{$instructions}){
+<tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций)</td></tr>
+<tr><td><i><%= $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
+%foreach my $ingredientid(keys %{$ingredients}){
+%if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
+<tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> <%= $ingredients->{$ingredientid}{'AMOUNT'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
+%}
+%}
+%}
+</table>
