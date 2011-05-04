@@ -1,1 +1,14 @@
-% layout 'default',title 'Buy menu';
+% layout 'default',title 'Покупка продуктов';
+<%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
+<P align=center><i>список продуктов</i></P>
+<%= form_for cooking=>begin %>
+<table >
+%foreach my $key(keys %{$ingredients}){
+<tr><td width=15><%= check_box cutingredient=>$ingredients->{$key}{'ID'} %></td>
+<td class=buyerlist><%= $ingredients->{$key}{'INGREDIENT'}%></td>
+<td><%= $ingredients->{$key}{'SUM'}%>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
+%}
+</table><br/>
+<%= text_field 'email' %>
+<%= submit_button 'Отправить список продуктов' %>
+<% end %>

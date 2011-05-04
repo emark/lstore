@@ -145,6 +145,10 @@ select{
 	/*line-height: 1.2;*/
 	 color: #40541A;
 }
+.buyerlist{
+	border-bottom-style: dotted;
+	border-bottom-width: 1px;
+}
 /* Footer
 -----------------------------------------------------------------------------*/
 #footer {
