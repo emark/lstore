@@ -3,7 +3,8 @@
 %#	Select ingredients from tags
 %if(!%{$ingredients}){
 %#	Show ingredients tags
-  <%= form_for recipe=>(method=>'post')=>begin %>
+<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
+<%= form_for recipe=>(method=>'post')=>begin %>
 <table border=0>
 %#	Show ingredients tags
 %	foreach (keys %{$tags}){
@@ -16,7 +17,6 @@
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
-<%= tag 'div',id=>'caption1'=>(align=>'center')=>begin %>&nbsp;<% end %>
 <table border=0>
 <tr><td>Как назовём блюдо?</td><td align=left colspan=2><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет порций <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"></td></tr>
 %	foreach (keys %{$ingredients}){

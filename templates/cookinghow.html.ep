@@ -11,4 +11,7 @@
 %}
 %}
 %}
-</table>
+</table><br/>
+<%= tag 'div'=>begin %>
+<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
+<% end %><br/>

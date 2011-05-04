@@ -1,5 +1,6 @@
 % layout 'default', title 'На кухне есть все рецепты';
 <%#= test %>
+<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Список моих рецептов<% end %><br/>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>
 %foreach my $key(keys %{$recipes}){

@@ -59,6 +59,8 @@ select{
 	height: 100px;
 	background: #FFC711;
 	padding-top: 30px;
+	background-image: url('/media/header.jpg');
+	box-shadow: 3px 3px 10px #6C6D33;
 }
 .menu{
 	background-color: transparent;
@@ -84,14 +86,16 @@ select{
 /* Middle
 -----------------------------------------------------------------------------*/
 #content {
-	padding: 15px 20px 100px 20px;
+	padding: 15px 20px 20px 20px;
 	background-color:#CDD326;/*#D4E256;*/
 	font-size: small;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
+	box-shadow: 3px 8px 10px #6C6D33;
 }
 .temporary{
-	color: #D718F4;
+	/*color: #D718F4;*/
+	color: #2053A0;
 }
 .recipelist{
   font-size: 20px;
@@ -113,9 +117,7 @@ select{
   color: #40541A;	
 }
 .menulist{
-	/*font-family: 'PT Serif Caption', serif;*/
   font-size: 26px;
-  /*font-style: italic;*/
   font-weight: 400;
   text-shadow: none;
   text-decoration: none;
@@ -149,10 +151,14 @@ select{
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
 }
-/* Footer
------------------------------------------------------------------------------*/
-#footer {
-	width: 940px;
-	margin: -100px auto 0;
-	height: 100px;
+.captionmessage{
+	font-size: medium;
+	font-weight: 400;
+  text-shadow: none;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 1.2;
+  color: #40541A;
 }

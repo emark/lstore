@@ -78,7 +78,8 @@ get '/icebox'=>sub{
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
-	       tag=>'');
+	       tag=>'',
+	       measure=>'');
   $self->render('icebox');
 };
 
@@ -91,7 +92,8 @@ get '/icebox/tag/:tagname'=>sub{
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
-	       tag=>$tagname);
+	       tag=>$tagname,
+	       measure=>'');
   $self->render('icebox');
 };
 
@@ -103,17 +105,20 @@ get '/icebox/:action/:id'=>sub{
   my $ingredientid=$self->param('id');
   my $ingredient='';
   my $tag='';
+  my $measure='';
   if($action eq 'delete'){
     $dbh->do("DELETE FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
     $ingredientid=0;
   }elsif($action eq 'edit'){
     $ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.NAME FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
     $tag=$dbh->selectrow_array("SELECT INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
+    $measure=$dbh->selectrow_array("SELECT INGREDIENTS.MEASUREID FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
+	       measure=>$measure,
 	       tag=>$tag);
   $self->render('icebox');
 };
@@ -135,7 +140,8 @@ post '/icebox'=>sub{
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
-	       tag=>$tag);
+	       tag=>$tag,
+	       measure=>'');
   $self->render('icebox');
 };
 
@@ -332,8 +338,9 @@ get '/cooking/buy/:id'=>sub{
   my $uid=$self->session('uid');
   my $menuid=$self->param('id');
   my $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.USERID=$uid AND MENU.ID=$menuid");
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID, INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,SUM(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION)) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');  
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE,SUM(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION)) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');  
   $self->stash(menu=>$menu,
+	       menuid=>$menuid,
 	       ingredients=>$ingredients);
   $self->render('cookingbuy');
 };
@@ -347,6 +354,7 @@ get '/cooking/how/:id'=>sub{
   my $instructions=$dbh->selectall_hashref("SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION,ROUTER3.AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
   my $ingredients=$dbh->selectall_hashref("SELECT ROUTER1.ID,RECIPES.ID AS RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION) AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
   $self->stash(menu=>$menu,
+	       menuid=>$menuid,
 	       instructions=>$instructions,
 	       ingredients=>$ingredients);
   $self->render('cookinghow');

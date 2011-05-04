@@ -25,14 +25,11 @@
 
 	<div id="content">
 	      <%= content %>
+	      <div align=right><br/>
+	      <%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%><br/>
+	      <%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru'=>(style=>'color:#193D17')%>
+	      </div>
 	</div><!-- #content-->
-
 </div><!-- #wrapper -->
-
-<div id="footer" align=center>
-	<%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%>&nbsp;
-	<%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru'=>(style=>'color:#193D17')%>
-</div><!-- #footer -->
-
 </body>
 </html>

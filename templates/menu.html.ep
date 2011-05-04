@@ -1,7 +1,7 @@
 % layout 'default',title 'Меню';
 <%#= $test %>
 % if(!%{$recipes}){
-<%= tag 'div',id=>'caption1'=>(align=>'center')=>begin %>Please, select some recipes.<% end %>
+<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Для создания меню нужно выбрать не менее одного рецепта.<% end %>
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>

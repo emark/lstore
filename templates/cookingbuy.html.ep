@@ -4,11 +4,13 @@
 <%= form_for cooking=>begin %>
 <table >
 %foreach my $key(keys %{$ingredients}){
-<tr><td width=15><%= check_box cutingredient=>$ingredients->{$key}{'ID'} %></td>
-<td class=buyerlist><%= $ingredients->{$key}{'INGREDIENT'}%></td>
-<td><%= $ingredients->{$key}{'SUM'}%>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
+<tr><td class=buyerlist><%= $ingredients->{$key}{'INGREDIENT'}%>, <b><%= $ingredients->{$key}{'TAG'}%></b></td>
+<td><%= text_field amount=>$ingredients->{$key}{'SUM'}=>(size=>3) %>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
 %}
 </table><br/>
+<%= tag 'div'=>begin %>
+<%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
+<% end %><br/>
 <%= text_field 'email' %>
-<%= submit_button 'Отправить список продуктов' %>
+<%= submit_button 'Отправить' %> список продуктов на почтовый ящик
 <% end %>
