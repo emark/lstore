@@ -9,7 +9,7 @@
     %foreach my $key(keys %{$recipes}){
       <tr><td class=cutstyle>
 %	if($menuid && $recipes){
-      <a  href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">
+      <a  href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>" title="Исключить блюдо из меню">
       <%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></a>
 %	}else{
 	<%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%>
@@ -24,7 +24,7 @@
     <%= tag 'div'=>begin %>
     <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
      <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
-    <%= link_to 'Удалить меню'=>"/cooking/delete/$menuid"=>(class=>'button') %>
+    <%= link_to 'Удалить меню'=>"/cooking/delete/$menuid"=>(class=>'button',style=>'color:#BC1714') %>
     <% end %>
     <%= tag 'P'=>begin %>
     <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value="">&nbsp;<%= submit_button 'Добавить блюдо' %><% end %>
