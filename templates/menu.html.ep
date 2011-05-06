@@ -7,11 +7,14 @@
     <input type=hidden name='menuid' value=<%= $menuid %>>
     <table border=0><tr><td>Меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
     %foreach my $key(keys %{$recipes}){
-      <tr><td><%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>> порций
+      <tr><td class=cutstyle>
 %	if($menuid && $recipes){
-	  &nbsp;<a class=button href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">Исключить рецепт</a>
+      <a  href="/menu/cut/<%=$recipes->{$key}{'MENUID'}%>/<%=$recipes->{$key}{'ROUTEID'}%>">
+      <%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%></a>
+%	}else{
+	<%= hidden_field 'recipeid'=>$recipes->{$key}{'ID'} %><%= $recipes->{$key}{'RECIPE'}%>
 %	}
-    </td></tr>
+    </td><td align=left><input type=textfield size=5 name=amount value=<%=$recipes->{$key}{'AMOUNT'} %>> порций</td></tr>
 %	}
     %foreach my $key(keys %{$addrecipes}){
       <tr class=temporary><td><%= hidden_field 'recipeid'=>$addrecipes->{$key}{'ID'} %><%= $addrecipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=""> порций</td></tr>

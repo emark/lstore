@@ -1,7 +1,7 @@
 % layout 'default',title 'Покупка продуктов';
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>список продуктов</i></P>
-<%= form_for cooking=>begin %>
+<%= form_for cooking=>{foo=>'buy'}=>begin %>
 <table >
 %foreach my $key(keys %{$ingredients}){
 <tr><td class=buyerlist><%= $ingredients->{$key}{'INGREDIENT'}%>, <b><%= $ingredients->{$key}{'TAG'}%></b></td>

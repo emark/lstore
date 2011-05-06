@@ -128,24 +128,22 @@ select{
   color: #40541A;
 }
 .button{
-	background-color: transparent;
-	padding: 2px 2px 2px 2px;
-	border: dashed 1px #7C7C7C;
+	background-color: #F5FF47;
+	padding: 3px 3px 3px 3px;
+	border:  hidden;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-	/*font-family: 'PT Serif Caption', serif;*/
 	font-size: 12px;
 	font-style: normal;
 	font-weight: 400;
-	/*text-shadow: 1px 1px 1px #FFF2CE;*/
 	text-decoration: none;
 	text-transform: none;
 	letter-spacing: 0em;
 	word-spacing: 0em;
-	/*line-height: 1.2;*/
-	 color: #40541A;
+	line-height: 1.2;
+	color: #40541A;
 }
 .buyerlist{
 	border-bottom-style: dotted;
@@ -161,4 +159,12 @@ select{
   word-spacing: 0em;
   line-height: 1.2;
   color: #40541A;
+}
+.cutstyle a {
+	text-decoration: none;
+	color: #000;
+}
+.cutstyle a:hover{
+	text-decoration: line-through;
+	color: #000;
 }

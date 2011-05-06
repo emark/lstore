@@ -18,16 +18,20 @@
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table border=0>
-<tr><td>Как назовём блюдо?</td><td align=left colspan=2><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет порций <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"></td></tr>
+<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет порций <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"></td></tr>
 %	foreach (keys %{$ingredients}){
-<tr><td><%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=3 name=quantity value="<%= $ingredients->{$_}{'QUANTITY'} %>"> <%= $ingredients->{$_}{'MEASURE'} %>
+<tr><td class=cutstyle>
 %		if($recipeid && $ingredients){
-	    </td><td><a class=button href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>">Исключить продукт</a>
-%		}
-</td></tr>
+  <a href="/recipe/cut/<%=$ingredients->{$_}{'RECIPEID'}%>/<%=$ingredients->{$_}{'ROUTEID'}%>" title="Исключить ингредиент">
+  <%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %></a>
+%		}else{
+  <%= hidden_field 'ingredientid'=>($ingredients->{$_}{'ID'}) %><%= $ingredients->{$_}{'INGREDIENT'} %>
+%}
+</td><td><input type=textfield size=3 name=quantity value="<%= $ingredients->{$_}{'QUANTITY'} %>"> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %	foreach (keys %{$addingredients}){
-<tr class=temporary><td><%= hidden_field 'ingredientid'=>($addingredients->{$_}{'ID'}) %><%= $addingredients->{$_}{'INGREDIENT'} %></td><td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
+<tr class=temporary><td><%= hidden_field 'ingredientid'=>($addingredients->{$_}{'ID'}) %><%= $addingredients->{$_}{'INGREDIENT'} %></td>
+<td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %if($recipeid){
 <tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[2] %><% end %></td></tr>

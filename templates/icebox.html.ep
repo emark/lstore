@@ -17,7 +17,7 @@
   <% end %>
 <% end %>
 %if($tag && !$ingredientid){
-<%= link_to 'показать все'=>icebox=>(class=>'button') %><br/><br/>
+<%= link_to 'показать все продукты'=>icebox=>(class=>'button') %><br/><br/>
 %}
 %#	Generate ingredients refs
 <table>
