@@ -1,11 +1,15 @@
 % layout 'default',title 'Покупка продуктов';
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>список продуктов</i></P>
-<%= form_for cooking=>{foo=>'buy'}=>begin %>
+<%= form_for cooking=>(method=>'post')=>begin %>
 <table >
 %foreach my $key(keys %{$ingredients}){
-<tr><td class=buyerlist><%= $ingredients->{$key}{'INGREDIENT'}%>, <b><%= $ingredients->{$key}{'TAG'}%></b></td>
-<td><%= text_field amount=>$ingredients->{$key}{'SUM'}=>(size=>3) %>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
+<tr><td class=buyerlist>
+<%= hidden_field 'ingredient'=>$ingredients->{$key}{'INGREDIENT'}%>
+<%= hidden_field 'tag'=>$ingredients->{$key}{'TAG'}%>
+<%= hidden_field 'measure'=>$ingredients->{$key}{'MEASURE'}%>
+<%= $ingredients->{$key}{'INGREDIENT'}%>, <b><%= $ingredients->{$key}{'TAG'}%></b></td>
+<td><%= text_field amount=>$ingredients->{$key}{'SUM'}=>(size=>5) %>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
 %}
 </table><br/>
 <%= tag 'div'=>begin %>

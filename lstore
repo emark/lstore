@@ -15,6 +15,13 @@ our $dbh = DBI->connect($dbconf[0],$dbconf[1],$dbconf[2],
 $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
 
+app->plugin(mail => {
+    from     => 'emarkw2b@gmail.com',
+    encoding => 'base64',
+    how      => 'sendmail',
+    howargs  => [ '/usr/sbin/sendmail -t' ],
+  });
+
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
@@ -370,11 +377,37 @@ get '/cooking/:action/:id'=>sub{
   my $ingredients={};
   if($action eq 'delete'){
     $dbh->do("DELETE FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
-  }elsif($action eq 'buy'){
-    $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID, INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,SUM(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION)) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');
   }
   my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
   $self->stash(menus=>$menus);
+  $self->render('cooking');
+};
+
+post '/cooking'=>sub{
+my $self=shift;
+  return $self->redirect_to('login') unless $self->session('name');
+  my $uid=$self->session('uid');
+  my $email=$self->param('email') || undef;
+  my @ingredient=$self->param('ingredient');
+  my @tag=$self->param('tag');
+  my @measure=$self->param('measure');
+  my @amount=$self->param('amount');
+  my $data='';
+  if($email){
+	       foreach(my $n=0;$n<@ingredient;$n++){
+			      if($amount[$n] && $amount[$n]>0){
+					     $data=$data."$ingredient[$n],$tag[$n] - $amount[$n],$measure[$n]\n";
+			      }
+	       }
+	       $self->mail(
+	         to      => $email,
+	         subject => 'StoResto - список продуктов',
+	         data    => $data,
+	       );
+  }
+  my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
+  $self->stash(menus=>$menus,
+	       ingredients=>{});
   $self->render('cooking');
 };
 
