@@ -4,6 +4,7 @@ use lib "/home/hosting_locumtest/usr/local/lib/perl5";
 use Mojolicious::Lite;
 use DBI;
 use utf8;
+plugin 'mail';
 
 open (DBCONF,"< db.conf") || die "Error open dbconfig file";
 my @dbconf=<DBCONF>;
@@ -14,6 +15,7 @@ our $dbh = DBI->connect($dbconf[0],$dbconf[1],$dbconf[2],
 $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
 
+app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
                $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
@@ -392,5 +394,4 @@ get '/logout'=>sub{
   $self->redirect_to('index');
 }=>'logout';
 
-app->secret('storestosecret');
 app->start;
