@@ -4,8 +4,12 @@
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <%= tag 'P'=>(align=>'center')=>begin %>Что добавим?
   <input type=text name=ingredient value="<%= $ingredient %>">
-%#my @selected=('','','');$selected[$measure]='selected';
-  <%#= select_field measure=>[['гр.'=>2,$selected[2]],['мл.'=>3,$selected[3]],['шт.'=>1,$selected[1]]]%>
+%my @selected=('','','','');$selected[$measure]='selected';
+  <select>
+    <option value='2' <%= $selected[2] %>>гр.
+    <option value='3' <%= $selected[3] %>>мл.
+    <option value='1' <%= $selected[1] %>>шт.
+  </select>
   На какую полку?
   <input type=text name=tag size=15 value="<%= $tag %>">
   <input type=hidden name=ingredientid value="<%= $ingredientid %>">

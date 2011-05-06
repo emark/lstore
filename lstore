@@ -74,12 +74,12 @@ get '/icebox'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID AS ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG AS TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
 	       tag=>'',
-	       measure=>'');
+	       measure=>0);
   $self->render('icebox');
 };
 
@@ -93,7 +93,7 @@ get '/icebox/tag/:tagname'=>sub{
 	       ingredient=>'',
 	       ingredientid=>'',
 	       tag=>$tagname,
-	       measure=>'');
+	       measure=>0);
   $self->render('icebox');
 };
 
@@ -105,7 +105,7 @@ get '/icebox/:action/:id'=>sub{
   my $ingredientid=$self->param('id');
   my $ingredient='';
   my $tag='';
-  my $measure='';
+  my $measure=0;
   if($action eq 'delete'){
     $dbh->do("DELETE FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
     $ingredientid=0;
