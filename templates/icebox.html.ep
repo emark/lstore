@@ -16,6 +16,9 @@
   <%= submit_button 'Сохранить' %>
   <% end %>
 <% end %>
+%if($tag && !$ingredientid){
+<%= link_to 'показать все'=>icebox=>(class=>'button') %><br/><br/>
+%}
 %#	Generate ingredients refs
 <table>
 %foreach my $key(keys %{$ingredients}){
