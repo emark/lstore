@@ -57,7 +57,7 @@ select{
 -----------------------------------------------------------------------------*/
 #header {
 	height: 100px;
-	background: #FFC711;
+	background: #684B25;
 	padding-top: 30px;
 	background-image: url('/media/header.jpg');
 	box-shadow: 3px 3px 10px #6C6D33;
@@ -66,11 +66,11 @@ select{
 	background-color: transparent;
 	padding: 10px 10px 10px 10px;
 	margin: 5px 5px 5px 5px;
-	border: dashed 1px #684B25;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	/*border: dashed 1px #684B25;*/
+	/*border-bottom-left-radius: 5px;*/
+	/*border-bottom-right-radius: 5px;*/
+	/*border-top-left-radius: 5px;*/
+	/*border-top-right-radius: 5px;*/
 	font-family: 'Lobster', serif;
 	font-size: 26px;
 	font-style: normal;
@@ -167,5 +167,5 @@ select{
 }
 .cutstyle a:hover{
 	text-decoration: line-through;
-	color: #000;
+	color: #C40D0D;
 }
