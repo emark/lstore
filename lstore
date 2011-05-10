@@ -16,10 +16,10 @@ $dbh->{'mysql_enable_utf8'} = 1;
 $dbh->do('SET NAMES utf8');
 
 app->plugin(mail => {
-    from     => 'emarkw2b@gmail.com',
+    from     => 'notify@storesto.ru',
     encoding => 'base64',
-    how      => 'sendmail',
-    howargs  => [ '/usr/sbin/sendmail -t' ],
+    how      => 'smtp',
+    howargs  => ['mail.locum.ru',AuthUser=>'notify@storesto.ru',AuthPass=>'123'],
   });
 
 app->secret('storestosecret');
