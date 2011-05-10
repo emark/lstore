@@ -435,4 +435,9 @@ get '/logout'=>sub{
   $self->redirect_to('index');
 }=>'logout';
 
+get '/register'=>sub{
+  my $self=shift;
+  
+}=>'register';
+
 app->start;

@@ -20,7 +20,6 @@
 	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
 	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
 	  <%= link_to cooking=>{foo=>'bar'}=>(class=>'menu')=>begin %>Готовим<% end %>
-	  </P>
 	</div><!-- #header-->
 
 	<div id="content">

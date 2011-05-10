@@ -1,0 +1,8 @@
+% layout 'default', title 'Регистрация пользователя';
+<%= tag 'div'=>(align=>'center')=>begin %>
+Пришлите мне приглашение на этот email<br/><br/>
+<%= form_for register=>begin%>
+<%= text_field 'registermail'=>(size=>15) %>
+<%= submit_button 'Регистрация' %>
+<% end %>
+<% end %>
