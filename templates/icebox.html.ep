@@ -5,7 +5,7 @@
 <%= tag 'P'=>(align=>'center')=>begin %>Что добавим?
   <input type=text name=ingredient value="<%= $ingredient %>">
 %my @selected=('','','','');$selected[$measure]='selected';
-  <select>
+  <select name=measure>
     <option value='2' <%= $selected[2] %>>гр.
     <option value='3' <%= $selected[3] %>>мл.
     <option value='1' <%= $selected[1] %>>шт.
@@ -20,8 +20,13 @@
 <%= link_to 'показать все продукты'=>icebox=>(class=>'button') %><br/><br/>
 %}
 %#	Generate ingredients refs
-<table>
-%foreach my $key(keys %{$ingredients}){
-  <tr><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$key}{'ID'}%>"><%= $ingredients->{$key}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$key}{'MEASURE'}%></i></td><td><%= link_to "/icebox/tag/$ingredients->{$key}{'TAG'}"=>begin %><%= $ingredients->{$key}{'TAG'} %><% end %></td><td><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$key}{'ID'}" %>" style="color:#BC1714">Удалить продукт</a></td></tr>
+<table border=0>
+%foreach my $tagname(@{$tags}){
+<tr><td colspan=3 align=left style="font-size:16px;"><b><%= link_to "/icebox/tag/$tagname"=>begin %><%= $tagname %><% end %></b></td></tr>
+%	foreach my $ingredientid(keys %{$ingredients}){
+%	if($tagname eq $ingredients->{$ingredientid}{'TAG'}){
+	  <tr><td>&nbsp;</td><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$ingredientid}{'ID'}%>"><%= $ingredients->{$ingredientid}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i></td><td><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$ingredientid}{'ID'}" %>" style="color:#BC1714">Удалить продукт</a></td></tr>
+%	}
+  %}
 %}
 </table>

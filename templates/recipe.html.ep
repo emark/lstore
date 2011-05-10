@@ -18,7 +18,7 @@
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table border=0>
-<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет порций <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"></td></tr>
+<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"> порций</td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td class=cutstyle>
 %		if($recipeid && $ingredients){

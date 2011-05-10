@@ -19,7 +19,7 @@ app->plugin(mail => {
     from     => 'notify@storesto.ru',
     encoding => 'base64',
     how      => 'smtp',
-    howargs  => ['mail.locum.ru',AuthUser=>'notify@storesto.ru',AuthPass=>'123'],
+    howargs  => ['mail.locum.ru',AuthUser=>'notify@storesto.ru',AuthPass=>'rpO8UikS1K'],
   });
 
 app->secret('storestosecret');
@@ -84,10 +84,12 @@ get '/icebox'=>sub{
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID AS ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG AS TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
 	       tag=>'',
+	       tags=>$tags,
 	       measure=>0);
   $self->render('icebox');
 };
@@ -98,10 +100,12 @@ get '/icebox/tag/:tagname'=>sub{
   my $uid=$self->session('uid');
   my $tagname=$self->param('tagname');
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.TAG='$tagname' AND INGREDIENTS.USERID=$uid",'ID');
+  my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.TAG='$tagname' AND INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>'',
 	       ingredientid=>'',
 	       tag=>$tagname,
+	       tags=>$tags,
 	       measure=>0);
   $self->render('icebox');
 };
@@ -124,11 +128,13 @@ get '/icebox/:action/:id'=>sub{
     $measure=$dbh->selectrow_array("SELECT INGREDIENTS.MEASUREID FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
 	       measure=>$measure,
-	       tag=>$tag);
+	       tag=>$tag,
+	       tags=>$tags);
   $self->render('icebox');
 };
 
@@ -146,11 +152,13 @@ post '/icebox'=>sub{
     $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,INGREDIENTS.TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
 	       tag=>$tag,
-	       measure=>'');
+	       tags=>$tags,
+	       measure=>$measure);
   $self->render('icebox');
 };
 
@@ -393,7 +401,7 @@ my $self=shift;
   my @measure=$self->param('measure');
   my @amount=$self->param('amount');
   my $data='';
-  if($email){
+  if($email && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
 	       foreach(my $n=0;$n<@ingredient;$n++){
 			      if($amount[$n] && $amount[$n]>0){
 					     $data=$data."$ingredient[$n],$tag[$n] - $amount[$n],$measure[$n]\n";
