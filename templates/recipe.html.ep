@@ -37,7 +37,9 @@
 <tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[2] %><% end %></td></tr>
 %}
 <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %></td></tr></table>
+%if($recipeid){
   <%= tag 'P'=>begin %>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %><% end %>
   <% end %>
+%}
 %}

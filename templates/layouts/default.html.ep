@@ -26,12 +26,12 @@
 	      <%= content %>
 	      <div align=center><br/>
 		<table style="background: transparent"><tr><td align=left>
+		  <%= link_to 'Feedback'=>'http://storesto.reformal.ru' %> |
 		  <%= link_to 'Blog'=>'http://blog.storesto.ru' %> |
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
 		  <%= link_to 'Facebook'=>'http://facebook.com/storesto' %>
 		</td><td align=right>
-		  <%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%><br/>
-		  <%= link_to 'storesto.reformal.ru'=>'http://storesto.reformal.ru'=>(style=>'color:#193D17')%>
+		  <%= link_to 'StoResto'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%>, 2011
 		</td></tr></table>
 	      </div>
 	</div><!-- #content-->

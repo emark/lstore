@@ -21,6 +21,7 @@
 %	}
 
     <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %><%# form finish%></td></tr></table><br/>
+%if($menuid){
     <%= tag 'div'=>begin %>
     <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
      <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
@@ -29,4 +30,5 @@
     <%= tag 'P'=>begin %>
     <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value="">&nbsp;<%= submit_button 'Добавить блюдо' %><% end %>
     <% end %>
+%}
 %}
