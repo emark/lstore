@@ -1,4 +1,5 @@
 % layout 'default',title 'Покупка продуктов';
+<%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>список продуктов</i></P>
 <%= form_for cooking=>(method=>'post')=>begin %>
@@ -13,6 +14,7 @@
 %}
 </table><br/>
 <%= tag 'div'=>begin %>
+<%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
 <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
 <% end %><br/>
 <%= text_field 'email' %>

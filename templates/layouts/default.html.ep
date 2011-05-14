@@ -20,6 +20,7 @@
 	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
 	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
 	  <%= link_to cooking=>{foo=>'bar'}=>(class=>'menu')=>begin %>Готовим<% end %>
+	  <!--<br/><br/><P style="font-family: Lobster">~	  Ваш личный ресторан ~</P>-->
 	</div><!-- #header-->
 
 	<div id="content">
@@ -31,7 +32,7 @@
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
 		  <%= link_to 'Facebook'=>'http://facebook.com/storesto' %>
 		</td><td align=right>
-		  <%= link_to 'StoResto'=>'mailto:team@storesto.ru'=>(style=>'color:#193D17')%>, 2011
+		  <%= link_to 'StoResto'=>'mailto:team@storesto.ru' %>, 2011
 		</td></tr></table>
 	      </div>
 	</div><!-- #content-->

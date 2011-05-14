@@ -1,4 +1,5 @@
 % layout 'default',title 'Приготовление меню';
+<%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>инструкции по приготовлению</i></P>
 <table>
@@ -13,5 +14,6 @@
 %}
 </table><br/>
 <%= tag 'div'=>begin %>
+<%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
 <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
 <% end %><br/>

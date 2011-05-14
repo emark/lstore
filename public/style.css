@@ -88,6 +88,7 @@ select{
 -----------------------------------------------------------------------------*/
 #content {
 	padding: 15px 20px 20px 20px;
+	margin-bottom: 20px;
 	background-color:#CDD326;/*#D4E256;*/
 	font-size: small;
 	border-bottom-left-radius: 15px;
