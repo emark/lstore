@@ -1,22 +1,28 @@
 % layout 'default',title 'Покупка продуктов';
+<%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>список продуктов</i></P>
 <%= form_for cooking=>(method=>'post')=>begin %>
 <table >
-%foreach my $key(keys %{$ingredients}){
-<tr><td class=buyerlist>
-<%= hidden_field 'ingredient'=>$ingredients->{$key}{'INGREDIENT'}%>
-<%= hidden_field 'tag'=>$ingredients->{$key}{'TAG'}%>
-<%= hidden_field 'measure'=>$ingredients->{$key}{'MEASURE'}%>
-<%= $ingredients->{$key}{'INGREDIENT'}%>, <b><%= $ingredients->{$key}{'TAG'}%></b></td>
-<td><%= text_field amount=>$ingredients->{$key}{'SUM'}=>(size=>5) %>&nbsp;<i><%= $ingredients->{$key}{'MEASURE'}%></i></td></tr>
+%foreach my $tag (@{$tags}){#Align for tagname
+%foreach my $ingredientid(keys %{$ingredients}){
+%if($tag eq $ingredients->{$ingredientid}{'TAG'}){
+    <tr><td class=buyerlist>
+    <%= hidden_field 'ingredient'=>$ingredients->{$ingredientid}{'INGREDIENT'}%>
+    <%= hidden_field 'tag'=>$ingredients->{$ingredientid}{'TAG'}%>
+    <%= hidden_field 'measure'=>$ingredients->{$ingredientid}{'MEASURE'}%>
+    <%= $ingredients->{$ingredientid}{'INGREDIENT'}%>, <b><%= $ingredients->{$ingredientid}{'TAG'}%></b></td>
+    <td><%= text_field amount=>$ingredients->{$ingredientid}{'SUM'}=>(size=>5) %>&nbsp;<i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i></td></tr>
+%}
+%}
 %}
 </table><br/>
 <%= tag 'div'=>begin %>
 <%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
 <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
 <% end %><br/>
-<%= text_field 'email' %>
+<%= hidden_field 'menu'=>"$menu" %>
+<%= text_field 'email'=>"$email" %>
 <%= submit_button 'Отправить' %> список продуктов на почтовый ящик
 <% end %>

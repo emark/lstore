@@ -167,7 +167,7 @@ get '/recipe'=>sub{
 	       recipe=>'',
 	       recipeid=>undef,
 	       addingredients=>{});
-  $self->render('recipeview');
+  $self->render('recipe');
 };
 
 get '/recipe/view/:id'=>sub{
@@ -359,10 +359,13 @@ get '/cooking/buy/:id'=>sub{
   my $uid=$self->session('uid');
   my $menuid=$self->param('id');
   my $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.USERID=$uid AND MENU.ID=$menuid");
-  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE,SUM(ROUND(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION))) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');  
+  my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE,SUM(ROUND(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION))) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');
+  my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.TAG ORDER BY INGREDIENTS.TAG");
   $self->stash(menu=>$menu,
 	       menuid=>$menuid,
-	       ingredients=>$ingredients);
+	       ingredients=>$ingredients,
+	       tags=>$tags,
+	       email=>$self->session('name'));
   $self->render('cookingbuy');
 };
 
@@ -401,20 +404,24 @@ my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $email=$self->param('email') || undef;
+  my $menu=$self->param('menu');
   my @ingredient=$self->param('ingredient');
   my @tag=$self->param('tag');
   my @measure=$self->param('measure');
   my @amount=$self->param('amount');
   my $data='';
+  my $position=0;
   if($email && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
 	       foreach(my $n=0;$n<@ingredient;$n++){
 			      if($amount[$n] && $amount[$n]>0){
-					     $data=$data."$ingredient[$n],$tag[$n] - $amount[$n],$measure[$n]\n";
+					     $position++;
+					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
+	       $data=$data."\nStoResto желает вам приятного приготовления.";
 	       $self->mail(
 	         to      => $email,
-	         subject => 'StoResto - список продуктов',
+	         subject => "$menu, список продуктов",
 	         data    => $data,
 	       );
   }
