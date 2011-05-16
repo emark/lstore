@@ -1,7 +1,7 @@
 %layout 'default', title 'Создаем новые вкусы';
 <%#= test %>
 %#	Select ingredients from tags
-%if(!$recipeid){
+%if(!%{$ingredients}){
 %#	Show ingredients tags
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
 <%= form_for recipe=>(method=>'post')=>begin %>
@@ -36,7 +36,7 @@
 %if($recipeid){
 <tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[2] %><% end %></td></tr>
 %}
-<tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %></td></tr></table>
+<tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table>
 %if($recipeid){  
   <%= tag 'P'=>begin %>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %><% end %>
