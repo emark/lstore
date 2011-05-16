@@ -1,11 +1,11 @@
 % layout 'default',title 'Меню';
 <%#= $test %>
 % if(!%{$recipes}){
-<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Для создания меню нужно выбрать не менее одного рецепта.<% end %>
+<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Для создания нового меню нужно выбрать не менее одного рецепта.<% end %>
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>
-    <table border=0><tr><td>Меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
+    <table border=0><tr><td>Название меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
     %foreach my $key(keys %{$recipes}){
       <tr><td class=cutstyle>
 %	if($menuid && $recipes){

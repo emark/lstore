@@ -1,6 +1,20 @@
 % layout 'default', title 'Регистрация пользователя';
-<%= tag 'div'=>(align=>'center')=>begin %>
-Регистрация закрыта.<br/>
-Для получения приглашения, пожалуйста пришлите пустое письмо с темой "Invite" на адрес 
-<%= link_to 'team@storesto.ru'=>'mailto:team@storesto.ru' %>
-<% end %>
+<%#= test %>
+%if($uid){
+    <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
+%}else{
+    <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Регистрация=>'register'=>(class=>'button') %> или <%= link_to вход=>'login'=>(class=>'button') %><% end %>
+%}
+<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Регистрация в StoResto<% end %><br/>
+<table>
+<tr><td align=center>
+%if($message){
+    <%= $message %>
+%}else{
+    <%= form_for 'register'=>begin %>
+    Ваш емейл: <%= text_field 'email' %>
+    <%= submit_button 'Регистрация'%>
+    <% end %>
+%}
+</td></tr>
+</table>

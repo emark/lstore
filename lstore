@@ -449,7 +449,46 @@ get '/logout'=>sub{
 
 get '/register'=>sub{
   my $self=shift;
-  
+  my $uid=$self->session('uid');
+  my $email=$self->param('email') || '';
+  my $activation=$self->param('activation') || undef;
+  my $message=undef;
+  my $data='';
+  if(!$activation && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
+        $activation=$dbh->selectrow_array("SELECT PASS FROM USERS WHERE EMAIL='$email'");
+        if(!$activation){
+            for (my $i=0;$i<=10;$i++){
+                $activation=$activation.int(rand($i));
+            }
+            #Generate activation code
+            $data="Мы рады приветствовать вас в StoResto.\n
+Для завершения регистрации откройте ссылку http://www.storesto.ru/register?&activation=$activation,
+если ссылка не открывается, скопируйте и вставьте в броузере.
+Ваш пароль (секретное слово):\t$activation\n
+Служба поддержки: support\@storesto.ru
+Наш блог http://blog.storesto.ru";
+            $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,QUERY) VALUES (NULL,\"$email\",\"$activation\",NOW())");
+            $self->mail(to=>$email,
+            	subject=>'Приглашение в StoResto',
+            	data=>$data);
+            $message='Приглашение отправлено на электронную почту.';
+        }else{
+            $message="Пользователь $email уже зарегистрирован. Укажите другой email";
+        }
+  }elsif($activation){
+    $email=$dbh->selectrow_array("SELECT EMAIL FROM INVITE WHERE CODE=\"$activation\"") || undef;
+    if($email){
+        $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS) VALUES(NULL,\"$email\",\"$activation\")") || $dbh->errstr;
+        $uid=$dbh->last_insert_id('','','USERS','ID');
+        $dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
+        $self->session(name=>$email,uid=>$uid);
+        $message='Все отлично! Вы в StoResto. Для начала, неплохо бы заполнить кладовую продуктами :)';
+    }else{
+        $message='Код активации неверен.';
+    }
+  }
+  $self->stash(message=>$message,
+               uid=>$uid);
 }=>'register';
 
 get '/' => sub{

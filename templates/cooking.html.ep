@@ -1,5 +1,6 @@
 % layout 'default',title 'Мы здесь готовим';
 <%#= test %>
+<%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %><br/>
 %#	Show menus for my cooking
 <table>
 %	foreach (keys %{$menus}){
