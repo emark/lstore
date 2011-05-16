@@ -33,7 +33,7 @@ get '/kitchen'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION AS CALCULATION FROM RECIPES INNER JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION AS CALCULATION FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID WHERE RECIPES.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
 	       menu=>'',
 	       menuid=>0,
@@ -178,6 +178,7 @@ get '/recipe/view/:id'=>sub{
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        $self->stash(ingredients=>$ingredients,
 	       recipe=>$recipe,
+           recipeid=>$recipeid,
            uid=>$uid);
        $self->render('recipeview');
 };
