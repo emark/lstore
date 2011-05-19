@@ -1,4 +1,4 @@
-% layout 'default', title 'Вход только для избранных';
+% layout 'default', title 'Авторизация пользователя';
 <table><tr><td align=center style="color:#000000">
     <%= form_for login=>(method=>'get')=>begin %>
     ваш e-mail <%= text_field 'email'=>(size=>10) %>
