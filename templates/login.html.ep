@@ -2,7 +2,8 @@
 <table><tr><td align=center style="color:#000000">
     <%= form_for login=>(method=>'get')=>begin %>
     ваш e-mail <%= text_field 'email'=>(size=>10) %>
-    и секретное слово <%= password_field 'pass'=>(size=>10) %>
+    и секретное слово <%= password_field 'pass'=>(size=>10) %><br/><br/>
+    <a href="/lost_password">Восстановить забытый пароль</a>
 </td></tr><tr><td align=center><br/>
     <%= submit_button 'Впустите меня' %>
     <% end %>

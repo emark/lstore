@@ -21,6 +21,7 @@ app->plugin(mail => {
     how      => 'smtp',
     howargs  => ['mail.locum.ru',AuthUser=>'notify@storesto.ru',AuthPass=>'rpO8UikS1K'],
   });
+my $subscribe="Служба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
 
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
@@ -421,7 +422,7 @@ my $self=shift;
 					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nStoResto желает вам приятного приготовления.";
+	       $data=$data."\nStoResto желает вам приятного приготовления.\n$subscribe";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",
@@ -468,8 +469,7 @@ get '/register'=>sub{
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?&activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль (секретное слово):\t$activation\n
-Служба поддержки: support\@storesto.ru
-Наш блог http://blog.storesto.ru";
+$subscribe";
             $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,QUERY) VALUES (NULL,\"$email\",\"$activation\",NOW())");
             $self->mail(to=>$email,
             	subject=>'Приглашение в StoResto',
@@ -493,6 +493,29 @@ get '/register'=>sub{
   $self->stash(message=>$message,
                uid=>$uid);
 }=>'register';
+
+get '/lost_password'=>sub{
+    my $self=shift;
+    my $email=$self->param('email') || '';
+    my $pass='';
+    my $message='';
+    if($email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
+        $pass=$dbh->selectrow_array("SELECT PASS FROM USERS WHERE EMAIL=\"$email\"");
+        if($pass){
+            $self->mail(to=>$email,
+                        subject=>'Восстановление пароля в StoResto',
+                        data=>"Вы или возможно кто-то другой попытались восстановить пароль.
+Ваш пароль: $pass
+Если вы не восстанавливали пароль, пожалуйста оставьте это письмо без внимания.
+$subscribe");
+            $message='Письмо с инструкцией отправлено на электронный адрес.';
+        }else{
+            $message='Указанный электронный адрес не зарегистрирован';
+        }
+    }
+    $self->stash(message=>$message,
+               uid=>undef);
+}=>'lost_password';
 
 get '/' => sub{
     my $self=shift;
