@@ -9,7 +9,7 @@
 	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
 	<link  href="http://fonts.googleapis.com/css?family=Lobster:regular&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
 	<%= stylesheet '/style.css' %>
-
+	
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-10023555-3']);
@@ -37,12 +37,15 @@
 
 	<div id="content">
 		<%= content %>
-	    <div align=center><br/>
-		  <%= link_to 'Feedback'=>'http://storesto.reformal.ru' %> |
-		  <%= link_to 'Blog'=>'http://blog.storesto.ru' %> |
+	    <div align=center>
+		  <P align=center><br/>
+		  <%= link_to 'Блог'=>'http://blog.storesto.ru' %> |
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
-		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %> |
-		  <%= link_to 'StoResto'=>'mailto:team@storesto.ru' %>, 2011
+		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %>
+		  </P><P align=center>
+				<%= link_to 'Предложения по развитию'=>'http://storesto.reformal.ru' %>,
+				<%= link_to 'ООО "Эмарк"'=>'mailto:team@storesto.ru' %>, 2011.
+		  </P>
 	    </div>
 	</div><!-- #content-->
 </div><!-- #wrapper -->

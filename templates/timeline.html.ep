@@ -1,0 +1,16 @@
+% layout 'default', title 'Добро пожаловать в StoResto';
+<%#= test %>
+%if($uid){
+    <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
+%}else{
+    <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
+%}
+<div><P align=cnter class=recipelist>Что готовят сегодня</P></div>
+%foreach my $recipeid(keys%{$recipes}){
+    <div id=recipe>
+    <table>
+    <tr><td class=recipelist><%= link_to $recipes->{$recipeid}{'RECIPE'}=>"/recipe/view/$recipes->{$recipeid}{'ID'}" %></td></tr>
+    <tr><td><i><%= $recipes->{$recipeid}{'INSTRUCTION'} %>...</i></td></tr>
+    </table><br/>
+    </div>
+%}

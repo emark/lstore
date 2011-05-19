@@ -1,16 +1,26 @@
 % layout 'default', title 'Добро пожаловать в StoResto';
-<%#= test %>
 %if($uid){
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 %}else{
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 %}
-<div><P align=cnter class=recipelist>Что готовят сегодня</P></div>
-%foreach my $recipeid(keys%{$recipes}){
-    <div id=recipe>
-    <table>
-    <tr><td class=recipelist><%= link_to $recipes->{$recipeid}{'RECIPE'}=>"/recipe/view/$recipes->{$recipeid}{'ID'}" %></td></tr>
-    <tr><td><i><%= $recipes->{$recipeid}{'INSTRUCTION'} %>...</i></td></tr>
-    </table><br/>
-    </div>
-%}
+<br/>
+<table>
+<tr><td align=center>
+<div class=mainpage>
+<div class=maintext><br/>
+<P><i>Вы любите готовить, но вам постоянно не хватает времени?</i><br/>Тогда вам нужен <b>StoResto</b>.</P>
+<P>Что такое <b>StoResto</b>?<br/>
+<i>Это сервис для хранения ваших рецептов.</i></P>
+<P>Чем мне поможет <b>StoResto</b>?<br/>
+<i>Вы сможете добавлять новый рецепт за 1 минуту,<br/>
+быстро составлять меню из нескольких блюд,<br/>
+рассчитывать требуемое количество продуктов,<br>
+отправлять на почту список продуктов<br>
+и даже открыть свой домашний ресторан...</i><br><br>
+</P>
+</div></div></td></tr>
+<tr><td align=center><br/><div class=registerbutton align=center>
+<P><a href="/register">Откройте бесплатно свой ресторан</a></P>
+</div></td></tr>
+</table>

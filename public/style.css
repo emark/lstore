@@ -57,7 +57,7 @@ select{
 -----------------------------------------------------------------------------*/
 #header {
 	height: 100px;
-	background: #684B25;
+	background: #C1B4A2;
 	padding-top: 30px;
 	background-image: url('/media/header.jpg');
 	box-shadow: 3px 3px 10px #6C6D33;
@@ -66,11 +66,6 @@ select{
 	background-color: transparent;
 	padding: 10px 10px 10px 10px;
 	margin: 5px 5px 5px 5px;
-	/*border: dashed 1px #684B25;*/
-	/*border-bottom-left-radius: 5px;*/
-	/*border-bottom-right-radius: 5px;*/
-	/*border-top-left-radius: 5px;*/
-	/*border-top-right-radius: 5px;*/
 	font-family: 'Lobster', serif;
 	font-size: 26px;
 	font-style: normal;
@@ -170,3 +165,24 @@ select{
 	text-decoration: line-through;
 	color: #C40D0D;
 }
+.mainpage{
+		background-image: url('/media/restodish.jpg');
+		background-position: center, top;
+		background-repeat: no-repeat;
+		font-size:20px;
+		color: #161616;
+		height: 458px;
+}
+.maintext{
+		background: url('/media/opacity.png'), center, no-repeat;
+		width:600px;
+		border-bottom-left-radius: 50px;
+		border-bottom-right-radius: 50px;
+		text-shadow: 1px 1px 1px #FFF2CE;
+}
+.registerbutton{
+		font-family: Arial;
+		font-size: 20px;
+		font-weight:bold;
+		text-shadow: 1px 1px 1px #FFF2CE;
+}	
