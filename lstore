@@ -149,6 +149,9 @@ post '/icebox'=>sub{
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,INGREDIENTS.TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
+    $ingredient='';#Clear form fields
+    $tag='';
+    $measure=0;
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
