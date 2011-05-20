@@ -238,7 +238,9 @@ post '/recipe'=>sub{
 	  #$self->stash(sql=>$SQL,q=>$quantity_hook);#Test
   if(@tag){#Select ingredients for recipe
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
+  
   }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
+    
     $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,USERID) VALUES(NULL,\"$recipe\",$calculation,\"$instruction\",$uid)");
     $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
     for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
@@ -261,6 +263,7 @@ post '/recipe'=>sub{
       }
     }
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
+    $self->flash(message=>'Рецепт сохранен.');
   }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
@@ -469,6 +472,7 @@ get '/login'=>sub{
   my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'");
   return $self->render unless $check;
   $self->session(name=>$email,uid=>$check);
+  $self->flash(message => 'Thanks for logging in!');
   $self->redirect_to('kitchen');
 }=>'login';
 

@@ -1,5 +1,8 @@
 %layout 'default', title 'Создаем новые вкусы';
 <%#= test %>
+<% if (my $message = flash 'message' ) { %>
+<b><%= $message %></b><br>
+<% } %>
 %#	Select ingredients from tags
 %if(!%{$ingredients}){
 %#	Show ingredients tags

@@ -1,4 +1,5 @@
 % layout 'default', title 'Авторизация пользователя';
+<%#= test %>
 <table><tr><td align=center style="color:#000000">
     <%= form_for login=>(method=>'get')=>begin %>
     ваш e-mail <%= text_field 'email'=>(size=>10) %>
