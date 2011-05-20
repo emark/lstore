@@ -122,6 +122,7 @@ select{
   letter-spacing: 0em;
   word-spacing: 0em;
   line-height: 1.2;
+  vertical-align: middle;
   color: #40541A;
 }
 .button{

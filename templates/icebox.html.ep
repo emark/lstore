@@ -17,7 +17,7 @@
   <% end %>
 <% end %>
 %if($tag && !$ingredientid){
-<%= link_to 'показать все продукты'=>icebox=>(class=>'button') %><br/><br/>
+<%= link_to 'Показать все продукты'=>icebox=>(class=>'button') %><br/><br/>
 %}
 %#	Generate ingredients refs
 <table border=0>
@@ -25,7 +25,8 @@
 <tr><td colspan=3 align=left style="font-size:16px;"><b><%= link_to "/icebox/tag/$tagname"=>begin %><%= $tagname %><% end %></b></td></tr>
 %	foreach my $ingredientid(keys %{$ingredients}){
 %	if($tagname eq $ingredients->{$ingredientid}{'TAG'}){
-	  <tr><td>&nbsp;</td><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$ingredientid}{'ID'}%>"><%= $ingredients->{$ingredientid}{'INGREDIENT'}%></a>, <i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i></td><td align=right><a class=button href="<%= url_for "/icebox/delete/$ingredients->{$ingredientid}{'ID'}" %>" style="color:#BC1714">Удалить продукт</a></td></tr>
+	  <tr><td>&nbsp;</td><td><a class=ingredientlist href="/icebox/edit/<%= $ingredients->{$ingredientid}{'ID'}%>"><%= $ingredients->{$ingredientid}{'INGREDIENT'}%></a>,
+	  <i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i>&nbsp;<a class=button href="<%= url_for "/icebox/delete/$ingredients->{$ingredientid}{'ID'}" %>" title="Удалить продукт"><img src="/media/delete.png" border=0></a></td><td align=right></td></tr>
 %	}
   %}
 %}

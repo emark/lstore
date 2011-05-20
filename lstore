@@ -519,7 +519,7 @@ $subscribe");
 
 get '/' => sub{
     my $self=shift;
-    my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION,LEFT(RECIPES.INSTRUCTION,140) AS INSTRUCTION FROM RECIPES ORDER BY ID DESC LIMIT 10','ID');
+    my $recipes='';#$dbh->selectall_hashref('SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION,LEFT(RECIPES.INSTRUCTION,140) AS INSTRUCTION FROM RECIPES ORDER BY ID DESC LIMIT 10','ID');
     my $uid=$self->session('uid');
     $self->stash(recipes=>$recipes,uid=>$uid);
     $self->render;
