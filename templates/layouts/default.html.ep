@@ -36,7 +36,7 @@
 	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
 	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
 	  <%= link_to cooking=>{foo=>'bar'}=>(class=>'menu')=>begin %>Готовим<% end %>
-	  <!--<br/><br/><P style="font-family: Lobster">~	  Ваш личный ресторан ~</P>-->
+	  <br/><br/><P align=center style="font-size:12px;color:#443C2E">beta версия</P>
 	</div><!-- #header-->
 
 	<div id="content">
@@ -48,7 +48,7 @@
 		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %>
 		  </P><P align=center>
 				<%= link_to 'Предложения по развитию'=>'http://storesto.reformal.ru' %>,
-				<%= link_to 'ООО "Эмарк"'=>'mailto:team@storesto.ru' %>, 2011.
+				<%= link_to 'StoResto'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
 	    </div>
 	</div><!-- #content-->

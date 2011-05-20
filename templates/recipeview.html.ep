@@ -24,4 +24,5 @@
   <%= $ingredients->{$_}{'QUANTITY'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 </table><br/>
-<%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
+<%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%><br/><br/>
+Прямая ссылка на этот рецепт <b style="background-color:#FFF">&nbsp;<%= link_to "http://www.storesto.ru/recipe/view/$recipeid"=>"http://www.storesto.ru/recipe/view/$recipeid"%>&nbsp;</b>
