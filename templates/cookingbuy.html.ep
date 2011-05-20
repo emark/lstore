@@ -19,6 +19,7 @@
 %}
 </table><br/>
 <%= tag 'div'=>begin %>
+<%= link_to 'Распечатать'=>"/cooking/print/buy/$menuid"=>(class=>'button',target=>'_blank') %>
 <%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
 <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
 <% end %><br/>

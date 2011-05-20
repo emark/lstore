@@ -23,8 +23,8 @@
     <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'cooking'%><%# form finish%></td></tr></table><br/>
 %if($menuid){
     <%= tag 'div'=>begin %>
-    <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
-     <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
+	<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
+    <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
 	<a href="<%= url_for "/recipe/delete/$menuid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить меню&nbsp;</a>
     <% end %>
     <%= tag 'P'=>begin %>

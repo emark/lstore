@@ -1,0 +1,33 @@
+% layout 'printview', title 'Версия для печати';
+<P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
+%if($action eq 'buy'){
+        <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
+        <table border=0 align=center>
+        %foreach my $tag (@{$tags}){#Align for tagname
+        <tr><td align=center colspan=2><b><i><%= $tag %></i></b></td></tr>
+        %foreach my $ingredientid(keys %{$ingredients}){
+        %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
+            <tr><td>
+            <%= $ingredients->{$ingredientid}{'INGREDIENT'}%></td>
+            <td align=right><%= $ingredients->{$ingredientid}{'SUM'} %>&nbsp;<i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i></td></tr>
+        %}
+        %}
+        %}
+        </table><br/>
+%}elsif($action eq 'how'){
+        <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, приготовление</P>
+        <table align=center border=0>
+        %foreach my $recipeid(keys %{$instructions}){
+        <tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций)</td></tr>
+        <tr><td><i><%= $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
+        %foreach my $ingredientid(keys %{$ingredients}){
+        %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
+        <tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> - <%= $ingredients->{$ingredientid}{'AMOUNT'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
+        %}
+        %}
+        %}
+        </table><br/>
+%}
+
+<font style="font-size:12px">Благодарим вас за использование StoResto<br/>
+http://www.storesto.ru</font>
