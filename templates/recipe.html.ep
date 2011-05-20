@@ -39,7 +39,7 @@
 <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table><br/>
 %if($recipeid){
   <%= tag 'P'=>begin %>
-  <%= link_to 'Ссылка на рецепт'=>"/recipe/view/$recipeid"=>(class=>'button')%>
+  <%= link_to 'Поделиться рецептом'=>"/recipe/view/$recipeid"=>(class=>'button')%>
   <a href="<%= url_for "/recipe/delete/$recipeid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %><% end %>
   <% end %>
