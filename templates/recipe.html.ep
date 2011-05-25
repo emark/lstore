@@ -1,8 +1,8 @@
 %layout 'default', title 'Создаем новые вкусы';
 <%#= test %>
-<% if (my $message = flash 'message' ) { %>
-<b><%= $message %></b><br>
-<% } %>
+%if(my $message = stash 'message'){
+  <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
 %#	Select ingredients from tags
 %if(!%{$ingredients}){
 %#	Show ingredients tags
@@ -43,7 +43,7 @@
 %if($recipeid){
   <%= tag 'P'=>begin %>
   <%= link_to 'Поделиться рецептом'=>"/recipe/view/$recipeid"=>(class=>'button')%>
-  <a href="<%= url_for "/recipe/delete/$recipeid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
+  <a href="<%= url_for "/kitchen/delete/$recipeid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %><% end %>
   <% end %>
 %}

@@ -1,7 +1,14 @@
 % layout 'default',title 'Меню';
 <%#= $test %>
+
+%if(my $message = stash 'message'){
+	<table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
 % if(!%{$recipes}){
-<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Для создания нового меню нужно выбрать не менее одного рецепта.<% end %>
+<%= tag 'div',id=>'message'=>(align=>'center',class=>'captionmessage')=>begin%>
+	Для создания нового меню нужно выбрать не менее одного рецепта.
+<% end %>
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>
@@ -25,7 +32,7 @@
     <%= tag 'div'=>begin %>
 	<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
     <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
-	<a href="<%= url_for "/recipe/delete/$menuid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить меню&nbsp;</a>
+	<a href="<%= url_for "/cooking/delete/$menuid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить меню&nbsp;</a>
     <% end %>
     <%= tag 'P'=>begin %>
     <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value="">&nbsp;<%= submit_button 'Добавить блюдо' %><% end %>

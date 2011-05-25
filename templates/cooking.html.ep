@@ -1,6 +1,11 @@
 % layout 'default',title 'Мы здесь готовим';
 <%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
+
+%if(my $message = stash 'message'){
+ <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Составленные меню<% end %><br/>
 %#	Show menus for my cooking
 <table>

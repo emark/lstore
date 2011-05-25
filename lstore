@@ -50,6 +50,7 @@ get '/kitchen/:action/:id'=>sub{
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
     $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+    $self->stash(message=>'Рецепт удален')
   }
   my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
@@ -118,6 +119,7 @@ get '/icebox/:action/:id'=>sub{
   if($action eq 'delete'){
     $dbh->do("DELETE FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
     $ingredientid=0;
+    $self->stash(message=>'Продукт удален');
   }elsif($action eq 'edit'){
     $ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.NAME FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
     $tag=$dbh->selectrow_array("SELECT INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
@@ -144,8 +146,10 @@ post '/icebox'=>sub{
   my $ingredientid=$self->param('ingredientid') || undef;
   if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
     $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
+    $self->stash(message=>'Продукт сохранен');
   }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
     $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
+    $self->stash(message=>'Продукт сохранен');
   }
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,INGREDIENTS.TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
@@ -263,7 +267,7 @@ post '/recipe'=>sub{
       }
     }
     $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
-    $self->flash(message=>'Рецепт сохранен.');
+    $self->stash(message=>'Рецепт сохранен.');
   }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
@@ -329,6 +333,7 @@ post '/menu'=>sub{
 	  #$self->stash(sql=>$SQL);#Test
     $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES $SQL");
     $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+    $self->stash(message=>'Меню сохранено');
   }elsif($amount_hook && $menuid && $menu){#Update menu, router3
     $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
     for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
@@ -340,6 +345,7 @@ post '/menu'=>sub{
       }
     }
     $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+    $self->stash(message=>'Меню сохранено');
   }else{#If new menu,select recipes
     foreach(@recipeid){
     $SQL=$SQL."RECIPES.ID=$_ OR ";
@@ -427,6 +433,7 @@ get '/cooking/:action/:id'=>sub{
   my $ingredients={};
   if($action eq 'delete'){
     $dbh->do("DELETE FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
+    $self->stash(message=>'Меню удалено');
   }
   my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
   $self->stash(menus=>$menus);
@@ -458,6 +465,7 @@ my $self=shift;
 	         subject => "$menu, список продуктов",
 	         data    => $data,
 	       );
+    $self->stash(message=>'Список продуктов отправлен на почту');
   }
   my $menus=$dbh->selectall_hashref("SELECT MENU.ID,MENU.NAME AS MENU FROM MENU WHERE MENU.USERID=$uid",'ID');
   $self->stash(menus=>$menus,

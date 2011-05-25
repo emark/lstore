@@ -1,11 +1,16 @@
 % layout 'default', title 'На кухне есть все рецепты';
 <%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
+
+%if(my $message = stash 'message'){
+    <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Список моих рецептов<% end %><br/>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table>
 %foreach my $key(keys %{$recipes}){
-  <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;<a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>">
-  <%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;<a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a></td></tr>
+  <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
+  <a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;<a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a></td></tr>
 %}
 <tr><td align=center><br/><%= submit_button 'Новое меню' %><% end %></td></tr></table>

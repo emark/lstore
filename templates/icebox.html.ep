@@ -1,5 +1,10 @@
 % layout 'default',title 'Кладовая - здесь хранятся продукты';
 <%#= test %>
+
+%if(my $message = stash 'message'){
+  <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
 %#	Create new ingredient
 <%= form_for 'icebox'=>(method=>'post')=>begin %>
 <%= tag 'P'=>(align=>'center')=>begin %>Что добавим?
