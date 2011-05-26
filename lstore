@@ -46,7 +46,7 @@ get '/kitchen/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action');
+  my $action=$self->stash('action') || '';
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
     $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
@@ -111,7 +111,7 @@ get '/icebox/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action');
+  my $action=$self->stash('action') || '';
   my $ingredientid=$self->param('id');
   my $ingredient='';
   my $tag='';
@@ -195,7 +195,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action');
+  my $action=$self->stash('action') || '';
   my $recipeid=$self->param('id');
   my $routerid=$self->param('routerid');
   my $addingredient=$self->param('addingredient') || undef;
@@ -284,7 +284,7 @@ get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action');
+  my $action=$self->param('action') || '';
   my $menuid=$self->param('id');
   my $routeid=$self->param('routeid');
   my $addrecipe=$self->param('addrecipe') || undef;
@@ -389,7 +389,7 @@ get '/cooking/print/:action/:id'=>sub{
     my $self=shift;
     return $self->redirect_to('login') unless $self->session('name');
     my $uid=$self->session('uid');
-    my $action=$self->param('action');
+    my $action=$self->param('action') || '';
     my $menuid=$self->param('id') || 0;
     my $ingredients={};
     my $instructions={};
@@ -428,7 +428,7 @@ get '/cooking/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action');
+  my $action=$self->param('action') || '';
   my $menuid=$self->param('id');
   my $ingredients={};
   if($action eq 'delete'){
