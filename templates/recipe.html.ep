@@ -21,7 +21,8 @@
   <%= form_for 'recipe'=>(method=>'post')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table border=0>
-<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe value="<%= $recipe->[0] %>"> расчет <input type=text size=1 name=calculation value="<%= $recipe->[1] %>"> порций</td></tr>
+<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
+<tr><td>&nbsp;</td><td>общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>">, расчет <input type=text size=1 name=calculation value="<%= $recipe->[2] %>"> порций</td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td class=cutstyle>
 %		if($recipeid && $ingredients){
@@ -37,7 +38,7 @@
 <td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %if($recipeid){
-<tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[2] %><% end %></td></tr>
+<tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %></td></tr>
 %}
 <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table><br/>
 %if($recipeid){

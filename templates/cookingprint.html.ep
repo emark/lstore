@@ -1,4 +1,5 @@
 % layout 'printview', title 'Версия для печати';
+<%#= test %>
 <P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
 %if($action eq 'buy'){
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
@@ -18,7 +19,11 @@
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, приготовление</P>
         <table align=center border=0>
         %foreach my $recipeid(keys %{$instructions}){
-        <tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций)</td></tr>
+        <tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций
+%   if($instructions->{$recipeid}{'PORTIONS'}){
+/ общий вес <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
+%}
+        )</td></tr>
         <tr><td><i><%= $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
         %foreach my $ingredientid(keys %{$ingredients}){
         %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){

@@ -4,7 +4,11 @@
 <P align=center><i>инструкции по приготовлению</i></P>
 <table>
 %foreach my $recipeid(keys %{$instructions}){
-<tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций)</td></tr>
+<tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций
+%   if($instructions->{$recipeid}{'PORTIONS'}){
+        / общий вес <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
+%}
+)</td></tr>
 <tr><td><i><%= $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
 %foreach my $ingredientid(keys %{$ingredients}){
 %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
