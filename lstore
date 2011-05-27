@@ -2,6 +2,7 @@
 use strict;
 use lib "/home/hosting_locumtest/usr/local/lib/perl5";
 use Mojolicious::Lite;
+use Validator::Custom;
 use DBI;
 use utf8;
 plugin 'mail';
@@ -21,6 +22,8 @@ app->plugin(mail => {
     how      => 'smtp',
     howargs  => ['mail.locum.ru',AuthUser=>'notify@storesto.ru',AuthPass=>'rpO8UikS1K'],
   });
+
+my $vc=Validator::Custom->new;
 my $subscribe="Служба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
 
 app->secret('storestosecret');
@@ -87,7 +90,8 @@ get '/icebox'=>sub{
 	       ingredientid=>'',
 	       tag=>'',
 	       tags=>$tags,
-	       measure=>0);
+	       measure=>0,
+           invalidform=>{});
   $self->render('icebox');
 };
 
@@ -103,7 +107,8 @@ get '/icebox/tag/:tagname'=>sub{
 	       ingredientid=>'',
 	       tag=>$tagname,
 	       tags=>$tags,
-	       measure=>0);
+	       measure=>0,
+           invalidform=>{});
   $self->render('icebox');
 };
 
@@ -132,7 +137,8 @@ get '/icebox/:action/:id'=>sub{
 	       ingredientid=>$ingredientid,
 	       measure=>$measure,
 	       tag=>$tag,
-	       tags=>$tags);
+	       tags=>$tags,
+           invalidform=>{});
   $self->render('icebox');
 };
 
@@ -144,18 +150,31 @@ post '/icebox'=>sub{
   my $measure=$self->param('measure');
   my $tag=lc $self->param('tag');
   my $ingredientid=$self->param('ingredientid') || undef;
-  if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
-    $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
-    $self->stash(message=>'Продукт сохранен');
-  }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
-    $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
-    $self->stash(message=>'Продукт сохранен');
-  }
+  my $param=$self->req->params->to_hash;
+  # Validation Rule
+    my $rule = [
+                ingredient => {message => 'Назовите продукт. '} => ['not_blank'],
+                tag => {message => 'Уточните полку. '} => ['not_blank']
+                ];
+    my $vresult=$vc->validate($param,$rule);
+    #Validation is OK
+    if($vresult->is_ok){
+        if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
+            $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
+            $self->stash(message=>'Продукт сохранен');
+        }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
+            $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
+            $ingredient='';#Clear form fields
+            $tag='';
+            $measure=0;
+            $self->stash(message=>'Продукт сохранен');
+        }
+    }else{
+        $self->stash(invalidform=>$vresult->messages_to_hash) if $vresult->has_invalid;
+        $self->stash(message=>'Упс, ошибочка. ');
+    }   
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,INGREDIENTS.TAG FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG AS TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY TAG ORDER BY TAG");
-    $ingredient='';#Clear form fields
-    $tag='';
-    $measure=0;
   $self->stash(ingredients=>$ingredients,
 	       ingredient=>$ingredient,
 	       ingredientid=>$ingredientid,
@@ -322,41 +341,42 @@ post '/menu'=>sub{
       $amount_hook=1;
     }
   }
-  if($amount_hook && $menu && !$menuid){#Create menu,router3 if quantity>0
-    $dbh->do("INSERT INTO MENU(ID,NAME,USERID) VALUES(NULL,\"$menu\",$uid)");
-    $menuid=$dbh->last_insert_id('','','MENU','ID');
-    for(my $n=0;$n<@recipeid;$n++){#Create SQL INSERT query for ROUTER3
-      if($amount[$n] && $amount[$n]!=0){
-        $SQL=$SQL."(NULL,$menuid,$recipeid[$n],$amount[$n]),"
-    }
-  }chop $SQL;#Drop last character ','
-	  #$self->stash(sql=>$SQL);#Test
-    $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES $SQL");
-    $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
-    $self->stash(message=>'Меню сохранено');
-  }elsif($amount_hook && $menuid && $menu){#Update menu, router3
-    $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
-    for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
-      if($amount[$n] && $amount[$n]!=0){
-	my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid[$n] AND RECIPES.USERID=$uid) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
-	if($status!=1){
-	  $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES(NULL,$menuid,$recipeid[$n],$amount[$n])");
-	}
-      }
-    }
-    $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
-    $self->stash(message=>'Меню сохранено');
-  }else{#If new menu,select recipes
-    foreach(@recipeid){
-    $SQL=$SQL."RECIPES.ID=$_ OR ";
-    }
-    $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE ($SQL RECIPES.ID=0) AND RECIPES.USERID=$uid",'ID');
-  }
-  $self->stash(recipes=>$recipes,
-	       menu=>$menu,
-	       menuid=>$menuid,
-	       addrecipes=>{});
-  $self->render('menu');
+    if($amount_hook && $menu && !$menuid){#Create menu,router3 if quantity>0
+        $dbh->do("INSERT INTO MENU(ID,NAME,USERID) VALUES(NULL,\"$menu\",$uid)");
+        $menuid=$dbh->last_insert_id('','','MENU','ID');
+        for(my $n=0;$n<@recipeid;$n++){#Create SQL INSERT query for ROUTER3
+            if($amount[$n] && $amount[$n]!=0){
+                $SQL=$SQL."(NULL,$menuid,$recipeid[$n],$amount[$n]),"
+            }
+        }chop $SQL;#Drop last character ','
+    	#$self->stash(sql=>$SQL);#Test
+        $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES $SQL");
+        $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+        $self->stash(message=>'Меню сохранено');
+    }elsif($amount_hook && $menuid && $menu){#Update menu, router3
+        $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
+        for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
+            if($amount[$n] && $amount[$n]!=0){
+                my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid[$n] AND RECIPES.USERID=$uid) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
+                if($status!=1){
+                    $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES(NULL,$menuid,$recipeid[$n],$amount[$n])");
+                }
+            }
+        }
+        $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+        $self->stash(message=>'Меню сохранено');
+    }else{#If new menu,select recipes
+        foreach(@recipeid){
+            $SQL=$SQL."RECIPES.ID=$_ OR ";
+        }
+        $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE ($SQL RECIPES.ID=0) AND RECIPES.USERID=$uid",'ID');
+    }  
+    $self->stash(recipes=>$recipes,
+                 menu=>$menu,
+                 menuid=>$menuid,
+                 addrecipes=>{}
+                 );
+    $self->render('menu');
 };
 
 get '/cooking'=>sub{
