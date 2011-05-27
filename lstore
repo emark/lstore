@@ -203,7 +203,7 @@ get '/recipe/view/:id'=>sub{
        my $self=shift;
        my $uid=$self->session('uid') || undef;
        my $recipeid=$self->param('id');
-       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.CALCULATION,RECIPES.INSTRUCTION FROM RECIPES WHERE RECIPES.ID=$recipeid");
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION FROM RECIPES WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        $self->stash(ingredients=>$ingredients,
 	       recipe=>$recipe,
