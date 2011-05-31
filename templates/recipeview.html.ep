@@ -1,5 +1,5 @@
 %layout 'default';
-% title "Рецепт $recipe->[0]";
+% title $recipe->[0];
 <%#= test %>
 %if($uid){
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
@@ -23,6 +23,7 @@
   <%= $ingredients->{$_}{'INGREDIENT'} %> -
   <%= $ingredients->{$_}{'QUANTITY'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
+<tr><td align=center><img src="<%= $photo %>"></td></tr>
 </table><br/>
 <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%><br/><br/>
 Прямая ссылка на этот рецепт <b style="background-color:#FFF">&nbsp;<%= link_to "http://www.storesto.ru/recipe/view/$recipeid"=>"http://www.storesto.ru/recipe/view/$recipeid"%>&nbsp;</b>
