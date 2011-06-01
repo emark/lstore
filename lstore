@@ -52,6 +52,8 @@ get '/kitchen/:action/:id'=>sub{
   my $action=$self->stash('action') || '';
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
+    my $photo=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID");
+    unlink("public/media/photo/$photo");
     $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     $self->stash(message=>'Рецепт удален')
   }
@@ -160,15 +162,20 @@ post '/icebox'=>sub{
     #Validation is OK
     if($vresult->is_ok){
         if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
-            $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
-            $self->stash(message=>'Продукт сохранен',
-                         invalidform=>{});
+            my $exist_ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.NAME=\"$ingredient\" AND INGREDIENTS.USERID=$uid") || undef;
+            if($exist_ingredient){
+                $self->stash(message=>"Такой продукт уже есть на полке $exist_ingredient");
+            }else{
+                $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
+                $self->stash(message=>'Продукт сохранен');
+            }
+            $self->stash(invalidform=>{});
         }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
             $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
             $ingredient='';#Clear form fields
             $tag='';
             $measure=0;
-            $self->stash(message=>'Продукт сохранен',
+            $self->stash(message=>'Продукт изменён',
                          invalidform=>{});
         }
     }else{
