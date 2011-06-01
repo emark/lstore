@@ -3,7 +3,6 @@ use strict;
 use lib "/home/hosting_locumtest/usr/local/lib/perl5";
 use Mojolicious::Lite;
 use Validator::Custom;
-use Atompub::Client;
 use DBI;
 use utf8;
 plugin 'mail';
@@ -25,7 +24,6 @@ app->plugin(mail => {
   });
 
 my $vc=Validator::Custom->new;
-my $atom_client=Atompub::Client->new();
 my $subscribe="Служба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
 
 app->secret('storestosecret');
@@ -207,39 +205,12 @@ get '/recipe/view/:id'=>sub{
        my $recipeid=$self->param('id');
        my $err='';
        my $photo='';
-       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION FROM RECIPES WHERE RECIPES.ID=$recipeid");
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
-       my $photo_id=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid");
-       #Get recipe image;
-       #if($recipe->{'PHOTO'}){
-        my $service = $atom_client->getService('http://api-fotki.yandex.ru/api/users/storesto/');
-        unless ( $service ) {
-        # Не сложился запрос
-        $err='Cant request service document';
-        }
-        # Уфф.. все получилось, запоминаем:
-        my $workspace = $service->workspace;
-        my @collections = $workspace->collections;
-        my $album_link = $collections[0]->href;
-        my $photo_link = $collections[1]->href;    
-        my $feed = $atom_client->getFeed( $photo_link );
-        unless ( $feed ) {
-        # Не получилось выполнить запрос
-        $err='Cant get photo';
-        #return;
-        }
-        for my $entry ($feed->entries) {
-            if($entry->id eq "urn:yandex:fotki:storesto:photo:$photo_id")
-            {
-                $photo=$entry->content->src;
-            }
-        }
-       #}    
        $self->stash(ingredients=>$ingredients,
 	       recipe=>$recipe,
            recipeid=>$recipeid,
-           uid=>$uid,
-           photo=>$photo);
+           uid=>$uid);
        $self->render('recipeview');
 };
 
@@ -257,8 +228,14 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   }elsif($action eq 'add' && $addingredient){
     $addingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.NAME LIKE '%$addingredient%' AND INGREDIENTS.USERID=$uid",'ID');
     $self->stash(message=>'Ой, а такого продукта в кладовой нет.') if !%{$addingredients};
+  }elsif($action eq 'change_photo'){
+    my $photo=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+    if($photo){
+        unlink("public/media/photo/$photo");
+        $dbh->do("UPDATE RECIPES SET PHOTO='' WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+    }
   }
-  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
   $self->stash(tags=>{},
 	       ingredients=>$ingredients,
@@ -277,7 +254,7 @@ post '/recipe'=>sub{
   my $weight=$self->param('weight') || 0;
   my $calculation=$self->param('calculation') || 1;
   my $instruction=$self->param('instruction') || '';
-  my $photo=$self->param('photo');
+  my $photo=$self->req->upload('photo') || '';
   my $tags={};
   my $ingredients={};
   my $SQL='';
@@ -289,12 +266,10 @@ post '/recipe'=>sub{
     }
   }
   my @ingredientid=$self->param('ingredientid');
-  	  #$self->stash(sql=>$SQL,n=>$n);Test
   my @tag=$self->param('tag');
   foreach(@tag){
     $SQL=$SQL." INGREDIENTS.TAG='$_' OR "
   }
-	  #$self->stash(sql=>$SQL,q=>$quantity_hook);#Test
     if(@tag){#Select ingredients for recipe
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
   
@@ -310,25 +285,18 @@ post '/recipe'=>sub{
           #$self->stash(sql=>$SQL);#Test
         $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES $SQL");
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
+        $self->stash(message=>'Рецепт сохранен. Можете добавить описание и фото.');
     }elsif($quantity_hook && $recipeid && $recipe){#Update recipe, router1
-        #uploading photo recipe, if exist
-        #if($photo){
-            $atom_client->username('storesto');
-            $atom_client->password('yandex@63');
-            $atom_client->request;
-            my $service = $atom_client->getService('http://api-fotki.yandex.ru/api/users/storesto/');
-            unless ( $service ) {
-                # Не сложился запрос
-            }
-            # Уфф.. все получилось, запоминаем:
-            my $workspace = $service->workspace;
-            my @collections = $workspace->collections;
-            my $album_link = $collections[0]->href;
-            my $photo_link = $collections[1]->href;
-            my $answer=$atom_client->createMedia($album_link,$photo,'image/jpeg','Test image.jpeg');
-            $self->stash(message=>$answer);
-        #}
-        $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+        #Uploading photo
+        if($photo){
+            my $filename=time;
+            my $ext=$photo->filename;
+            $ext=~s/.*\.(.*)$/$1/;
+            $filename=$filename.'.'.$ext;
+            $photo->move_to("public/media/photo/$filename");
+            $photo=$filename;
+        }
+        $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,PHOTO=\"$photo\",INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
         for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
             if($quantity[$n] && $quantity[$n]!=0){
                 #Hook for checking true UPDATE
@@ -340,11 +308,11 @@ post '/recipe'=>sub{
             }
         }
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
-        #$self->stash(message=>'Рецепт сохранен.');
+        $self->stash(message=>'Рецепт сохранен.');
     }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
-  $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+  $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   $self->stash(recipe=>$recipe,
 	       recipeid=>$recipeid,
 	       ingredients=>$ingredients,

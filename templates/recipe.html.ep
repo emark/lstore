@@ -21,7 +21,7 @@
   <%= form_for 'recipe'=>(method=>'post',enctype=>'multipart/form-data')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table border=0>
-<tr><td>Как назовём блюдо?</td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
+<tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>">, расчет <input type=text size=1 name=calculation value="<%= $recipe->[2] %>"> порций</td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td class=cutstyle>
@@ -38,15 +38,25 @@
 <td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %if($recipeid){
-<tr><td>Инструкция приготовления</td><td><%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %></td></tr>
-<tr><td>Фотография блюда</td><td><%= file_field 'photo'%></td></tr>
+<tr><td><b>Инструкция приготовления</b></td><td>
+                            <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %>
+</td></tr>
+<tr><td><b>Фотография блюда</b></td><td>
+% if($recipe->[4]){
+  <%= link_to 'Заменить фото'=>"/recipe/change_photo/$recipeid",(class=>'button') %>
+%}else{  
+  <%= file_field 'photo' %>
 %}
-<tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table><br/>
+</td></tr>
+%}
+<tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %>
+<% end %><%#= end form %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table><br/>
 %if($recipeid){
   <%= tag 'P'=>begin %>
   <%= link_to 'Просмотр рецепта'=>"/recipe/view/$recipeid"=>(class=>'button')%>
   <a href="<%= url_for "/kitchen/delete/$recipeid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
-  <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %><% end %>
+  <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %>
+  <% end %>
   <% end %>
 %}
 %}

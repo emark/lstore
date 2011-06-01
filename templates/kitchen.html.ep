@@ -16,6 +16,6 @@
 % if($recipes->{$key}{'PORTION'}) {
   <i><%= $recipes->{$key}{'PORTION'} %> гр.</i>
 % }
-  </td></tr>
+</td><td><%= link_to 'Посмотреть рецепт'=>"/recipe/view/$recipes->{$key}{'ID'}",(class=>'button')%></td></tr>
 %}
 <tr><td align=center colspan=2><br/><%= submit_button 'Новое меню' %><% end %></td></tr></table>
