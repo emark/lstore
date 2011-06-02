@@ -529,7 +529,7 @@ get '/login'=>sub{
   my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'");
   return $self->render unless $check;
   $self->session(name=>$email,uid=>$check);
-  $self->flash(message => 'Thanks for logging in!');
+  $self->flash(message => 'Добро пожаловать в StoResto');
   $self->redirect_to('kitchen');
 }=>'login';
 
@@ -543,10 +543,11 @@ get '/register'=>sub{
   my $self=shift;
   my $uid=$self->session('uid');
   my $email=$self->param('email') || '';
+  my $pass=$self->param('pass') || undef;
   my $activation=$self->param('activation') || undef;
   my $message=undef;
   my $data='';
-  if(!$activation && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
+  if(!$activation && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/ && $pass){
         $activation=$dbh->selectrow_array("SELECT PASS FROM USERS WHERE EMAIL='$email'");
         if(!$activation){
             for (my $i=0;$i<=10;$i++){
@@ -556,13 +557,15 @@ get '/register'=>sub{
             $data="Мы рады приветствовать вас в StoResto.\n
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?&activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
-Ваш пароль (секретное слово):\t$activation\n
+Ваш пароль:\t$pass\n
 $subscribe";
-            $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,QUERY) VALUES (NULL,\"$email\",\"$activation\",NOW())");
+            $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,PASS,QUERY) VALUES (NULL,\"$email\",\"$activation\",\"$pass\",NOW())");
             $self->mail(to=>$email,
             	subject=>'Приглашение в StoResto',
             	data=>$data);
             $message='Приглашение отправлено на электронную почту.';
+            $self->flash(message=>$message);
+            return $self->redirect_to('login');
         }else{
             $message="Пользователь $email уже зарегистрирован. Укажите другой email";
         }
@@ -574,8 +577,10 @@ $subscribe";
         $dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
         $self->session(name=>$email,uid=>$uid);
         $message='Все отлично! Вы в StoResto. Для начала, неплохо бы заполнить кладовую продуктами :)';
+        $self->flash(message=>$message);
+        return $self->redirect_to('kitchen');
     }else{
-        $message='Код активации неверен.';
+        $message='Код активации неверен';
     }
   }
   $self->stash(message=>$message,

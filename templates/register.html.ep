@@ -5,16 +5,21 @@
 %}else{
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Регистрация=>'register'=>(class=>'button') %> или <%= link_to вход=>'login'=>(class=>'button') %><% end %>
 %}
+%if(my $message = stash 'message'){
+    <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Регистрация в StoResto<% end %><br/>
 <table>
 <tr><td align=center>
-%if($message){
-    <%= $message %>
-%}else{
     <%= form_for 'register'=>begin %>
-    Ваш емейл: <%= text_field 'email' %>
-    <%= submit_button 'Регистрация'%>
+<table border=0>
+    <tr><td align=center>Электронная почта</td></tr>
+    <tr><td align=center><%= text_field 'email' %></td></tr>
+    <tr><td align=center>Пароль</td></tr>
+    <tr><td align=center><input type=password name='pass' %></td></tr>
+    <tr align=center><td><br/><%= submit_button 'Регистрация'%></td></tr>
+</table>
     <% end %>
-%}
 </td></tr>
 </table>
