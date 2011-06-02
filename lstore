@@ -167,12 +167,19 @@ post '/icebox'=>sub{
                 $self->stash(message=>"Такой продукт уже есть на полке $exist_ingredient");
             }else{
                 $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
+                #Clear form fields
+                $ingredient='';
+                $ingredientid='';
+                $tag='';
+                $measure=0;
                 $self->stash(message=>'Продукт сохранен');
             }
             $self->stash(invalidform=>{});
         }elsif($ingredient && $measure && $tag && $ingredientid){#Upgrade ingredient and tag
             $dbh->do("UPDATE INGREDIENTS SET INGREDIENTS.NAME=\"$ingredient\",INGREDIENTS.MEASUREID=$measure,INGREDIENTS.TAG=\"$tag\" WHERE INGREDIENTS.ID=$ingredientid AND INGREDIENTS.USERID=$uid");
-            $ingredient='';#Clear form fields
+            #Clear form fields
+            $ingredient='';
+            $ingredientid='';
             $tag='';
             $measure=0;
             $self->stash(message=>'Продукт изменён',
