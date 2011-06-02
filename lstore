@@ -515,7 +515,7 @@ my $self=shift;
 					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nStoResto желает вам приятного приготовления.\n$subscribe";
+	       $data=$data."\nКоманда StoResto желает вам приятного аппетита.\n$subscribe";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",
