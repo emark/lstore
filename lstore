@@ -578,7 +578,7 @@ $subscribe";
         $self->session(name=>$email,uid=>$uid);
         $message='Все отлично! Вы в StoResto. Для начала, неплохо бы заполнить кладовую продуктами :)';
         $self->flash(message=>$message);
-        return $self->redirect_to('kitchen');
+        return $self->redirect_to('icebox');
     }else{
         $message='Код активации неверен';
     }

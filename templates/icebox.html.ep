@@ -1,7 +1,9 @@
 % layout 'default',title 'Кладовая - здесь хранятся продукты';
 <%#= test %>
 
-%if(my $message = stash 'message'){
+%my $message=stash 'message';
+%$message=flash 'message' if(flash 'message');
+%if($message){
   <table id='message'><tr><td>
   <%= $message %>
 % if($message=$invalidform->{'ingredient'})  {
