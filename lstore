@@ -29,7 +29,7 @@ my $subscribe="Служба поддержки: support\@storesto.ru\nНаш б�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -562,7 +562,7 @@ get '/register'=>sub{
             }
             #Generate activation code
             $data="Мы рады приветствовать вас в StoResto.\n
-Для завершения регистрации откройте ссылку http://www.storesto.ru/register?&activation=$activation,
+Для завершения регистрации откройте ссылку http://www.storesto.ru/register?activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль:\t$pass\n
 $subscribe";
@@ -578,14 +578,20 @@ $subscribe";
         }
   }elsif($activation){
     $email=$dbh->selectrow_array("SELECT EMAIL FROM INVITE WHERE CODE=\"$activation\"") || undef;
+    $pass=$dbh->selectrow_array("SELECT PASS FROM INVITE WHERE EMAIL='$email' AND CODE=\"$activation\"") || undef;
     if($email){
-        $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS,TIMEFLAG) VALUES(NULL,\"$email\",\"$activation\",NOW())") || $dbh->errstr; #Create new user
+        $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS,TIMEFLAG) VALUES(NULL,\"$email\",\"$pass\",NOW())") || $dbh->errstr; #Create new user
         $uid=$dbh->last_insert_id('','','USERS','ID');
-        $dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
+        #$dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
+        $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"Батон белый\",2,\"хлеб\",$uid,NOW())");#Create ingredients
+        my $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW())");#Create recipe
+        my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
+        $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
         $self->session(name=>$email,uid=>$uid);
-        $message='Все отлично! Вы в StoResto. Для начала, неплохо бы заполнить кладовую продуктами :)';
+        $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
         $self->flash(message=>$message);
-        return $self->redirect_to('icebox');
+        return $self->redirect_to('kitchen');
     }else{
         $message='Код активации неверен';
     }
