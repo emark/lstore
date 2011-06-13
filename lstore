@@ -153,20 +153,18 @@ post '/icebox'=>sub{
   my $tag=lc $self->param('tag');
   my $ingredientid=$self->param('ingredientid') || undef;
   my $param=$self->req->params->to_hash;
-  # Validation Rule
-    my $rule = [
+    my $rule = [ # Validation Rule
                 ingredient => {message => 'Назовите продукт. '} => ['not_blank'],
                 tag => {message => 'Уточните полку. '} => ['not_blank']
                 ];
     my $vresult=$vc->validate($param,$rule);
-    #Validation is OK
-    if($vresult->is_ok){
+    if($vresult->is_ok){#Validation is OK
         if($ingredient && $measure && $tag && !$ingredientid){#Insert new ingredient on tag
             my $exist_ingredient=$dbh->selectrow_array("SELECT INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.NAME=\"$ingredient\" AND INGREDIENTS.USERID=$uid") || undef;
             if($exist_ingredient){
                 $self->stash(message=>"Такой продукт уже есть на полке $exist_ingredient");
             }else{
-                $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid)");
+                $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"$ingredient\",$measure,\"$tag\",$uid,NOW())");
                 #Clear form fields
                 $ingredient='';
                 $ingredientid='';
@@ -288,7 +286,7 @@ post '/recipe'=>sub{
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
   
     }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
-        $dbh->do("INSERT INTO RECIPES(ID,NAME,WEIGHT,CALCULATION,USERID) VALUES(NULL,\"$recipe\",$weight,$calculation,$uid)");
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,WEIGHT,CALCULATION,USERID,TIMEFLAG) VALUES(NULL,\"$recipe\",$weight,$calculation,$uid,NOW())");
         $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
             if($quantity[$n] && $quantity[$n]!=0){
@@ -380,7 +378,7 @@ post '/menu'=>sub{
     }
   }
     if($amount_hook && $menu && !$menuid){#Create menu,router3 if quantity>0
-        $dbh->do("INSERT INTO MENU(ID,NAME,USERID) VALUES(NULL,\"$menu\",$uid)");
+        $dbh->do("INSERT INTO MENU(ID,NAME,USERID,TIMEFLAG) VALUES(NULL,\"$menu\",$uid,NOW())");
         $menuid=$dbh->last_insert_id('','','MENU','ID');
         for(my $n=0;$n<@recipeid;$n++){#Create SQL INSERT query for ROUTER3
             if($amount[$n] && $amount[$n]!=0){
@@ -486,7 +484,7 @@ get '/cooking/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->param('action') || '';
+  my $action=$self->stash('action') || '';
   my $menuid=$self->param('id');
   my $ingredients={};
   if($action eq 'delete'){
@@ -530,11 +528,6 @@ my $self=shift;
 	       ingredients=>{});
   $self->render('cooking');
 };
-
-get '/timeline'=>sub{
-    my $self=shift;
-    $self->stash(uid=>undef);
-}=>'timeline';
 
 get '/login'=>sub{
   my $self=shift;
@@ -586,7 +579,7 @@ $subscribe";
   }elsif($activation){
     $email=$dbh->selectrow_array("SELECT EMAIL FROM INVITE WHERE CODE=\"$activation\"") || undef;
     if($email){
-        $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS) VALUES(NULL,\"$email\",\"$activation\")") || $dbh->errstr;
+        $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS,TIMEFLAG) VALUES(NULL,\"$email\",\"$activation\",NOW())") || $dbh->errstr; #Create new user
         $uid=$dbh->last_insert_id('','','USERS','ID');
         $dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
         $self->session(name=>$email,uid=>$uid);
@@ -630,6 +623,6 @@ get '/' => sub{
     my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION AS INSTRUCTION,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES LIMIT 10','ID');
     $self->stash(recipes=>$recipes,uid=>$uid);
     $self->render;
-}=>'timeline';
+}=>'index';
 
 app->start;
