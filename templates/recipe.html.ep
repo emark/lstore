@@ -22,7 +22,11 @@
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table border=0>
 <tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
-<tr><td>&nbsp;</td><td>общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>">, расчет <input type=text size=1 name=calculation value="<%= $recipe->[2] %>"> порций</td></tr>
+<tr><td>&nbsp;</td><td>
+  <div id=extoptions style="display:none">общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>">, расчет <input type=text size=1 name=calculation value="<%= $recipe->[2] %>"> порций
+  <br/><a href="#1" onClick="SelectLayer('extoptions','more')">скрыть вес и количество</a></div>
+  <div id=more align=left><a href="#1" onClick="SelectLayer('more','extoptions')">Вес блюда, количество порций</a></div>
+<br/></td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td class=cutstyle>
 %		if($recipeid && $ingredients){
@@ -39,7 +43,7 @@
 %	}
 %if($recipeid){
 <tr><td><b>Инструкция приготовления</b></td><td>
-                            <%= text_area 'instruction'=>(cols=>40,rows=>5,maxlength=>10)=>begin %><%= $recipe->[3] %><% end %>
+                            <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %>
 </td></tr>
 <tr><td><b>Фотография блюда</b></td><td>
 % if($recipe->[4]){

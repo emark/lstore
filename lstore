@@ -29,7 +29,7 @@ my $subscribe="Служба поддержки: support\@storesto.ru\nНаш б�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -626,7 +626,7 @@ $subscribe");
 get '/' => sub{
     my $self=shift;
     my $uid=$self->session('uid');
-    my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION AS INSTRUCTION,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES LIMIT 10','ID');
+    my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION AS INSTRUCTION,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES WHERE LENGTH(INSTRUCTION)>0 AND WEIGHT>0 LIMIT 10','ID');
     $self->stash(recipes=>$recipes,uid=>$uid);
     $self->render;
 }=>'index';
