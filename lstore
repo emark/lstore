@@ -288,41 +288,43 @@ post '/recipe'=>sub{
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
   
     }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
-    
-        $dbh->do("INSERT INTO RECIPES(ID,NAME,WEIGHT,CALCULATION,INSTRUCTION,USERID) VALUES(NULL,\"$recipe\",$weight,$calculation,\"$instruction\",$uid)");
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,WEIGHT,CALCULATION,USERID) VALUES(NULL,\"$recipe\",$weight,$calculation,$uid)");
         $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
-          if($quantity[$n] && $quantity[$n]!=0){
-            $SQL=$SQL."(NULL,$recipeid,$ingredientid[$n],$quantity[$n]),"
-          }
-        }chop $SQL;#Drop last character ','
-          #$self->stash(sql=>$SQL);#Test
-        $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES $SQL");
-        $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
-        $self->stash(message=>'Рецепт сохранен. Можете добавить описание и фото.');
-    }elsif($quantity_hook && $recipeid && $recipe){#Update recipe, router1
-        #Uploading photo
-        if($photo){
-            my $filename=time;
-            my $ext=$photo->filename;
-            $ext=~s/.*\.(.*)$/$1/;
-            $filename=$filename.'.'.$ext;
-            $photo->move_to("public/media/photo/$filename");
-            $photo=$filename;
-        }
-        $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,PHOTO=\"$photo\",INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
-        for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
             if($quantity[$n] && $quantity[$n]!=0){
-                #Hook for checking true UPDATE
-                my $status=$dbh->do("UPDATE ROUTER1 SET QUANTITY=$quantity[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid) AND INGREDIENTID=(SELECT INGREDIENTS.ID FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid[$n] AND INGREDIENTS.USERID=$uid)") || die $dbh->errstr;
-                if($status!=1){
-                  $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])");
-                  $self->stash(sql=>"INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])");#Test
+                $SQL=$SQL."(NULL,$recipeid,$ingredientid[$n],$quantity[$n]),"
+            }
+        }chop $SQL;#Drop last character ','
+        $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES $SQL");
+        $self->stash(message=>'Рецепт сохранен. Можете добавить описание и фото.');
+        $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
+    }elsif($quantity_hook && $recipeid && $recipe){#Update recipe, router1
+        if(length($instruction)<=300){#Check for length instruction
+            if($photo){#Uploading photo
+                my $filename=time;
+                my $ext=$photo->filename;
+                $ext=~s/.*\.(.*)$/$1/;
+                $filename=$filename.'.'.$ext;
+                $photo->move_to("public/media/photo/$filename");
+                $photo=$filename;
+                $dbh->do("UPDATE RECIPES SET PHOTO=\"$photo\"");
+            }
+            $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+            for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
+                if($quantity[$n] && $quantity[$n]!=0){
+                    #Hook for checking true UPDATE
+                    my $status=$dbh->do("UPDATE ROUTER1 SET QUANTITY=$quantity[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid) AND INGREDIENTID=(SELECT INGREDIENTS.ID FROM INGREDIENTS WHERE INGREDIENTS.ID=$ingredientid[$n] AND INGREDIENTS.USERID=$uid)") || die $dbh->errstr;
+                    if($status!=1){
+                      $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])");
+                      $self->stash(sql=>"INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid[$n],$quantity[$n])");#Test
+                    }
                 }
             }
+            $self->stash(message=>'Рецепт сохранен.');
+        }else{
+            $self->stash(message=>'Описание рецепта слишком большое');
         }
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
-        $self->stash(message=>'Рецепт сохранен.');
     }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
@@ -529,6 +531,11 @@ my $self=shift;
   $self->render('cooking');
 };
 
+get '/timeline'=>sub{
+    my $self=shift;
+    $self->stash(uid=>undef);
+}=>'timeline';
+
 get '/login'=>sub{
   my $self=shift;
   my $email=$self->param('email') || '';
@@ -619,10 +626,10 @@ $subscribe");
 
 get '/' => sub{
     my $self=shift;
-    my $recipes='';#$dbh->selectall_hashref('SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION,LEFT(RECIPES.INSTRUCTION,140) AS INSTRUCTION FROM RECIPES ORDER BY ID DESC LIMIT 10','ID');
     my $uid=$self->session('uid');
+    my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION AS INSTRUCTION,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES LIMIT 10','ID');
     $self->stash(recipes=>$recipes,uid=>$uid);
     $self->render;
-}=>'index';
+}=>'timeline';
 
 app->start;

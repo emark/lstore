@@ -39,7 +39,7 @@
 %	}
 %if($recipeid){
 <tr><td><b>Инструкция приготовления</b></td><td>
-                            <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %>
+                            <%= text_area 'instruction'=>(cols=>40,rows=>5,maxlength=>10)=>begin %><%= $recipe->[3] %><% end %>
 </td></tr>
 <tr><td><b>Фотография блюда</b></td><td>
 % if($recipe->[4]){

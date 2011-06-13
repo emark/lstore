@@ -190,7 +190,7 @@ select{
 #message{
 	background-color: #F5FF47;
 	padding: 3px 3px 3px 3px;
-	border:  hidden;
+	/*border: 1px solid #9E940B;*/
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-left-radius: 5px;
@@ -206,4 +206,22 @@ select{
 	height:25px;
 	color: #40541A;
 	margin: 15px 0px 15px 0px ;
+}
+.timeline{
+	/*background-color: #E0FF47;*/
+	/*padding: 3px 3px 3px 3px;*/
+	border:  hidden;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 400;
+	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	line-height: 1.2;
+	color: #40541A;
 }

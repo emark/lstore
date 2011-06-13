@@ -5,12 +5,13 @@
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
         <table border=0 align=center>
         %foreach my $tag (@{$tags}){#Align for tagname
-        <tr><td align=center colspan=2><b><i><%= $tag %></i></b></td></tr>
+        <tr><td align=center colspan=3><b><i><%= $tag %></i></b> <img src="/media/delete.png"></td></tr>
         %foreach my $ingredientid(keys %{$ingredients}){
         %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
             <tr><td>
             <%= $ingredients->{$ingredientid}{'INGREDIENT'}%></td>
-            <td align=right><%= $ingredients->{$ingredientid}{'SUM'} %>&nbsp;<i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i></td></tr>
+            <td align=right><%= text_field 'sum'=>$ingredients->{$ingredientid}{'SUM'}=>(size=>6) %></td><td valign=middle><i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i>
+                <img src="/media/delete.png"></td></tr>
         %}
         %}
         %}
