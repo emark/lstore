@@ -305,7 +305,7 @@ post '/recipe'=>sub{
                 $filename=$filename.'.'.$ext;
                 $photo->move_to("public/media/photo/$filename");
                 $photo=$filename;
-                $dbh->do("UPDATE RECIPES SET PHOTO=\"$photo\"");
+                $dbh->do("UPDATE RECIPES SET PHOTO=\"$photo\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             }
             $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
