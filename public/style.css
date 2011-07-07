@@ -226,9 +226,9 @@ select{
 	color: #40541A;
 }
 .clearbutton{
-	background-color: #F5FF47;
+	background-color: #58B7D3;
 	padding: 3px 3px 3px 3px;
-	border: 1px solid #9B9730;
+	border: 1px solid #075B7A;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-left-radius: 5px;
@@ -240,5 +240,5 @@ select{
 	letter-spacing: 0em;
 	word-spacing: 0em;
 	line-height: 1.2;
-	color: #40541A;
+	color: #FFFFFF;
 }

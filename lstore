@@ -24,7 +24,7 @@ app->plugin(mail => {
   });
 
 my $vc=Validator::Custom->new;
-my $subscribe="Служба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
+my $subscribe="Добавьте адрес notify\@storesto.ru в вашу адресную книгу и вы не пропустите ни одного сообщения.\nСлужба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
 
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
@@ -441,25 +441,25 @@ get '/cooking/buy/:id'=>sub{
   $self->render('cookingbuy');
 };
 
-get '/cooking/print/:action/:id'=>sub{
+get '/cooking/print/:actions/:id'=>sub{
     my $self=shift;
     return $self->redirect_to('login') unless $self->session('name');
     my $uid=$self->session('uid');
-    my $action=$self->stash('action') || '';
+    my $actions=$self->param('actions') || '';
     my $menuid=$self->param('id') || 0;
     my $ingredients={};
     my $instructions={};
     my $tags=();
     my $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
-    if($action eq 'buy'){
+    if($actions eq 'buy'){
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE,SUM(ROUND(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION))) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.ID",'ID');
         $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid GROUP BY INGREDIENTS.TAG ORDER BY INGREDIENTS.TAG");
-    }elsif($action eq 'how'){
+    }elsif($actions eq 'how'){
         $instructions=$dbh->selectall_hashref("SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,RECIPES.INSTRUCTION,ROUTER3.AMOUNT,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION*ROUTER3.AMOUNT) AS PORTIONS  FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
         $ingredients=$dbh->selectall_hashref("SELECT ROUTER1.ID,RECIPES.ID AS RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,(ROUND(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION))) AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
     }
     $self->stash(menu=>$menu,
-                 action=>$action,
+                 actions=>$actions,
                  ingredients=>$ingredients,
                  tags=>$tags,
                  instructions=>$instructions);

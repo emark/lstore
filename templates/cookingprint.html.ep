@@ -1,11 +1,11 @@
 % layout 'printview', title 'Версия для печати';
 <%#= test %>
 <P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
-%if($action eq 'buy'){
+%if($actions eq 'buy'){
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
         <table border=0 align=center>
         %foreach my $tag (@{$tags}){#Align for tagname
-        <tr><td align=center colspan=3><b><i><%= $tag %></i></b> <img src="/media/delete.png"></td></tr>
+        <tr><td align=center colspan=3><b><i><%= $tag %></i></b></td></tr>
         %foreach my $ingredientid(keys %{$ingredients}){
         %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
             <tr><td>
@@ -16,7 +16,7 @@
         %}
         %}
         </table><br/>
-%}elsif($action eq 'how'){
+%}elsif($actions eq 'how'){
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, приготовление</P>
         <table align=center border=0>
         %foreach my $recipeid(keys %{$instructions}){

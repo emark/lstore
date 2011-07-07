@@ -23,7 +23,7 @@
 <table border=0>
 <tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>
-  <div id=extoptions style="display:none">общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>">, расчет <input type=text size=1 name=calculation value="<%= $recipe->[2] %>"> порций
+  <div id=extoptions style="display:none">общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>"> грамм, количество порций <input type=text size=1 name=calculation value="<%= $recipe->[2] %>">
   <br/><a href="#1" onClick="SelectLayer('extoptions','more')">скрыть вес и количество</a></div>
   <div id=more align=left><a href="#1" onClick="SelectLayer('more','extoptions')">Вес блюда, количество порций</a></div>
 <br/></td></tr>

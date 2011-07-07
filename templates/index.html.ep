@@ -1,4 +1,4 @@
-% layout 'default', title 'StoResto timeline';
+% layout 'default', title 'StoResto - ваш домашний ресторан';
 %if($uid){
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 %}else{
