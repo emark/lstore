@@ -242,3 +242,10 @@ select{
 	line-height: 1.2;
 	color: #FFFFFF;
 }
+.indexcaption{
+		font-size: 35px;
+		color: #40541A;
+		border-bottom-left-radius: 50px;
+		border-bottom-right-radius: 50px;
+		text-shadow: 1px 1px 1px #F0FFD3;
+}

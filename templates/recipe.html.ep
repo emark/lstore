@@ -23,7 +23,7 @@
   </table>
   <% end %>
 %}else{
-  <P align=center id=message>Только автор рецепта может его редактировать</P>
+  <P align=center id=message>Только автор может редактировать рецепт</P>
 %}
 
 %}else{

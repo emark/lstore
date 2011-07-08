@@ -276,6 +276,7 @@ post '/recipe'=>sub{
   foreach(@quantity){#Hook for defined quantity
     if($_ && $_>0){
       $quantity_hook=1;
+      $_=~s/,/./;
     }
   }
   my @ingredientid=$self->param('ingredientid');
@@ -562,7 +563,7 @@ get '/register'=>sub{
                 $activation=$activation.int(rand($i));
             }
             #Generate activation code
-            $data="Мы рады приветствовать вас в StoResto.\n
+            $data="Поздравляем! Вы открыли свой ресторан StoResto.\n
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль:\t$pass\n
