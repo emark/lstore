@@ -235,6 +235,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   my $routerid=$self->param('routerid');
   my $addingredient=$self->param('addingredient') || undef;
   my $addingredients={};
+  my $tags={};
   if($action eq 'cut'){
     $dbh->do("DELETE FROM ROUTER1 WHERE ROUTER1.ID=$routerid AND ROUTER1.RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid)");
   }elsif($action eq 'add' && $addingredient){
@@ -249,7 +250,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   }
   my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
-  $self->stash(tags=>{},
+  $self->stash(tags=>$tags,
 	       ingredients=>$ingredients,
 	       recipe=>$recipe,
 	       recipeid=>$recipeid,

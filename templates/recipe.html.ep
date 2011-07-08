@@ -3,19 +3,29 @@
 %if(my $message = stash 'message'){
   <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
 %}
+
 %#	Select ingredients from tags
 %if(!%{$ingredients}){
+
+%# If tags not empty 
+%if(%{$tags}){
+
 %#	Show ingredients tags
-<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
-<%= form_for recipe=>(method=>'post')=>begin %>
-<table border=0>
-%#	Show ingredients tags
-%	foreach (keys %{$tags}){
-<tr><td class=ingredientlist><%= check_box 'tag'=>($tags->{$_}{'TAG'})%>&nbsp;<%= $tags->{$_}{'TAG'}%></td></tr>
-%	}
-<tr><td align=center><br/><%= submit_button 'Начинаем готовить' %></td></tr>
-</table>
+  <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
+  <%= form_for recipe=>(method=>'post')=>begin %>
+  <table border=0>
+
+  %#	Show ingredients tags
+  %	foreach (keys %{$tags}){
+  <tr><td class=ingredientlist><%= check_box 'tag'=>($tags->{$_}{'TAG'})%>&nbsp;<%= $tags->{$_}{'TAG'}%></td></tr>
+  %	}
+  <tr><td align=center><br/><%= submit_button 'Начинаем готовить' %></td></tr>
+  </table>
   <% end %>
+%}else{
+  <P align=center id=message>Только автор рецепта может его редактировать</P>
+%}
+
 %}else{
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post',enctype=>'multipart/form-data')=>begin %>
@@ -23,7 +33,8 @@
 <table border=0>
 <tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>
-  <div id=extoptions style="display:none">общий вес блюда <input type=text size=2 name=weight value="<%= $recipe->[1] %>"> грамм, количество порций <input type=text size=1 name=calculation value="<%= $recipe->[2] %>">
+  <div id=extoptions style="display:none">общий вес блюда <input type=text size=3 name=weight value="<%= $recipe->[1] %>"> грамм<br/>
+  количество порций <input type=text size=2 name=calculation value="<%= $recipe->[2] %>"> шт.
   <br/><a href="#1" onClick="SelectLayer('extoptions','more')">скрыть вес и количество</a></div>
   <div id=more align=left><a href="#1" onClick="SelectLayer('more','extoptions')">Вес блюда, количество порций</a></div>
 <br/></td></tr>
