@@ -226,22 +226,37 @@ get '/recipe/view/:id'=>sub{
        $self->render('recipeview');
 };
 
+get '/recipe/print/:id'=>sub{
+       my $self=shift;
+       my $uid=$self->session('uid') || undef;
+       my $recipeid=$self->param('id');
+       my $err='';
+       my $photo='';
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid");
+       my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
+       $self->stash(ingredients=>$ingredients,
+	       recipe=>$recipe,
+           recipeid=>$recipeid,
+           uid=>$uid);
+       $self->render('recipeprint');
+};
+
 get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->stash('action') || '';
+  my $actions=$self->stash('action') || '';
   my $recipeid=$self->param('id');
   my $routerid=$self->param('routerid');
   my $addingredient=$self->param('addingredient') || undef;
   my $addingredients={};
   my $tags={};
-  if($action eq 'cut'){
+  if($actions eq 'cut'){
     $dbh->do("DELETE FROM ROUTER1 WHERE ROUTER1.ID=$routerid AND ROUTER1.RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid)");
-  }elsif($action eq 'add' && $addingredient){
+  }elsif($actions eq 'add' && $addingredient){
     $addingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE INGREDIENTS.NAME LIKE '%$addingredient%' AND INGREDIENTS.USERID=$uid",'ID');
     $self->stash(message=>'Ой, а такого продукта в кладовой нет.') if !%{$addingredients};
-  }elsif($action eq 'change_photo'){
+  }elsif($actions eq 'change_photo'){
     my $photo=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     if($photo){
         unlink("public/media/photo/$photo");

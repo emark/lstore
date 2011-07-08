@@ -1,0 +1,17 @@
+% layout 'printview';
+<%#= test %>
+        <table align=center border=0>
+        <tr><td align=center><b><%= $recipe->[0]%></b> (расчет <%= $recipe->[2]%> порций
+%   if($recipe->[1]){
+/ общий вес <%= $recipe->[1]%> гр.
+%}
+        )</td></tr>
+        <tr><td><i><%= $recipe->[3]%></i></td></tr>
+        %foreach my $ingredientid(keys %{$ingredients}){
+        %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
+        <tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> - <%= $ingredients->{$ingredientid}{'QUANTITY'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
+        %}
+        %}
+        </table><br/>
+
+

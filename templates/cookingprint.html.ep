@@ -1,6 +1,5 @@
-% layout 'printview', title 'Версия для печати';
+% layout 'printview';
 <%#= test %>
-<P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
 %if($actions eq 'buy'){
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
         <table border=0 align=center>
@@ -35,5 +34,4 @@
         </table><br/>
 %}
 
-<font style="font-size:12px">Благодарим вас за использование StoResto<br/>
-http://www.storesto.ru</font>
+

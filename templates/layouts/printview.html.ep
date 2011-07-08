@@ -2,9 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><%= title %></title>
+    <title>Версия для печати</title>
 </head>
 <body>
+    <P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
     <%= content %>
+<P>
+<font style="font-size:12px">Благодарим вас за использование StoResto<br/>
+http://www.storesto.ru</font></P>
 </body>
 </html>

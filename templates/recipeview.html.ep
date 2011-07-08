@@ -13,7 +13,7 @@
   / общий вес блюда <%= $recipe->[1] %> гр.
 %}
 </i></P>
-
+<%= link_to 'Печать рецепта'=>"/recipe/print/$recipeid"=>(class=>'button',target=>'_print')%><br/><br/>
 <table border=0>
 <tr><td align=left><i style="font-size:25px">Как готовить</i></td></tr>
 <tr><td ><i><%= $recipe->[3] %></i></td></tr>
