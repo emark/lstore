@@ -314,7 +314,7 @@ post '/recipe'=>sub{
         $self->stash(message=>'Рецепт сохранен. Можете добавить описание и фото.');
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
     }elsif($quantity_hook && $recipeid && $recipe){#Update recipe, router1
-        if(length($instruction)<=300){#Check for length instruction
+        if(length($instruction)<=1000){#Check for length instruction
             if($photo){#Uploading photo
                 my $filename=time;
                 my $ext=$photo->filename;
