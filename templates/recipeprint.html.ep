@@ -6,7 +6,7 @@
 / общий вес <%= $recipe->[1]%> гр.
 %}
         )</td></tr>
-        <tr><td><i><%= $recipe->[3]%></i></td></tr>
+        <tr><td><i><%== $instruction %></i></td></tr>
         %foreach my $ingredientid(keys %{$ingredients}){
         %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
         <tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> - <%= $ingredients->{$ingredientid}{'QUANTITY'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
