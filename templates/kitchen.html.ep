@@ -8,13 +8,13 @@
     <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
 %}
 
-<%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Список моих рецептов<% end %><br/>
+<br/>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table id=app border=0>
 
 %#Start category indexing
 %foreach my $category (@{$category}){
-    <tr><td colspan=3 align=center><i style="font-size:20px"><%= $category->[1]%></td></tr>
+    <tr><td colspan=3 align=center class=category><%= $category->[1]%></tr>
 %foreach my $key(keys %{$recipes}){
 %   if($category->[0]==$recipes->{$key}{'CATEGORYID'}){
   <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
@@ -28,4 +28,4 @@
 %}
 
 %}#Finish category
-<tr><td align=center colspan=3><br/><%= submit_button 'Новое меню' %><% end %></td></tr></table>
+<tr><td align=center colspan=3><br/><%= submit_button 'Создать новое меню' %><% end %></td></tr></table>

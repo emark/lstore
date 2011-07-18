@@ -7,6 +7,7 @@
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 %}
 %#	Show ingredients for recipe
+<%= tag 'div'=>(class=>'category',align=>'center')=>begin %><%= $recipe->[5] %><% end %>
 <%= tag 'div'=>(class=>'recipelist',align=>'center')=>begin %><%= $recipe->[0] %><% end %>
 <P align=center><i>расчет <%= $recipe->[2] %> порций
 %if($recipe->[1]){

@@ -11,7 +11,7 @@
 %if(%{$tags}){
 
 %#	Show ingredients tags
-  <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
+  <%= tag 'div'=>(align=>'center',id=>'message')=>begin%>Из чего будем готовить?<% end %><br/>
   <%= form_for recipe=>(method=>'post')=>begin %>
   <table id=app border=0>
 
@@ -31,8 +31,9 @@
   <%= form_for 'recipe'=>(method=>'post',enctype=>'multipart/form-data')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
 <table id=app border=0>
-<tr><td><b>Категория</b></td><td align=left>
-%my @selected=('','','','','','','','','');$selected[$recipe->[5]]='selected';
+<tr><td><b><i>Категория</i></b></td><td align=left>
+%my @selected=('','','','','','','','','');
+%$selected[$recipe->[5]]='selected' if $recipeid;
 <select name=category>
     <option value='1' <%= $selected[1] %>>Первые блюда
     <option value='2' <%= $selected[2] %>>Вторые блюда
@@ -43,7 +44,7 @@
     <option value='7' <%= $selected[7] %>>Напитки
   </select>
 </td></tr>
-<tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
+<tr><td><b><i>Как назовём блюдо?</i></b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>
   <div id=extoptions style="display:none">общий вес блюда <input type=text size=3 name=weight value="<%= $recipe->[1] %>"> грамм<br/>
   количество порций <input type=text size=2 name=calculation value="<%= $recipe->[2] %>"> шт.
@@ -65,10 +66,10 @@
 <td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %if($recipeid){
-<tr><td><b>Инструкция приготовления</b></td><td>
+<tr><td><b><i>Как готовить рецепт?</i></b></td><td>
                             <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %>
 </td></tr>
-<tr><td><b>Фотография блюда</b></td><td>
+<tr><td><b><i>Фотография блюда</i></b></td><td>
 % if($recipe->[4]){
   <%= link_to 'Заменить фото'=>"/recipe/change_photo/$recipeid",(class=>'button') %>
 %}else{  

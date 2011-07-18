@@ -37,7 +37,7 @@ get '/kitchen'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY ID");
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY INNER JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID WHERE RECIPES.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
   my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
                category=>$category,
@@ -219,7 +219,7 @@ get '/recipe/view/:id'=>sub{
        my $recipeid=$self->param('id');
        my $err='';
        my $photo='';
-       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid");
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        my $instruction=$recipe->[3];
        $instruction=~s/\n/<br>/g;

@@ -253,3 +253,12 @@ select{
 		border-bottom-right-radius: 50px;
 		text-shadow: 1px 1px 1px #F0FFD3;
 }
+.category{
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  vertical-align: middle;
+  color: #443C2E;
+  text-shadow: 1px 1px 1px #F0FFD3;
+  font-style: italic;
+}

@@ -52,7 +52,6 @@ function SelectLayer($div1,$div2)
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
 		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %>
 		  </P><P align=center>
-				<%= link_to 'Предложения по развитию'=>'http://storesto.reformal.ru' %>,
 				<%= link_to 'StoResto'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
 	    </div>
