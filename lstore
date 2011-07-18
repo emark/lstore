@@ -55,12 +55,14 @@ get '/kitchen/:action/:id'=>sub{
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
     my $photo=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID");
-    unlink("public/media/photo/$photo");
+    unlink("public/media/photo/$photo") if $photo;
     $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     $self->stash(message=>'Рецепт удален')
   }
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY INNER JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID WHERE RECIPES.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,RECIPES.CATEGORYID FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
+               category=>$category,
 	       menu=>'',
 	       menuid=>0);
   $self->render('kitchen');
