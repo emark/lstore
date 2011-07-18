@@ -7,10 +7,10 @@
         <tr><td align=center colspan=3><b><i><%= $tag %></i></b></td></tr>
         %foreach my $ingredientid(keys %{$ingredients}){
         %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
-            <tr><td>
+            <tr id=<%= $ingredientid %>><td>
             <%= $ingredients->{$ingredientid}{'INGREDIENT'}%></td>
             <td align=right><%= text_field 'sum'=>$ingredients->{$ingredientid}{'SUM'}=>(size=>6) %></td><td valign=middle><i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i>
-                <img src="/media/delete.png"></td></tr>
+                <a href="#1" onClick="HideObject('<%= $ingredientid %>');return false"><img src="/media/delete.png" border=0 title='Убрать продукт'></a></td></tr>
         %}
         %}
         %}

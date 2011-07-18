@@ -11,7 +11,6 @@
 <br/>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
 <table id=app border=0>
-
 %#Start category indexing
 %foreach my $category (@{$category}){
     <tr><td colspan=3 align=center class=category><%= $category->[1]%></tr>

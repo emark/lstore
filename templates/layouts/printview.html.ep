@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title>Версия для печати</title>
+<script src="/scripts.js" type="text/javascript"></script>
 </head>
 <body>
     <P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
