@@ -37,9 +37,11 @@ get '/kitchen'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES WHERE RECIPES.USERID=$uid",'ID');
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY ID");
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
-	       menu=>'',
+               category=>$category,
+           menu=>'',
 	       menuid=>0,
 	       uid=>$self->session('uid'));
   $self->render('kitchen');
@@ -269,7 +271,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
         $dbh->do("UPDATE RECIPES SET PHOTO='' WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     }
   }
-  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
   $self->stash(tags=>$tags,
 	       ingredients=>$ingredients,
@@ -285,6 +287,7 @@ post '/recipe'=>sub{
   my $uid=$self->session('uid');
   my $recipe=$self->param('recipe');
   my $recipeid=$self->param('recipeid') || 0;
+  my $category=$self->param('category') || 1;
   my $weight=$self->param('weight') || 0;
   my $calculation=$self->param('calculation') || 1;
   my $instruction=$self->param('instruction') || '';
@@ -309,7 +312,7 @@ post '/recipe'=>sub{
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
   
     }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
-        $dbh->do("INSERT INTO RECIPES(ID,NAME,WEIGHT,CALCULATION,USERID,TIMEFLAG) VALUES(NULL,\"$recipe\",$weight,$calculation,$uid,NOW())");
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CATEGORYID,WEIGHT,CALCULATION,USERID,TIMEFLAG) VALUES(NULL,\"$recipe\",$category,$weight,$calculation,$uid,NOW())");
         $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
             if($quantity[$n] && $quantity[$n]!=0){
@@ -330,7 +333,7 @@ post '/recipe'=>sub{
                 $photo=$filename;
                 $dbh->do("UPDATE RECIPES SET PHOTO=\"$photo\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             }
-            $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+            $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",CATEGORYID=$category,WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
                 if($quantity[$n] && $quantity[$n]!=0){
                     #Hook for checking true UPDATE
@@ -349,7 +352,7 @@ post '/recipe'=>sub{
     }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
-  $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+  $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   $self->stash(recipe=>$recipe,
 	       recipeid=>$recipeid,
 	       ingredients=>$ingredients,

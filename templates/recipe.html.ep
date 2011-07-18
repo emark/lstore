@@ -13,7 +13,7 @@
 %#	Show ingredients tags
   <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Из чего будем готовить?<% end %><br/>
   <%= form_for recipe=>(method=>'post')=>begin %>
-  <table border=0>
+  <table id=app border=0>
 
   %#	Show ingredients tags
   %	foreach (keys %{$tags}){
@@ -30,7 +30,19 @@
 %#	Show ingredients for recipe
   <%= form_for 'recipe'=>(method=>'post',enctype=>'multipart/form-data')=>begin %>
   <%= hidden_field 'recipeid'=>$recipeid %>
-<table border=0>
+<table id=app border=0>
+<tr><td><b>Категория</b></td><td align=left>
+%my @selected=('','','','','','','','','');$selected[$recipe->[5]]='selected';
+<select name=category>
+    <option value='1' <%= $selected[1] %>>Первые блюда
+    <option value='2' <%= $selected[2] %>>Вторые блюда
+    <option value='3' <%= $selected[3] %>>Салаты
+    <option value='4' <%= $selected[4] %>>Десерты
+    <option value='5' <%= $selected[5] %>>Закуски
+    <option value='6' <%= $selected[6] %>>Выпечка
+    <option value='7' <%= $selected[7] %>>Напитки
+  </select>
+</td></tr>
 <tr><td><b>Как назовём блюдо?</b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>
   <div id=extoptions style="display:none">общий вес блюда <input type=text size=3 name=weight value="<%= $recipe->[1] %>"> грамм<br/>

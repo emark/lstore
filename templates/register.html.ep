@@ -10,7 +10,7 @@
 %}
 
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Регистрация в StoResto<% end %><br/>
-<table>
+<table id=app>
 <tr><td align=center>
     <%= form_for 'register'=>begin %>
 <table border=0>

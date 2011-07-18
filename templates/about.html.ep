@@ -5,7 +5,7 @@
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 %}
 <br/>
-<table>
+<table id=app>
 <tr><td align=center>
 <div class=mainpage>
 <div class=maintext><br/>

@@ -26,7 +26,7 @@ p {
 img {
 	border: none;
 }
-table{
+#app{
 	width:100%;
 	/*border: dashed;*/
 	border-color: #D4E256;
@@ -36,6 +36,10 @@ table{
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	background-color: #D4E256;
+}
+table{
+	width:100%;
+	padding: 10px 10px 10px 10px;
 }
 input {
 	vertical-align: middle;

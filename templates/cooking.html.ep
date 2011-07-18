@@ -8,7 +8,7 @@
 
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Составленные меню<% end %><br/>
 %#	Show menus for my cooking
-<table>
+<table id=app>
 %	foreach (keys %{$menus}){
  <tr><td><a title='Редактировать' class=menulist href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a>
  &nbsp;<a href="/cooking/delete/<%= $menus->{$_}{'ID'}%>" title="Удалить меню" class=button><img src="/media/delete.png" ></a></td>

@@ -10,14 +10,22 @@
 
 <%= tag 'div'=>(align=>'center',class=>'captionmessage')=>begin%>Список моих рецептов<% end %><br/>
 <%= form_for 'kitchen'=>(method=>'post')=>begin %>
-<table border=0>
+<table id=app border=0>
+
+%#Start category indexing
+%foreach my $category (@{$category}){
+    <tr><td colspan=3 align=center><i style="font-size:20px"><%= $category->[1]%></td></tr>
 %foreach my $key(keys %{$recipes}){
+%   if($category->[0]==$recipes->{$key}{'CATEGORYID'}){
   <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
   <a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;<a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a>
 </td><td>
-% if($recipes->{$key}{'PORTION'}) {
+%       if($recipes->{$key}{'PORTION'}) {
   <i><%= $recipes->{$key}{'PORTION'} %> гр.</i>
-% }
+%       }
 </td><td align=right><%= link_to 'Посмотреть рецепт'=>"/recipe/view/$recipes->{$key}{'ID'}",(class=>'button')%></td></tr>
+%   }
 %}
+
+%}#Finish category
 <tr><td align=center colspan=3><br/><%= submit_button 'Новое меню' %><% end %></td></tr></table>

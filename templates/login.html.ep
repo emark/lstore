@@ -5,7 +5,7 @@
 %}
 
 <%= form_for login=>(method=>'get')=>begin %>
-<table border=0>
+<table id=app border=0>
     <tr><td align=center>Электронная почта</td></tr>
     <tr><td align=center><%= text_field 'email' %></td></tr>
     <tr><td align=center>Пароль</td></tr>

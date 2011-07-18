@@ -14,7 +14,7 @@
 %}
 </i></P>
 <%= link_to 'Печать рецепта'=>"/recipe/print/$recipeid"=>(class=>'button',target=>'_print')%><br/><br/>
-<table border=0>
+<table id=app border=0>
 <tr><td align=left><i style="font-size:25px">Как готовить</i></td></tr>
 <tr><td ><i><%== $instruction %></i></td></tr>
 <tr><td align=left><br/><i style="font-size:25px">Ингридиенты</i></td></tr>

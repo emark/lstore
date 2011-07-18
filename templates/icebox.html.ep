@@ -35,7 +35,7 @@
 <%= link_to 'Показать все продукты'=>icebox=>(class=>'button') %><br/><br/>
 %}
 %#	Generate ingredients refs
-<table border=0>
+<table id=app border=0>
 %foreach my $tagname(@{$tags}){
 <tr><td colspan=3 align=left style="font-size:16px;"><b><%= link_to "/icebox/tag/$tagname"=>(title=>'Показать только эту полку')=>begin %><%= $tagname %><% end %></b></td></tr>
 %	foreach my $ingredientid(keys %{$ingredients}){

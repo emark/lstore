@@ -12,7 +12,7 @@
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>
-    <table border=0><tr><td>Название меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
+    <table id=app border=0><tr><td>Название меню</td><td align=left><input type=text size=35 name='menu' value="<%= $menu %>"></td></tr>
     %foreach my $key(keys %{$recipes}){
       <tr><td class=cutstyle>
 %	if($menuid && $recipes){
