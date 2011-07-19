@@ -35,14 +35,10 @@
 %my @selected=('','','','','','','','','');
 %$selected[$recipe->[5]]='selected' if $recipeid;
 <select name=category>
-    <option value='1' <%= $selected[1] %>>Первые блюда
-    <option value='2' <%= $selected[2] %>>Вторые блюда
-    <option value='3' <%= $selected[3] %>>Салаты
-    <option value='4' <%= $selected[4] %>>Десерты
-    <option value='5' <%= $selected[5] %>>Закуски
-    <option value='6' <%= $selected[6] %>>Выпечка
-    <option value='7' <%= $selected[7] %>>Напитки
-  </select>
+% foreach my $category (@{$category}){
+    <option value='<%= $category->[0] %>' <%= $selected[$category->[0]] %>><%=$category->[1]%>
+%}
+</select>
 </td></tr>
 <tr><td><b><i>Как назовём блюдо?</i></b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>

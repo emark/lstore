@@ -210,6 +210,7 @@ get '/recipe'=>sub{
   $self->stash(tags=>$tags,
 	       ingredients=>{},
 	       recipe=>'',
+           category=>'',
 	       recipeid=>undef,
 	       addingredients=>{});
   $self->render('recipe');
@@ -221,12 +222,14 @@ get '/recipe/view/:id'=>sub{
        my $recipeid=$self->param('id');
        my $err='';
        my $photo='';
+       my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
        my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        my $instruction=$recipe->[3];
        $instruction=~s/\n/<br>/g;
        $self->stash(ingredients=>$ingredients,
 	       recipe=>$recipe,
+           category=>$category,
            instruction=>$instruction,
            recipeid=>$recipeid,
            uid=>$uid);
@@ -239,12 +242,14 @@ get '/recipe/print/:id'=>sub{
        my $recipeid=$self->param('id');
        my $err='';
        my $photo='';
+       my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
        my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        my $instruction=$recipe->[3];
        $instruction=~s/\n/<br>/g;
        $self->stash(ingredients=>$ingredients,
 	       recipe=>$recipe,
+           category=>$category,
            instruction=>$instruction,
            recipeid=>$recipeid,
            uid=>$uid);
@@ -273,11 +278,13 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
         $dbh->do("UPDATE RECIPES SET PHOTO='' WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     }
   }
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
   my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
   $self->stash(tags=>$tags,
 	       ingredients=>$ingredients,
 	       recipe=>$recipe,
+           category=>$category,
 	       recipeid=>$recipeid,
 	       addingredients=>$addingredients);
   $self->render('recipe');
@@ -354,8 +361,10 @@ post '/recipe'=>sub{
     }else{#If new recipe,select ingredients tags
     $tags=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.TAG FROM INGREDIENTS WHERE INGREDIENTS.USERID=$uid GROUP BY INGREDIENTS.TAG",'ID');
   }
+  $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
   $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   $self->stash(recipe=>$recipe,
+               category=>$category,
 	       recipeid=>$recipeid,
 	       ingredients=>$ingredients,
 	       tags=>$tags,
