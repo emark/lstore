@@ -26,7 +26,7 @@
 <body>
 <div id="wrapper">
 	<div id="header" align=center>
-	  <%= link_to 'StoResto'=>'/'=>(class=>'menu') %>
+		<%= link_to 'StoResto'=>'/'=>(class=>'menu') %>
 	  <%= link_to kitchen=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кухня<% end %>
 	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
 	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
@@ -38,11 +38,11 @@
 		<%= content %>
 	    <div align=center>
 		  <P align=center><br/>
-		  <%= link_to 'Блог'=>'http://blog.storesto.ru' %> |
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
-		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %>
+		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %> |
+		  <%= link_to 'Screencast'=>'http://www.screenr.com/user/StoResto' %>
 		  </P><P align=center>
-				<%= link_to 'StoResto'=>'mailto:team@storesto.ru' %>, 2011.
+				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
 	    </div>
 	</div><!-- #content-->

@@ -540,7 +540,7 @@ get '/cooking/:action/:id'=>sub{
 };
 
 post '/cooking'=>sub{
-my $self=shift;
+    my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $email=$self->param('email') || undef;
@@ -586,7 +586,7 @@ get '/login'=>sub{
 get '/logout'=>sub{
   my $self=shift;
   $self->session(expires=>1);
-  $self->redirect_to('index');
+  $self->redirect_to('welcome');
 }=>'logout';
 
 get '/register'=>sub{
@@ -668,10 +668,12 @@ $subscribe");
 
 get '/' => sub{
     my $self=shift;
-    my $uid=$self->session('uid');
-    my $recipes=$dbh->selectall_hashref('SELECT RECIPES.ID, RECIPES.NAME AS RECIPE,LEFT(RECIPES.INSTRUCTION,250) AS INSTRUCTION,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION FROM RECIPES WHERE LENGTH(INSTRUCTION)>0 AND WEIGHT>0 ORDER BY ID DESC LIMIT 10','ID');
-    $self->stash(recipes=>$recipes,uid=>$uid);
-    $self->render;
-}=>'index';
+    my $uid=$self->session('uid');    
+    return $self->redirect_to('welcome') unless $self->session('name');
+    return $self->redirect_to('kitchen');
+};
+
+get '/welcome'=>sub{
+}=>'welcome';
 
 app->start;

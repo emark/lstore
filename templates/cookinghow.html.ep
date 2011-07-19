@@ -7,9 +7,9 @@
 <% end %>
 <table id=app>
 %foreach my $recipeid(keys %{$instructions}){
-<tr><td align=center><b><%= $instructions->{$recipeid}{'RECIPE'}%></b> (расчет <%= $instructions->{$recipeid}{'AMOUNT'}%> порций
+<tr><td align=left><br/><b style="font-size:16px"><%= $instructions->{$recipeid}{'RECIPE'}%></b> (<%= $instructions->{$recipeid}{'AMOUNT'}%> порций
 %   if($instructions->{$recipeid}{'PORTIONS'}){
-        / общий вес <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
+        / выход <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
 %}
 )</td></tr>
 <tr><td><i><%== $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>

@@ -1,0 +1,14 @@
+% layout 'default', title 'StoResto - ваш домашний ресторан';
+<%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
+<br/><br/>
+<table background="/media/mainbg.jpg" height=400><tr><td style="font-size:34px;color:#FFF;text-shadow: 1px 1px 1px #000;" align=center><br/>
+Приготовь любой рецепт или <%= link_to 'создай своё блюдо'=>'recipe'=>(style=>'color:#FFF') %>
+</td></table><br/>
+<table width=100% background="/media/bg-howto.jpg">
+<tr><td><P align=center class=indexcaption>Что умеет StoResto?</P></td></tr>
+<tr><td><P align=center>
+<iframe src="http://www.screenr.com/embed/DtUs" width="650" height="396" frameborder="0"></iframe>
+</P></td></tr>
+</table>
+<br/><br/>
+<P align=center><a href="/register" class=registerbutton>Зарегистрируйся прямо сейчас!</a></P>

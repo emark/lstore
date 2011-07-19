@@ -170,22 +170,8 @@ select{
 	text-decoration: line-through;
 	color: #C40D0D;
 }
-.mainpage{
-		background-image: url('/media/restodish.jpg');
-		background-position: center, top;
-		background-repeat: no-repeat;
-		font-size:20px;
-		color: #161616;
-		height: 458px;
-}
-.maintext{
-		background: url('/media/opacity.png'), center, no-repeat;
-		width:600px;
-		border-bottom-left-radius: 50px;
-		border-bottom-right-radius: 50px;
-		text-shadow: 1px 1px 1px #FFF2CE;
-}
 .registerbutton{
+		color: #820A36;
 		font-family: Arial;
 		font-size: 20px;
 		font-weight:bold;
@@ -247,8 +233,8 @@ select{
 	color: #FFFFFF;
 }
 .indexcaption{
-		font-size: 35px;
-		color: #40541A;
+		font-size: 30px;
+		color: #193351;
 		border-bottom-left-radius: 50px;
 		border-bottom-right-radius: 50px;
 		text-shadow: 1px 1px 1px #F0FFD3;
@@ -258,7 +244,7 @@ select{
   line-height: 1.2;
   text-decoration: none;
   vertical-align: middle;
-  color: #443C2E;
+  color: #2D4231;
   text-shadow: 1px 1px 1px #F0FFD3;
   font-style: italic;
 }

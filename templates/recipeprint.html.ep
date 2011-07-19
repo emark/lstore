@@ -1,9 +1,9 @@
 % layout 'printview';
 <%#= test %>
         <table align=center border=0>
-        <tr><td align=center><b><%= $recipe->[0]%></b> (расчет <%= $recipe->[2]%> порций
+        <tr><td align=center><b><%= $recipe->[0]%></b> (<%= $recipe->[2]%> порций
 %   if($recipe->[1]){
-/ общий вес <%= $recipe->[1]%> гр.
+/ выход <%= $recipe->[1]%> гр.
 %}
         )</td></tr>
         <tr><td><i><%== $instruction %></i></td></tr>

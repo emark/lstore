@@ -9,9 +9,9 @@
 %#	Show ingredients for recipe
 <%= tag 'div'=>(class=>'category',align=>'center')=>begin %><%= $recipe->[5] %><% end %>
 <%= tag 'div'=>(class=>'recipelist',align=>'center')=>begin %><%= $recipe->[0] %><% end %>
-<P align=center><i>расчет <%= $recipe->[2] %> порций
+<P align=center><i><%= $recipe->[2] %> порций
 %if($recipe->[1]){
-  / общий вес блюда <%= $recipe->[1] %> гр.
+  / выход <%= $recipe->[1] %> гр.
 %}
 </i></P>
 <%= link_to 'Печать рецепта'=>"/recipe/print/$recipeid"=>(class=>'button',target=>'_print')%><br/><br/>
