@@ -604,7 +604,7 @@ get '/register'=>sub{
                 $activation=$activation.int(rand($i));
             }
             #Generate activation code
-            $data="Поздравляем! Вы открыли свой ресторан StoResto.\n
+            $data="Поздравляем!\nВы получили доступ в StoResto.\n
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль:\t$pass\n
@@ -628,7 +628,7 @@ $subscribe";
         #$dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
         $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"Батон белый\",2,\"хлеб\",$uid,NOW())");#Create ingredients
         my $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
-        $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW())");#Create recipe
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG,CATEGORYID) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW(),5)");#Create recipe
         my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
         $self->session(name=>$email,uid=>$uid);
@@ -679,8 +679,8 @@ get '/welcome'=>sub{
 get '/cookbook/:slug'=>{slug=>''}=>sub{
     my $self=shift;
     my $slug=$self->param('slug');
-    my $catalog=$dbh->selectall_arrayref("SELECT CATEGORY.NAME AS CATEGORY,CATEGORY.SLUG, COUNT(RECIPES.NAME) AS RECIPES FROM CATEGORY LEFT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID GROUP BY CATEGORY ORDER BY CATEGORY.PRIORITY");
-    my $slugrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE CATEGORY.SLUG='$slug'",'ID');
+    my $catalog=$dbh->selectall_arrayref("SELECT CATEGORY.NAME AS CATEGORY,CATEGORY.SLUG, COUNT(RECIPES.ENABLED) AS RECIPES FROM CATEGORY LEFT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID GROUP BY CATEGORY ORDER BY CATEGORY.PRIORITY");
+    my $slugrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ENABLED=1 AND CATEGORY.SLUG='$slug'",'ID');
     my $catslug=$dbh->selectrow_array("SELECT CATEGORY.NAME FROM CATEGORY WHERE CATEGORY.SLUG='$slug'");
     $self->stash(catalog=>$catalog,
                  slugrecipes=>$slugrecipes,
