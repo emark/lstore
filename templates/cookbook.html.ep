@@ -1,0 +1,24 @@
+% layout 'default';
+<%#=test%>
+%if(!$catslug){
+%title 'Поваренная книга';
+    <table id=app>
+    %foreach my $key(@{$catalog}){
+        <tr><td class=timeline><P ALIGN=CENTER><%= link_to $key->[0]=>"/cookbook/$key->[1]" %> (<%= $key->[2] %>)</P></td></tr>
+    %}
+    </table>
+%}else{
+%title $catslug.' | Поваренная книга';
+    <%= tag 'div'=>(align=>'left')=>begin %><%= link_to 'Все рецепты'=>'cookbook'=>(class=>'button') %><% end %><br/>
+    %if(!%{$slugrecipes}){
+    <P id=message align=center>Здесь пока ничего нет :(</P>
+    <%= tag 'div'=>(align=>'center')=>begin %><%= link_to 'Создать рецепт'=>'recipe'=>(class=>'button') %><% end %><br/>
+    %}else{
+        <table id=app>
+        <tr><td align=center class=category><%= $catslug %></td></tr>
+        %foreach my $key(keys %{$slugrecipes}){
+            <tr><td class=recipelist><%= link_to $slugrecipes->{$key}{'RECIPE'}=>"/recipe/view/$slugrecipes->{$key}{'ID'}" %></td></tr>
+        %}
+    %}
+    </table>
+%}

@@ -29,7 +29,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -222,8 +222,8 @@ get '/recipe/view/:id'=>sub{
        my $recipeid=$self->param('id');
        my $err='';
        my $photo='';
-       my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
-       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ID=$recipeid");
+       my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME,CATEGORY.SLUG FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY,CATEGORY.SLUG AS SLUG FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        my $instruction=$recipe->[3];
        $instruction=~s/\n/<br>/g;
@@ -558,7 +558,7 @@ post '/cooking'=>sub{
 					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nКоманда StoResto желает вам приятного аппетита.\n$subscribe";
+	       $data=$data."\nwww.storesto.ru - готовим с удовольствием\n";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",
@@ -670,10 +670,36 @@ get '/' => sub{
     my $self=shift;
     my $uid=$self->session('uid');    
     return $self->redirect_to('welcome') unless $self->session('name');
-    return $self->redirect_to('kitchen');
+    return $self->redirect_to('cookbook');
 };
 
 get '/welcome'=>sub{
 }=>'welcome';
 
+get '/cookbook/:slug'=>{slug=>''}=>sub{
+    my $self=shift;
+    my $slug=$self->param('slug');
+    my $catalog=$dbh->selectall_arrayref("SELECT CATEGORY.NAME AS CATEGORY,CATEGORY.SLUG, COUNT(RECIPES.NAME) AS RECIPES FROM CATEGORY LEFT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID GROUP BY CATEGORY ORDER BY CATEGORY.PRIORITY");
+    my $slugrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE CATEGORY.SLUG='$slug'",'ID');
+    my $catslug=$dbh->selectrow_array("SELECT CATEGORY.NAME FROM CATEGORY WHERE CATEGORY.SLUG='$slug'");
+    $self->stash(catalog=>$catalog,
+                 slugrecipes=>$slugrecipes,
+                 catslug=>$catslug);
+}=>'cookbook';
+
 app->start;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

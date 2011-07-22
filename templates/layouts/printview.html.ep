@@ -6,7 +6,7 @@
 <script src="/scripts.js" type="text/javascript"></script>
 </head>
 <body>
-    <P align=left style="font-size:20px">StoResto - ваш домашний ресторан</P>
+    <P align=left style="font-size:20px">StoResto - готовим с удовольствием</P>
     <%= content %>
 <P>
 <font style="font-size:12px">Благодарим вас за использование StoResto<br/>

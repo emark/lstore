@@ -171,11 +171,10 @@ select{
 	color: #C40D0D;
 }
 .registerbutton{
-		color: #243775;
+		color: #FFFFFF;
 		font-family: Arial;
 		font-size: 20px;
-		font-weight:bold;
-		text-shadow: 1px 1px 1px #FFF2CE;
+		text-shadow: 1px 1px 1px #4458C9;
 }
 #message{
 	background-color: #F5FF47;
@@ -198,8 +197,6 @@ select{
 	margin: 15px 0px 15px 0px ;
 }
 .timeline{
-	/*background-color: #E0FF47;*/
-	/*padding: 3px 3px 3px 3px;*/
 	border:  hidden;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;

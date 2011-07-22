@@ -7,7 +7,7 @@
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 %}
 %#	Show ingredients for recipe
-<%= tag 'div'=>(class=>'category',align=>'center')=>begin %><%= $recipe->[5] %><% end %>
+<%= tag 'div'=>(class=>'category',align=>'center')=>begin %><%= link_to $recipe->[5]=>"/cookbook/$recipe->[6]"=>(title=>'Посмотреть все рецепты из этого раздела') %><% end %>
 <%= tag 'div'=>(class=>'recipelist',align=>'center')=>begin %><%= $recipe->[0] %><% end %>
 <P align=center><i><%= $recipe->[2] %> порций
 %if($recipe->[1]){
