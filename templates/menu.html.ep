@@ -9,6 +9,7 @@
 <%= tag 'div',id=>'message'=>(align=>'center',class=>'captionmessage')=>begin%>
 	Для создания нового меню нужно выбрать не менее одного рецепта.
 <% end %>
+<%= tag 'div'=>(align=>'center')=>begin %><%= link_to 'Создать меню'=>'kitchen'=>(class=>'button') %><% end %><br/>
 %}else{
     <%= form_for 'menu'=>(method=>'post')=>begin %>
     <input type=hidden name='menuid' value=<%= $menuid %>>
