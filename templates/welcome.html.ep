@@ -1,5 +1,5 @@
 % layout 'default', title 'StoResto - ваш домашний ресторан';
-<% content_for menuclassbegin %>/<% end %>
+<% content_for menuclass=>begin %>/<% end %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 <br/><br/>
 <table background="/media/mainbg.jpg" height=400><tr><td style="font-size:34px;color:#FFF;text-shadow: 1px 1px 1px #000;" align=center><br/>

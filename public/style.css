@@ -217,10 +217,13 @@ select{
 }
 .timeline{
 	border:  hidden;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	/*border-bottom-left-radius: 5px;*/
+	/*border-bottom-right-radius: 5px;*/
+	/*border-top-left-radius: 5px;*/
+	/*border-top-right-radius: 5px;*/
+	/*background-color: #DDCE56;*/
+	/*padding: 10px 10px 10px 10px;*/
+	/*margin: 30px 30px 30px 30px;*/
 	font-size: 24px;
 	font-style: normal;
 	font-weight: 400;
@@ -229,7 +232,7 @@ select{
 	letter-spacing: 0em;
 	word-spacing: 0em;
 	line-height: 1.2;
-	color: #40541A;
+	color: #493B21;
 }
 .clearbutton{
 	background-color: #58B7D3;
@@ -260,7 +263,7 @@ select{
   line-height: 1.2;
   text-decoration: none;
   vertical-align: middle;
-  color: #2D4231;
+  color: #352A12;
   text-shadow: 1px 1px 1px #F0FFD3;
   font-style: italic;
 }
