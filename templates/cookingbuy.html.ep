@@ -29,3 +29,5 @@
 <%= text_field 'email'=>"$email" %>
 <%= submit_button 'Отправить' %> список продуктов на почтовый ящик
 <% end %>
+
+<% content_for menuclass=>begin %>/cooking<% end %>

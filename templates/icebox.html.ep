@@ -1,4 +1,5 @@
 % layout 'default',title 'Кладовая - здесь хранятся продукты';
+<% content_for menuclass=>begin %>/icebox<% end %>
 <%#= test %>
 
 %my $message=stash 'message';
@@ -46,3 +47,4 @@
   %}
 %}
 </table>
+

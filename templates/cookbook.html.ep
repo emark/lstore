@@ -22,3 +22,5 @@
     %}
     </table>
 %}
+
+<% content_for menuclass=>begin %>/<% end %>

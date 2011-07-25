@@ -24,3 +24,5 @@
 <%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
 <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
 <% end %><br/>
+
+<% content_for menuclass=>begin %>/cooking<% end %>

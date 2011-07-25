@@ -80,7 +80,26 @@ select{
 	letter-spacing: 0em;
 	word-spacing: 0em;
 	line-height: 1.2;
+	/*color: #441204;*/
 	color: #443C2E;
+}
+.menu_select{
+	background-color: transparent;
+	/*background-color: #7C5034;*/
+	padding: 10px 10px 10px 10px;
+	margin: 5px 5px 5px 5px;
+	font-family: 'Lobster', serif;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	text-shadow: 1px 1px 1px #423A24;
+	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	line-height: 1.2;
+	/*border-bottom: dashed;*/
+	color: #FFEA05;
 }
 
 /* Middle
@@ -174,7 +193,7 @@ select{
 		color: #FFFFFF;
 		font-family: Arial;
 		font-size: 20px;
-		text-shadow: 1px 1px 1px #4458C9;
+		text-shadow: 1px 1px 1px #193351;
 }
 #message{
 	background-color: #F5FF47;

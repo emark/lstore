@@ -5,7 +5,7 @@
 %if(my $message = stash 'message'){
  <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
 %}
-
+<br/>
 %#	Show menus for my cooking
 %if(!%{$menus}){
     <P id=message align=center>Вы ещё не создали ни одного меню. Рецепты есть на кухне.</P>
@@ -20,3 +20,5 @@
  %}
 </table>
 %}
+
+<% content_for menuclass=>begin %>/cooking<% end %>

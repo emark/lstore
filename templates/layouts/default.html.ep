@@ -26,11 +26,13 @@
 <body>
 <div id="wrapper">
 	<div id="header" align=center>
-		<%= link_to 'StoResto'=>'/'=>(class=>'menu') %>
-	  <%= link_to kitchen=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кухня<% end %>
-	  <%= link_to icebox=>{foo=>'bar'}=>(class=>'menu')=>begin %>Кладовая<% end %>
-	  <%= link_to recipe=>{foo=>'bar'}=>(class=>'menu')=>begin %>Рецепт<% end %>
-	  <%= link_to cooking=>{foo=>'bar'}=>(class=>'menu')=>begin %>Готовим<% end %>
+		%my %class=('/'=>'menu','/kitchen'=>'menu','/icebox'=>'menu','/recipe'=>'menu','/cooking'=>'menu');
+		%$class{content_for 'menuclass'}='menu_select';
+		<%= link_to 'StoResto'=>'/'=>(class=>$class{'/'}) %>
+		<%= link_to kitchen=>{foo=>'bar'}=>(class=>$class{'/kitchen'})=>begin %>Кухня<% end %>
+		<%= link_to icebox=>{foo=>'bar'}=>(class=>$class{'/icebox'})=>begin %>Кладовая<% end %>
+		<%= link_to recipe=>{foo=>'bar'}=>(class=>$class{'/recipe'})=>begin %>Рецепт<% end %>
+		<%= link_to cooking=>{foo=>'bar'}=>(class=>$class{'/cooking'})=>begin %>Готовим<% end %>
 	  <br/><br/><P align=center style="font-size:12px;color:#443C2E"><i>готовим с удовольствием</I></P>
 	</div><!-- #header-->
 

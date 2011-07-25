@@ -1,4 +1,5 @@
 % layout 'default', title 'Регистрация пользователя';
+<% content_for menuclassbegin %>/<% end %>
 <%#= test %>
 %if($uid){
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
