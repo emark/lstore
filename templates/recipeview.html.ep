@@ -33,6 +33,7 @@
 <tr><td align=center><br/><i style="font-size:15px">Приятного аппетита!</i></td></tr>
 </table><br/>
 %if($uid){
-<%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%><br/><br/>
+<%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
+<%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%><br/><br/>
 %}
 Прямая ссылка на этот рецепт <%= link_to "http://www.storesto.ru/recipe/view/$recipeid"=>"http://www.storesto.ru/recipe/view/$recipeid"=>(class=>'button')%>

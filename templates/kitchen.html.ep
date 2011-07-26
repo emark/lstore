@@ -18,7 +18,12 @@
 %foreach my $key(keys %{$recipes}){
 %   if($category->[0]==$recipes->{$key}{'CATEGORYID'}){
   <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
-  <a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;<a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a>
+  <a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;
+  %if($recipes->{$key}{'UID'}==$recipes->{$key}{'USERID'}){
+    <a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a>
+  %}else{
+    <a class=buttonunlike href="/kitchen/unlike/<%= $recipes->{$key}{'ID'}%>" title="Убрать из кухни"><img src="/media/delete.png"></a>
+  %}
 </td><td>
 %       if($recipes->{$key}{'PORTION'}) {
   <i><%= $recipes->{$key}{'PORTION'} %> гр.</i>

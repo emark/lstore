@@ -29,7 +29,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -37,8 +37,8 @@ get '/kitchen'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY INNER JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID WHERE RECIPES.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.USERID=$uid",'ID');
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY RIGHT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID,RECIPES.USERID AS USERID,$uid AS UID  FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
                category=>$category,
            menu=>'',
@@ -51,16 +51,26 @@ get '/kitchen/:action/:id'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $action=$self->stash('action') || '';
+  my $action=$self->stash('action');
   my $recipeid=$self->param('id');
   if($action eq 'delete'){
     my $photo=$dbh->selectrow_array("SELECT RECIPES.PHOTO FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID");
     unlink("public/media/photo/$photo") if $photo;
     $dbh->do("DELETE FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
     $self->stash(message=>'Рецепт удален')
+  }elsif($action eq 'like'){
+    my $owned=$dbh->selectrow_array("SELECT 1 FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid") || 0;
+    my $unique=$dbh->selectrow_array("SELECT 1 FROM ROUTER2 WHERE ROUTER2.RECIPEID=$recipeid AND ROUTER2.USERID=$uid") || 0;
+    if(!$owned && !$unique){
+        $dbh->do("INSERT INTO ROUTER2(ID,RECIPEID,USERID) VALUES (NULL,$recipeid,$uid)");
+        $self->stash(message=>'Рецепт понравился')
+    }
+  }elsif($action eq 'unlike'){
+    $dbh->do("DELETE FROM ROUTER2 WHERE ROUTER2.USERID=$uid AND ROUTER2.RECIPEID=$recipeid");
+    $self->stash(message=>'Рецепт больше не нравится')
   }
-  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY INNER JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID WHERE RECIPES.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,RECIPES.CATEGORYID FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE INGREDIENTS.USERID=$uid",'ID');
+  my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY RIGHT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID,RECIPES.USERID AS USERID,$uid AS UID  FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid",'ID');
   $self->stash(recipes=>$recipes,
                category=>$category,
 	       menu=>'',
@@ -77,7 +87,7 @@ post '/kitchen'=>sub{
   foreach(@recipeid){
     $SQL=$SQL."RECIPES.ID=$_ OR ";
   }
-  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE ($SQL RECIPES.ID=0) AND RECIPES.USERID=$uid",'ID');
+  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ($SQL RECIPES.ID=0) AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
   $self->stash(recipes=>$recipes,
 	       menu=>'',
 	       menuid=>0,
@@ -387,10 +397,10 @@ get '/menu/:action/:id/:routeid'=>{routeid=>0}=>sub{
   }elsif($action eq 'cut'){#Cutting recipes from menu
     $dbh->do("DELETE FROM ROUTER3 WHERE ROUTER3.ID=$routeid AND ROUTER3.MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
   }elsif($action eq 'add' && $addrecipe){
-    $addrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE RECIPES.NAME LIKE '%$addrecipe%' AND RECIPES.USERID=$uid",'ID');
+    $addrecipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.NAME LIKE '%$addrecipe%' AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
   }
   $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
-  $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+  $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ROUTER3.MENUID=$menuid AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
   $self->stash(recipes=>$recipes,
 	       menu=>$menu,
 	       menuid=>$menuid,
@@ -430,19 +440,19 @@ post '/menu'=>sub{
         $dbh->do("UPDATE MENU SET NAME=\"$menu\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
         for(my $n=0;$n<@recipeid;$n++){#Create SQL UPDATE query for ROUTER3
             if($amount[$n] && $amount[$n]!=0){
-                my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid[$n] AND RECIPES.USERID=$uid) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
+                my $status=$dbh->do("UPDATE ROUTER3 SET AMOUNT=$amount[$n] WHERE RECIPEID=(SELECT RECIPES.ID FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.ID=$recipeid[$n] AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)) AND MENUID=(SELECT MENU.ID FROM MENU WHERE MENU.ID=$menuid AND MENU.USERID=$uid)");
                 if($status!=1){
                     $dbh->do("INSERT INTO ROUTER3(ID,MENUID,RECIPEID,AMOUNT) VALUES(NULL,$menuid,$recipeid[$n],$amount[$n])");
                 }
             }
         }
-        $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID WHERE ROUTER3.MENUID=$menuid AND RECIPES.USERID=$uid",'ID');
+        $recipes=$dbh->selectall_hashref("SELECT ROUTER3.RECIPEID AS ID,ROUTER3.ID AS ROUTEID,ROUTER3.MENUID AS MENUID,RECIPES.NAME AS RECIPE,ROUTER3.AMOUNT AS AMOUNT FROM ROUTER3 LEFT JOIN RECIPES ON RECIPES.ID=ROUTER3.RECIPEID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ROUTER3.MENUID=$menuid AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
         $self->stash(message=>'Меню сохранено');
     }else{#If new menu,select recipes
         foreach(@recipeid){
             $SQL=$SQL."RECIPES.ID=$_ OR ";
         }
-        $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES WHERE ($SQL RECIPES.ID=0) AND RECIPES.USERID=$uid",'ID');
+        $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ($SQL RECIPES.ID=0) AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
     }  
     $self->stash(recipes=>$recipes,
                  menu=>$menu,

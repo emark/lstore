@@ -166,6 +166,25 @@ select{
 	line-height: 1.2;
 	color: #40541A;
 }
+.buttonunlike{
+	/*background-color: #DEEDE2;*/
+	background-color: #E1EF77;
+	padding: 3px 3px 3px 3px;
+	border:  hidden;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	line-height: 1.2;
+	color: #40541A;
+}
 .buyerlist{
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
