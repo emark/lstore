@@ -1,4 +1,6 @@
 % layout 'default',title 'Мы здесь готовим';
+<% content_for menuclass=>begin %>/cooking<% end %>
+
 <%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 
@@ -21,4 +23,3 @@
 </table>
 %}
 
-<% content_for menuclass=>begin %>/cooking<% end %>
