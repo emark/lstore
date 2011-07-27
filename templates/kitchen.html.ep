@@ -10,7 +10,7 @@
 %}
 
 <br/>
-<%= form_for 'kitchen'=>(method=>'post')=>begin %>
+<%= form_for 'menu'=>(method=>'post')=>begin %>
 <table id=app border=0>
 %#Start category indexing
 %foreach my $category (@{$category}){

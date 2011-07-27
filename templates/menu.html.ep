@@ -6,9 +6,9 @@
   <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
 %}
 
-% if(!%{$recipes}){
+%if(!$menuid && !%{$recipes}){
 <%= tag 'div',id=>'message'=>(align=>'center',class=>'captionmessage')=>begin%>
-	Для создания нового меню нужно выбрать не менее одного рецепта.
+	Для создания нового меню нужно выбрать хоть один рецепт.
 <% end %>
 <%= tag 'div'=>(align=>'center')=>begin %><%= link_to 'Создать меню'=>'kitchen'=>(class=>'button') %><% end %><br/>
 %}else{

@@ -1,28 +1,37 @@
 % layout 'default',title 'Приготовление меню';
+<% content_for menuclass=>begin %>/cooking<% end %>
+
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
 <P align=center><i>инструкции по приготовлению</i></P>
 <%= tag 'div'=>begin %>
 <%= link_to 'Распечатать'=>"/cooking/print/how/$menuid"=>(class=>'button',target=>'_blank') %><br/><br/>
 <% end %>
-<table id=app>
-%foreach my $recipeid(keys %{$instructions}){
-<tr><td align=left><br/><b style="font-size:16px"><%= $instructions->{$recipeid}{'RECIPE'}%></b> (<%= $instructions->{$recipeid}{'AMOUNT'}%> порций
-%   if($instructions->{$recipeid}{'PORTIONS'}){
-        / выход <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
+%if(%{$instructions}){
+    <table id=app>
+    %foreach my $recipeid(keys %{$instructions}){
+    <tr><td align=left><br/><b style="font-size:16px"><%= $instructions->{$recipeid}{'RECIPE'}%></b> (<%= $instructions->{$recipeid}{'AMOUNT'}%> порций
+    %   if($instructions->{$recipeid}{'PORTIONS'}){
+            / выход <%= $instructions->{$recipeid}{'PORTIONS'}%> гр.
+    %}
+    )</td></tr>
+    <tr><td><i><%== $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
+    %foreach my $ingredientid(keys %{$ingredients}){
+    %if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
+    <tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> - <%= $ingredients->{$ingredientid}{'AMOUNT'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
+    %}
+    %}
+    %}
+    </table><br/>
+    <%= tag 'div'=>begin %>
+    <%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
+    <%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
+    <% end %><br/>
+%}else{
+    <%= tag 'div',id=>'message'=>(align=>'center',class=>'captionmessage')=>begin%>
+    	В этом меню совсем нет рецептов :(
+    <% end %>
+    <%= tag 'div'=>begin %>
+    <%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
+    <% end %><br/>
 %}
-)</td></tr>
-<tr><td><i><%== $instructions->{$recipeid}{'INSTRUCTION'}%></i></td></tr>
-%foreach my $ingredientid(keys %{$ingredients}){
-%if($ingredients->{$ingredientid}{'RECIPEID'}==$recipeid){
-<tr><td><%= $ingredients->{$ingredientid}{'INGREDIENT'}%> - <%= $ingredients->{$ingredientid}{'AMOUNT'}%> <%= $ingredients->{$ingredientid}{'MEASURE'}%></td></tr>
-%}
-%}
-%}
-</table><br/>
-<%= tag 'div'=>begin %>
-<%= link_to 'Список блюд'=>"/menu/edit/$menuid"=>(class=>'button') %>
-<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
-<% end %><br/>
-
-<% content_for menuclass=>begin %>/cooking<% end %>

@@ -4,15 +4,19 @@
         <P align=center style="font-size:20px"><b><i><%= $menu %></i></b>, список продуктов</P>
         <table border=0 align=center>
         %foreach my $tag (@{$tags}){#Align for tagname
-        <tr><td align=center colspan=3><b><i><%= $tag %></i></b></td></tr>
-        %foreach my $ingredientid(keys %{$ingredients}){
-        %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
-            <tr id=<%= $ingredientid %>><td>
-            <%= $ingredients->{$ingredientid}{'INGREDIENT'}%></td>
-            <td align=right><%= text_field 'sum'=>$ingredients->{$ingredientid}{'SUM'}=>(size=>6) %></td><td valign=middle><i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i>
-                <a href="#1" onClick="HideObject('<%= $ingredientid %>');return false"><img src="/media/delete.png" border=0 title='Убрать продукт'></a></td></tr>
-        %}
-        %}
+        %if($tag){
+                <tr><td align=center colspan=3><b><i><%= $tag %></i></b></td></tr>
+                %foreach my $ingredientid(keys %{$ingredients}){
+                %if($ingredients->{$ingredientid}{'TAG'} && $ingredients->{$ingredientid}{'INGREDIENT'}){
+                        %if($tag eq $ingredients->{$ingredientid}{'TAG'}){
+                            <tr id=<%= $ingredientid %>><td>
+                            <%= $ingredients->{$ingredientid}{'INGREDIENT'}%></td>
+                            <td align=right><%= text_field 'sum'=>$ingredients->{$ingredientid}{'SUM'}=>(size=>6) %></td><td valign=middle><i><%= $ingredients->{$ingredientid}{'MEASURE'}%></i>
+                                <a href="#1" onClick="HideObject('<%= $ingredientid %>');return false"><img src="/media/delete.png" border=0 title='Убрать продукт'></a></td></tr>
+                        %}
+                        %}
+                        %}
+                %}
         %}
         </table><br/>
 %}elsif($actions eq 'how'){

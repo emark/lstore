@@ -6,7 +6,7 @@
 %}
 
 %#	Select ingredients from tags
-%if(!%{$ingredients}){
+%if(!$recipeid && !%{$ingredients}){
 
 %# If tags not empty 
 %if(%{$tags}){
