@@ -1,0 +1,30 @@
+% layout 'feedview';
+<entities>
+    <recipe>
+        <name>Авокадо с чесночной начинкой</name>
+        <url>http://www.storesto.ru/recipe/view//</url>
+        <type>Закуски</type>
+        <ingredient>
+            <name>1 авокадо</name>
+
+        </ingredient>
+        <ingredient>
+            <name>чеснока</name>
+            <type>зубчик</type>
+            <value>1</value>
+        </ingredient>
+        <ingredient>
+
+            <name>1 помидор</name>
+        </ingredient>
+        <ingredient>
+            <name>соль, перец</name>
+            <quantity>по вкусу</quantity>
+        </ingredient>
+        <instruction>Чеснок раздавите, смешайте с кусочками авокадо и помидоров, посолите, поперчите и заполните смесью
+            половинки авокадо.
+        </instruction>
+
+    </recipe>
+
+</entities>

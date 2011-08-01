@@ -693,6 +693,14 @@ get '/' => sub{
 get '/welcome'=>sub{
 }=>'welcome';
 
+get '/cookbook/feed'=>sub{
+    my $self=shift;
+    my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE,RECIPES.CALCULATION,RECIPES.WEIGHT,CATEGORY.NAME AS CATEGORY FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ENABLED=1");
+    my $ingredients=$dbh->selectall_arrayref("");
+    $self->stash(feed=>$recipes,
+                 ingredients=>$ingredients);
+}=>'feed';
+
 get '/cookbook/:slug'=>{slug=>''}=>sub{
     my $self=shift;
     my $slug=$self->param('slug');

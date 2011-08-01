@@ -25,12 +25,11 @@
 <tr><td class='instructions'><i><%== $instruction %></i></td></tr>
 <tr><td align=left><br/><i style="font-size:25px">Ингридиенты</i></td></tr>
 %	foreach (keys %{$ingredients}){
-<tr><td class=cutstyle>
-<span class='ingredient'>
+<tr><td class='ingredient'>
   <span class='name'><%= $ingredients->{$_}{'INGREDIENT'} %></span> -
     <span class='value'><%= $ingredients->{$_}{'QUANTITY'} %></span>
       <span class='type'><%= $ingredients->{$_}{'MEASURE'} %></span>
-</span></td></tr>
+</td></tr>
 %	}
 %if($recipe->[4]){
 <tr><td align=center><img class="photo" src="/media/photo/<%= $recipe->[4] %>"></td></tr>
@@ -41,7 +40,7 @@
 <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
 <%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
   %if($likes){
-, уже добавили более <%= $likes %> раз
+, уже добавили <%= $likes %> раз
   %}
 <br/><br/>
 %}

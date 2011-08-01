@@ -42,11 +42,14 @@
 		  <P align=center><br/>
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
 		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %> |
-		  <%= link_to 'Screencast'=>'http://www.screenr.com/user/StoResto' %>
+		  <%= link_to 'SC TV'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV') %>
 		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
 	    </div>
+		<div class='partners'>
+				<img src="http://www.livingathome.de/test/recipe/hRecipe.png">
+		</div><!-- #partners-->
 	</div><!-- #content-->
 </div><!-- #wrapper -->
 
