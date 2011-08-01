@@ -7,28 +7,33 @@
     <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Вход=>'login'=>(class=>'button') %> или <%= link_to регистрация=>'register'=>(class=>'button') %><% end %>
 %}
 %#	Show ingredients for recipe
+<%= tag 'div'=>(class=>'hrecipe')=>begin %>
 <%= tag 'div'=>(class=>'category',align=>'center')=>begin %>
 <%= link_to $recipe->[5]=>"/cookbook/$recipe->[6]"=>(title=>'Посмотреть все рецепты из этого раздела') %>
 <%#=$recipe->[5]%>
 <% end %>
-<%= tag 'div'=>(class=>'recipelist',align=>'center')=>begin %><%= $recipe->[0] %><% end %>
-<P align=center><i>порций <%= $recipe->[2] %>
+%# hRecipe microformat
+  <div align=center class='recipelist'><span class='fn'><%= $recipe->[0] %></span></div>
+  <P align=center><i>порций <span class='yield'><%= $recipe->[2] %></span>
 %if($recipe->[1]){
-  / выход <%= $recipe->[1] %> гр. / одна порция <%= $recipe->[7] %> гр.
+  / выход <%= $recipe->[1] %> гр. / одна порция <span class='weight'><%= $recipe->[7] %></span> гр.
 %}
 </i></P>
 <%= link_to 'Печать рецепта'=>"/recipe/print/$recipeid"=>(class=>'button',target=>'_print')%><br/><br/>
 <table id=app border=0>
 <tr><td align=left><i style="font-size:25px">Как готовить</i></td></tr>
-<tr><td ><i><%== $instruction %></i></td></tr>
+<tr><td class='instructions'><i><%== $instruction %></i></td></tr>
 <tr><td align=left><br/><i style="font-size:25px">Ингридиенты</i></td></tr>
 %	foreach (keys %{$ingredients}){
 <tr><td class=cutstyle>
-  <%= $ingredients->{$_}{'INGREDIENT'} %> -
-  <%= $ingredients->{$_}{'QUANTITY'} %> <%= $ingredients->{$_}{'MEASURE'} %></td></tr>
+<span class='ingredient'>
+  <span class='name'><%= $ingredients->{$_}{'INGREDIENT'} %></span> -
+    <span class='value'><%= $ingredients->{$_}{'QUANTITY'} %></span>
+      <span class='type'><%= $ingredients->{$_}{'MEASURE'} %></span>
+</span></td></tr>
 %	}
 %if($recipe->[4]){
-<tr><td align=center><img src="/media/photo/<%= $recipe->[4] %>"></td></tr>
+<tr><td align=center><img class="photo" src="/media/photo/<%= $recipe->[4] %>"></td></tr>
 %}
 <tr><td align=center><br/><i style="font-size:15px">Приятного аппетита!</i></td></tr>
 </table><br/>
@@ -41,3 +46,4 @@
 <br/><br/>
 %}
 Прямая ссылка на этот рецепт <%= link_to "http://www.storesto.ru/recipe/view/$recipeid"=>"http://www.storesto.ru/recipe/view/$recipeid"=>(class=>'button')%>
+<% end %>
