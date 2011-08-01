@@ -36,7 +36,7 @@
 <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
 <%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
   %if($likes){
-, уже добавили <%= $likes %> раз
+, уже добавили более <%= $likes %> раз
   %}
 <br/><br/>
 %}

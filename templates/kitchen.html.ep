@@ -14,24 +14,25 @@
 <table id=app border=0>
 %#Start category indexing
 %foreach my $category (@{$category}){
-    <tr><td colspan=3 align=center class=category><%= $category->[1]%></tr>
+    <tr><td colspan=2 align=center class=category><%= $category->[1]%></tr>
 %foreach my $key(keys %{$recipes}){
 %   if($category->[0]==$recipes->{$key}{'CATEGORYID'}){
   <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
-  <a title='Редактировать' class="recipelist" href="/recipe/edit/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;
+  <a title='Посмотреть рецепт' class="recipelist" href="/recipe/view/<%= $recipes->{$key}{'ID'} %>"><%= $recipes->{$key}{'RECIPE'}%></a>&nbsp;
   %if($recipes->{$key}{'UID'}==$recipes->{$key}{'USERID'}){
     <a class=button href="/kitchen/delete/<%= $recipes->{$key}{'ID'}%>" title="Удалить рецепт"><img src="/media/delete.png"></a>
+    <%= link_to 'Редактировать'=>"/recipe/edit/$recipes->{$key}{'ID'}",(class=>'button',title=>'Редактировать рецепт')%>
   %}else{
-    <a class=buttonunlike href="/kitchen/unlike/<%= $recipes->{$key}{'ID'}%>" title="Убрать из кухни"><img src="/media/delete.png"></a>
+    <a class=buttonunlike href="/kitchen/unlike/<%= $recipes->{$key}{'ID'}%>" title="Рецепт больше не нравится"><img src="/media/delete.png"></a>
   %}
 </td><td>
 %       if($recipes->{$key}{'PORTION'}) {
   <i><%= $recipes->{$key}{'PORTION'} %> гр.</i>
 %       }
-</td><td align=right><%= link_to 'Посмотреть рецепт'=>"/recipe/view/$recipes->{$key}{'ID'}",(class=>'button')%></td></tr>
+</td></tr>
 %   }
 %}
 
 %}#Finish category
-<tr><td align=center colspan=3><br/><%= submit_button 'Создать новое меню' %><% end %></td></tr></table>
+<tr><td align=center colspan=2><br/><%= submit_button 'Создать новое меню' %><% end %></td></tr></table>
 

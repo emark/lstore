@@ -29,7 +29,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -71,7 +71,7 @@ get '/kitchen/:action/:id'=>sub{
         $dbh->do("DELETE FROM ROUTER3 WHERE ROUTER3.RECIPEID=$recipeid AND ROUTER3.MENUID=$_->[0]");
     }
     $dbh->do("DELETE FROM ROUTER2 WHERE ROUTER2.USERID=$uid AND ROUTER2.RECIPEID=$recipeid");
-    $self->stash(message=>'Рецепт больше не нравится')
+    $self->stash(message=>'Рецепт исключен из кухни и всех меню')
   }
   my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY RIGHT JOIN RECIPES ON CATEGORY.ID=RECIPES.CATEGORYID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid GROUP BY CATEGORY.ID ORDER BY ID");
   my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE,ROUND(RECIPES.WEIGHT/RECIPES.CALCULATION) AS PORTION,RECIPES.CATEGORYID,RECIPES.USERID AS USERID,$uid AS UID  FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE RECIPES.USERID=$uid OR ROUTER2.USERID=$uid",'ID');
