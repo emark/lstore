@@ -37,10 +37,13 @@
 <tr><td align=center><br/><i style="font-size:15px">Приятного аппетита!</i></td></tr>
 </table><br/>
 %if($uid){
-<%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
-<%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
-  %if($likes){
-, уже добавили <%= $likes %> раз
+  %if($recipe->[8]==$uid){
+    <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
+  %}else{
+    <%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
+    %if($likes){
+      , уже добавили <%= $likes %> раз
+    %}
   %}
 <br/><br/>
 %}
