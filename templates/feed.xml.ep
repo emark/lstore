@@ -12,8 +12,11 @@
                     <type><%=$ingredient->[4]%></type>
                     <value><%=$ingredient->[3]%></value>
                 </ingredient>
-            %}
+              %}
         %}
+        <instructions><%=$recipes->{$recipeid}{'INSTRUCTION'}%></instructions>
+        <weight><%=$recipes->{$recipeid}{'WEIGHT'}%></weight>
+        <yield><%=$recipes->{$recipeid}{'CALCULATION'}%></yield>
     </recipe>
 %}
 </entities>
