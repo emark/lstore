@@ -8,6 +8,10 @@
 	<meta name="description" content="StoResto - ваш домашний ресторан" />
 	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
 	<link  href="http://fonts.googleapis.com/css?family=Lobster:regular&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
+		<%= javascript 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js' %>
+	
+	 
+	
 	<%= stylesheet '/style.css' %>
 	
 <script type="text/javascript">
@@ -33,7 +37,7 @@
 		<%= link_to icebox=>{foo=>'bar'}=>(class=>$class{'/icebox'})=>begin %>Кладовая<% end %>
 		<%= link_to recipe=>{foo=>'bar'}=>(class=>$class{'/recipe'})=>begin %>Рецепт<% end %>
 		<%= link_to cooking=>{foo=>'bar'}=>(class=>$class{'/cooking'})=>begin %>Готовим<% end %>
-	  <br/><br/><P align=center style="font-size:12px;color:#443C2E"><i>готовим с удовольствием</I></P>
+	  <br/><br/><P align=center style="font-size:12px;color:#443C2E"><i>ваш домашний ресторан</I></P>
 	</div><!-- #header-->
 
 	<div id="content">
@@ -42,7 +46,7 @@
 		  <P align=center><br/>
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
 		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %> |
-		  <%= link_to 'SC TV'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV') %>
+		  <%= link_to 'Видео'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV') %>
 		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>

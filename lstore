@@ -575,7 +575,7 @@ post '/cooking'=>sub{
 					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nwww.storesto.ru - готовим с удовольствием\n";
+	       $data=$data."\nwww.storesto.ru - ваш домашний ресторан\n";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",

@@ -4,9 +4,20 @@
 <%#=test%>
 %if(!$catslug){
 %title 'Поваренная книга';
-    <table id=app>
+    <table id=app border=0>
+    %my $n=0;
     %foreach my $key(@{$catalog}){
-        <tr><td><P class=timeline ALIGN=left><%= link_to $key->[0]=>"/cookbook/$key->[1]" %> (<%= $key->[2] %>)</P></td></tr>
+        %if($n==0){
+        <tr>
+        %}
+        <td align=center width=30%>
+        <!--img src="/media/meal.png"><br/-->
+        <%= link_to $key->[0]=>"/cookbook/$key->[1]"=>(class=>'timeline') %><%#= $key->[2] %></td>
+        %$n++;
+        %if($n==3){
+        </tr>
+        %$n=0;
+        %}
     %}
     </table>
 %}else{

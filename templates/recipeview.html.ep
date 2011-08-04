@@ -14,9 +14,9 @@
 <% end %>
 %# hRecipe microformat
   <div align=center class='recipelist'><span class='fn'><%= $recipe->[0] %></span></div>
-  <P align=center><i>порций <span class='yield'><%= $recipe->[2] %></span>
+  <P align=center><i>количество порций <span class='yield'><%= $recipe->[2] %></span>
 %if($recipe->[1]){
-  / выход <%= $recipe->[1] %> гр. / одна порция <span class='weight'><%= $recipe->[7] %></span> гр.
+  / вес блюда <%= $recipe->[1] %> гр. / вес одной порции <span class='weight'><%= $recipe->[7] %></span> гр.
 %}
 </i></P>
 <%= link_to 'Печать рецепта'=>"/recipe/print/$recipeid"=>(class=>'button',target=>'_print')%><br/><br/>

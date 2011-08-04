@@ -6,10 +6,51 @@
 Приготовь <%= link_to 'любой рецепт'=>'cookbook'=>(style=>'color:#FFF') %> или <%= link_to 'создай своё блюдо'=>'register'=>(style=>'color:#FFF') %>
 </td></table><br/>
 <table width=100% background="/media/bg-howto.jpg">
-<tr><td><P align=center class=indexcaption>Что умеет StoResto?</P></td></tr>
-<tr><td><P align=center>
-<iframe src="http://www.screenr.com/embed/DtUs" width="650" height="396" frameborder="0"></iframe>
-</P></td></tr>
-<tr><td><P align=center><a href="/register" class=registerbutton>Зарегистрируйся прямо сейчас!</a></P>
+<tr><td>
+<table border=0 width=100%><tr>
+    <td align=center class=indexcaption width=30%><a href="#about" id=about_link style="color:#193351">Что это такое?</a></td>
+    <td align=center class=indexcaption width=30%><a href="#what_can" id=what_can_link style="color:#193351">Что умеет StoResto?</a></td>
+    <td align=center class=indexcaption width=30%><a href="#cost" id=cost_link style="color:#193351">Сколько стоит?</a></td>
+</tr></table>
+</td></tr>
+<tr><td>
+
+<div style="height:420px">
+<P id=about style="display:none" align=center><i class="registerbutton">
+StoResto - место, где бережно хранятся ваши рецепты и рецепты которые вам понравились.<br>
+<img src="/media/about-img.png" style="box-shadow: 3px 3px 20px #0F0F0F;"><br>
+Здесь можно придумывать любые блюда, составлять меню, планировать покупки продуктов, отправлять список покупок на электронную почту, обмениваться рецептами.
+</i></P>
+<P align=center id=what_can>
+<iframe id=display src="http://www.screenr.com/embed/DtUs" width="650" height="396" frameborder="0"></iframe>
+</P>
+<P id=cost align=center style="display:none;"><i class="registerbutton">
+<br><br>
+<span style="font-size:168px">0,00</span> <span style="font-size:88px">руб.</span>
+<br><br><br>
+StoResto полностью бесплатен для вас и ваших друзей. <br>А экономию времени и средств вы можете измерить сами.</i>
+</P>
+</div>
+
+<script>
+$('#about_link').click(function() {
+    $('#what_can').hide();
+    $('#cost').hide();
+    $('#about').show();
+});
+$('#what_can_link').click(function() {
+    $('#about').hide();
+    $('#cost').hide();
+    $('#what_can').show();
+});
+$('#cost_link').click(function() {
+    $('#about').hide();
+    $('#what_can').hide();
+    $('#cost').show();
+});
+</script>
+
+</td></tr>
+<tr><td><P align=center><a href="/register" class=registerbutton>Присоединяйся прямо сейчас!</a></P>
 </td></tr>
 </table>
