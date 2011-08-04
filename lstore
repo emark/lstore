@@ -167,6 +167,7 @@ post '/icebox'=>sub{
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $ingredient=$self->param('ingredient');
+  $ingredient=~s/"//g;#hook for \"
   my $measure=$self->param('measure');
   my $tag=lc $self->param('tag');
   my $ingredientid=$self->param('ingredientid') || undef;
