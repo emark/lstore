@@ -79,7 +79,7 @@
 %if($recipeid){
   <%= tag 'P'=>begin %>
   <%= link_to 'Просмотр рецепта'=>"/recipe/view/$recipeid"=>(class=>'button')%>
-  <a href="<%= url_for "/kitchen/delete/$recipeid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
+  <a href="#" onClick="javascript:ConfirmDelete('/kitchen/delete/<%=$recipeid%>')" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить рецепт</a>
   <%= form_for "/recipe/add/$recipeid" => (method => 'get') => begin %><input type=text name=addingredient value=""> <%= submit_button 'Добавить продукт' %>
   <% end %>
   <% end %>

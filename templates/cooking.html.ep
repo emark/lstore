@@ -16,7 +16,7 @@
  <table id=app>
   %foreach (keys %{$menus}){
   <tr><td><a title='Редактировать' class=menulist href="/menu/edit/<%= $menus->{$_}{'ID'} %>"><%= $menus->{$_}{'MENU'} %></a>
-  &nbsp;<a href="/cooking/delete/<%= $menus->{$_}{'ID'}%>" title="Удалить меню" class=button><img src="/media/delete.png" ></a></td>
+  &nbsp;<a href="#" onClick="javascript:ConfirmDelete('/cooking/delete/<%= $menus->{$_}{'ID'}%>')" title="Удалить меню" class=button><img src="/media/delete.png" ></a></td>
   <td><a class=button href="/cooking/buy/<%= $menus->{$_}{'ID'} %>">Что купить</a></td>
   <td><a class=button href="/cooking/how/<%= $menus->{$_}{'ID'} %>">Как готовить</a></td></tr>
  %}

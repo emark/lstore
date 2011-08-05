@@ -34,7 +34,7 @@
     <%= tag 'div'=>begin %>
 	<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>
     <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
-	<a href="<%= url_for "/cooking/delete/$menuid" %>" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить меню&nbsp;</a>
+	<a href="#" onClick="javascript:ConfirmDelete('/cooking/delete/<%=$menuid%>')" class='button' style='color:#BC1714'><img src="/media/delete.png">&nbsp;Удалить меню&nbsp;</a>
     <% end %>
     <%= tag 'P'=>begin %>
     <%= form_for "/menu/add/$menuid" => (method => 'get') => begin %><input type=text name=addrecipe value="">&nbsp;<%= submit_button 'Добавить блюдо' %><% end %>
