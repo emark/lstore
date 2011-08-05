@@ -82,23 +82,6 @@ get '/kitchen/:action/:id'=>sub{
   $self->render('kitchen');
 };
 
-#post '/kitchen'=>sub{
-#  my $self=shift;
-#  return $self->redirect_to('login') unless $self->session('name');
-#  my $uid=$self->session('uid');
-#  my @recipeid=$self->param('recipeid');
-#  my $SQL='';
-#  foreach(@recipeid){
-#    $SQL=$SQL."RECIPES.ID=$_ OR ";
-#  }
-#  my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID AS ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ($SQL RECIPES.ID=0) AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid)",'ID');
-#  $self->stash(recipes=>$recipes,
-#	       menu=>'',
-#	       menuid=>0,
-#	       addrecipes=>{});
-#  $self->render('menu');
-#};
-
 get '/icebox'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');

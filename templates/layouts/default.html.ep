@@ -41,9 +41,9 @@
 		<%= content %>
 	    <div align=center>
 		  <P align=center><br/>
-		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU' %> |
-		  <%= link_to 'Facebook'=>'https://www.facebook.com/home.php?sk=group_155471694518851' %> |
-		  <%= link_to 'Видео'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV') %>
+		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU'=>(target=>'blank') %> |
+		  <%= link_to 'Facebook'=>'http://www.facebook.com/groups/storesto/'=>(target=>'blank') %> |
+		  <%= link_to 'Видео'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV',target=>'blank') %>
 		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
