@@ -8,7 +8,7 @@
 	<meta name="description" content="StoResto - ваш домашний ресторан" />
 	<meta name="verify-reformal" content="a5419b34e791ffdd85f5cc39" />
 	<link  href="http://fonts.googleapis.com/css?family=Lobster:regular&subset=cyrillic,latin" rel="stylesheet" type="text/css" >
-		<%= javascript 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js' %>	
+		<%#= javascript 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js' %>	
 	<%= stylesheet '/style.css' %>
 	
 <script type="text/javascript">

@@ -11,6 +11,10 @@ function HideObject($object)
 {
 		document.getElementById([$object]).style.display = "none";
 }
+function ShowObject($object)
+{
+		document.getElementById([$object]).style.display = "";
+}
 function ConfirmDelete($object)
 {
         if(confirm("Удалить безвозвратно. Продожить? "))

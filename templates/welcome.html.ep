@@ -8,9 +8,9 @@
 <table width=100% background="/media/bg-howto.jpg">
 <tr><td>
 <table border=0 width=100%><tr>
-    <td align=center class=indexcaption width=30%><a href="#about" id=about_link style="color:#193351">Что это такое?</a></td>
-    <td align=center class=indexcaption width=30%><a href="#what_can" id=what_can_link style="color:#193351">Что умеет StoResto?</a></td>
-    <td align=center class=indexcaption width=30%><a href="#cost" id=cost_link style="color:#193351">Сколько стоит?</a></td>
+    <td align=center class=indexcaption width=30%><a href="#about" onClick="javascript:HideObject('what_can');HideObject('cost');ShowObject('about');return false;" style="color:#193351">Что это такое?</a></td>
+    <td align=center class=indexcaption width=30%><a href="#what_can" onClick="javascript:ShowObject('what_can');HideObject('cost');HideObject('about');return false;" style="color:#193351">Что умеет StoResto?</a></td>
+    <td align=center class=indexcaption width=30%><a href="#cost" onClick="javascript:HideObject('what_can');ShowObject('cost');HideObject('about');return false;" style="color:#193351">Сколько стоит?</a></td>
 </tr></table>
 </td></tr>
 <tr><td>
@@ -31,24 +31,6 @@ StoResto - место, где бережно хранятся ваши реце�
 StoResto полностью бесплатен для вас и ваших друзей. <br>А экономию времени и средств вы можете измерить сами.</i>
 </P>
 </div>
-
-<script>
-$('#about_link').click(function() {
-    $('#what_can').hide();
-    $('#cost').hide();
-    $('#about').show();
-});
-$('#what_can_link').click(function() {
-    $('#about').hide();
-    $('#cost').hide();
-    $('#what_can').show();
-});
-$('#cost_link').click(function() {
-    $('#about').hide();
-    $('#what_can').hide();
-    $('#cost').show();
-});
-</script>
 
 </td></tr>
 <tr><td><P align=center><a href="/register" class=registerbutton>Присоединяйся прямо сейчас!</a></P>
