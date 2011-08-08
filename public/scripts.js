@@ -17,7 +17,7 @@ function ShowObject($object)
 }
 function ConfirmDelete($object)
 {
-        if(confirm("Удалить безвозвратно. Продожить? "))
+        if(confirm("Удаляем. Вы уверены? "))
         {
                 window.location=$object;
         }

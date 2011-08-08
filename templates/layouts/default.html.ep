@@ -43,7 +43,8 @@
 		  <P align=center><br/>
 		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU'=>(target=>'blank') %> |
 		  <%= link_to 'Facebook'=>'http://www.facebook.com/groups/storesto/'=>(target=>'blank') %> |
-		  <%= link_to 'Видео'=>'http://www.screenr.com/user/StoResto'=>(title=>'Screencast TV',target=>'blank') %>
+		  <%= link_to 'Видеожурнал'=>'http://tv.storesto.ru'=>(target=>'blank') %> |
+		  <%= link_to 'Отзывы и предложения'=>'http://storesto.reformal.ru'=>(target=>'blank') %>
 		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>

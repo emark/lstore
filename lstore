@@ -149,8 +149,8 @@ post '/icebox'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $ingredient=$self->param('ingredient');
-  $ingredient=~s/"//g;#hook for \"
+  my $ingredient=$self->param('ingredient') || '';
+  $ingredient=~s/"//g unless $ingredient;#hook for \"
   my $measure=$self->param('measure');
   my $tag=lc $self->param('tag');
   my $ingredientid=$self->param('ingredientid') || undef;
@@ -295,7 +295,8 @@ post '/recipe'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
-  my $recipe=$self->param('recipe');
+  my $recipe=$self->param('recipe') || '';
+  $recipe=~s/"//g unless $recipe;#hook for \"
   my $recipeid=$self->param('recipeid') || 0;
   my $category=$self->param('category') || 1;
   my $weight=$self->param('weight') || 0;
@@ -404,6 +405,7 @@ post '/menu'=>sub{
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $menu=$self->param('menu');
+  $menu=~s/"//g;#hook for \"
   my $menuid=$self->param('menuid');
   my @recipeid=$self->param('recipeid');
   my @amount=$self->param('amount');

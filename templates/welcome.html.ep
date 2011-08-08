@@ -8,21 +8,30 @@
 <table width=100% background="/media/bg-howto.jpg">
 <tr><td>
 <table border=0 width=100%><tr>
-    <td align=center class=indexcaption width=30%><a href="#about" onClick="javascript:HideObject('what_can');HideObject('cost');ShowObject('about');return false;" style="color:#193351">Что это такое?</a></td>
-    <td align=center class=indexcaption width=30%><a href="#what_can" onClick="javascript:ShowObject('what_can');HideObject('cost');HideObject('about');return false;" style="color:#193351">Что умеет StoResto?</a></td>
-    <td align=center class=indexcaption width=30%><a href="#cost" onClick="javascript:HideObject('what_can');ShowObject('cost');HideObject('about');return false;" style="color:#193351">Сколько стоит?</a></td>
+    <td align=center class=indexcaption ><a href="#about" onClick="javascript:HideObject('what_can');HideObject('better_than');HideObject('cost');ShowObject('about');return false;" style="color:#193351">Что это такое?</a></td>
+    <td align=center class=indexcaption ><a href="#better_than" onClick="javascript:ShowObject('better_than');HideObject('what_can');HideObject('cost');HideObject('about');return false;" style="color:#193351">Чем мы отличаемся?</a></td>
+    <td align=center class=indexcaption ><a href="#what_can" onClick="javascript:ShowObject('what_can');HideObject('better_than');HideObject('cost');HideObject('about');return false;" style="color:#193351">Что умеем?</a></td>
+    <td align=center class=indexcaption ><a href="#cost" onClick="javascript:HideObject('what_can');ShowObject('cost');HideObject('better_than');HideObject('about');return false;" style="color:#193351">Сколько стоит?</a></td>
 </tr></table>
 </td></tr>
 <tr><td>
 
 <div style="height:420px">
-<P id=about style="display:none" align=center><i class="registerbutton">
-StoResto - место, где бережно хранятся ваши рецепты и рецепты которые вам понравились.<br>
+<P id=about  align=center><i class="registerbutton">
+StoResto - место, где помнят и хранят все ваши рецепты.<br><br>
 <img src="/media/about-img.png" style="box-shadow: 3px 3px 20px #0F0F0F;"><br>
 Здесь можно придумывать любые блюда, составлять меню, планировать покупки продуктов, отправлять список покупок на электронную почту, обмениваться рецептами.<br>
 <%=link_to 'Зрегистрируйся'=>'/register'=>(style=>'color:#FFF',title=>'Регистрация за 10 секунд')%> или посмотри нашу <%=link_to 'Кулинарную книгу'=>'/cookbook'=>(style=>'color:#FFF',title=>'Каталог рецептов')%>
 </i></P>
-<P align=center id=what_can>
+<P id=better_than align=center style="display:none;"><i class="registerbutton">
+<%= image '/media/check.png' %><br>Создание нового рецепта за 30 секунд<br><br>
+<%= image '/media/check.png' %><br>Планируй меню на день или заранее на важные даты<br><br>
+<%= image '/media/check.png' %><br>Обновляемая раскладка ингредиентов в один клик мышкой<br><br>
+<%= image '/media/check.png' %><br>Моментальный пересчет списка продуктов при изменении количества блюд<br>
+<%= image '/media/check.png' %><br>Делись своими рецептами с друзьями, находясь в кафе, в дороге или на работе<br>
+<%= image '/media/check.png' %><br>Распечатывай рецепты, меню, списки продуктов, отправляйте списки покупок на почту<br>и многое другое
+</i></P>
+<P align=center id=what_can style="display:none">
 <iframe id=display src="http://www.screenr.com/embed/DtUs" width="650" height="396" frameborder="0"></iframe>
 </P>
 <P id=cost align=center style="display:none;"><i class="registerbutton">
