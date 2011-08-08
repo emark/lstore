@@ -19,7 +19,8 @@
 <P id=about style="display:none" align=center><i class="registerbutton">
 StoResto - место, где бережно хранятся ваши рецепты и рецепты которые вам понравились.<br>
 <img src="/media/about-img.png" style="box-shadow: 3px 3px 20px #0F0F0F;"><br>
-Здесь можно придумывать любые блюда, составлять меню, планировать покупки продуктов, отправлять список покупок на электронную почту, обмениваться рецептами.
+Здесь можно придумывать любые блюда, составлять меню, планировать покупки продуктов, отправлять список покупок на электронную почту, обмениваться рецептами.<br>
+<%=link_to 'Зрегистрируйся'=>'/register'=>(style=>'color:#FFF',title=>'Регистрация за 10 секунд')%> или посмотри нашу <%=link_to 'Кулинарную книгу'=>'/cookbook'=>(style=>'color:#FFF',title=>'Каталог рецептов')%>
 </i></P>
 <P align=center id=what_can>
 <iframe id=display src="http://www.screenr.com/embed/DtUs" width="650" height="396" frameborder="0"></iframe>
