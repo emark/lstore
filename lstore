@@ -581,7 +581,7 @@ get '/login'=>sub{
   my $self=shift;
   my $email=$self->param('email') || '';
   my $pass=$self->param('pass') || '';
-  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'") || undef;
+  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass' AND LENGTH(OID)=0") || undef;
   my $message='';
   if(!$check && $email && $pass){
     $message='Неудача, постарайтесь верно указать почту и пароль.';
@@ -602,14 +602,27 @@ post '/openid'=>sub{
     my $md5=Digest::MD5->new;
     $md5->add($dbconf[5],$dbconf[6]);
     my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token")->res->json;
-    my $email=$json->{'email'};
-    my $message='';
-    if(!$email){
+    my $identity=$json->{'identity'};
+    my $uid=0;
+    my $message='Добро пожаловать';
+    if(!$identity){
         $message='Авторизоваться не удалось.';
     }
-    #return $self->render unless $email;
-    $self->stash(xjson=>$json);
-}=>'openid';
+    return $self->render unless $identity;
+    $uid=$dbh->selectrow_array("SELECT ID FROM USERS WHERE OID='$identity'") || undef;
+    if(!$uid){
+        $dbh->do("INSERT INTO USERS(ID,OID,TIMEFLAG) VALUES(NULL,\"$identity\",NOW())") || $dbh->errstr; #Create new user
+        $uid=$dbh->last_insert_id('','','USERS','ID');
+        $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"Батон белый\",2,\"хлеб\",$uid,NOW())");#Create ingredients
+        my $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG,CATEGORYID) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW(),5)");#Create recipe
+        my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
+        $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
+        $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
+    }
+    $self->session(name=>'user',uid=>$uid,message=>$message);
+    return $self->redirect_to('kitchen');
+}=>'login';
 
 get '/logout'=>sub{
   my $self=shift;
