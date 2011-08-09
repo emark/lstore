@@ -601,7 +601,7 @@ post '/openid'=>sub{
     my $token=$self->param('token') || '';
     my $md5=Digest::MD5->new;
     $md5->add($dbconf[5],$dbconf[6]);
-    my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token")->res->json;
+    my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token&id=$dbconf[5]&sig=$md5")->res->json;
     my $identity=$json->{'identity'};
     my $uid=0;
     my $message='Добро пожаловать';
