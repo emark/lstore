@@ -588,8 +588,7 @@ get '/login'=>sub{
   }
   my $url=uri_escape('http://www.storesto.ru/openid');
   $self->stash(url=>$url,
-               message=>$message,
-               check=>$check);
+               message=>$message);
   return $self->render unless $check;
   $self->session(name=>$email,uid=>$check);
   $self->flash(message => 'Добро пожаловать в StoResto');
@@ -607,7 +606,9 @@ post '/openid'=>sub{
     my $message='Добро пожаловать';
     if(!$identity){
         $message='Авторизоваться не удалось.';
-        $self->stash(message=>$message);
+        my $url=uri_escape('http://www.storesto.ru/openid');
+        $self->stash(url=>$url,
+               message=>$message);
     }
     return $self->render unless $identity;
     $uid=$dbh->selectrow_array("SELECT ID FROM USERS WHERE OID='$identity'") || undef;

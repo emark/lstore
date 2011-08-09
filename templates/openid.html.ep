@@ -1,5 +1,0 @@
-%layout 'default';
-<%#=test%>
-%foreach my $key (keys %{$xjson}){
-<%= $key %>=<%= $xjson->{$key} %><br/>
-%}
