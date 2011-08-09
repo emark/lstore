@@ -30,7 +30,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
