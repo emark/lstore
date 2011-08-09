@@ -6,6 +6,7 @@ use Validator::Custom;
 use DBI;
 use utf8;
 use URI::Escape;
+use Digest::MD5;
 plugin 'mail';
 
 open (DBCONF,"< db.conf") || die "Error open dbconfig file";
@@ -30,7 +31,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -553,20 +554,20 @@ post '/cooking'=>sub{
   my @tag=$self->param('tag');
   my @measure=$self->param('measure');
   my @amount=$self->param('amount');
-  my $data='';
+  my $text='';
   my $position=0;
   if($email && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
 	       foreach(my $n=0;$n<@ingredient;$n++){
 			      if($amount[$n] && $amount[$n]>0){
 					     $position++;
-					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
+					     $text=$text."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nwww.storesto.ru - ваш домашний ресторан\n";
+	       $text=$text."\nwww.storesto.ru - ваш домашний ресторан\n";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",
-	         data    => $data,
+	         data    => $text,
 	       );
     $self->stash(message=>'Список продуктов отправлен на почту');
   }
@@ -595,11 +596,19 @@ get '/login'=>sub{
   $self->redirect_to('kitchen');
 }=>'login';
 
-post '/openid'=>sub{
+get '/openid'=>sub{
     my $self=shift;
     my $token=$self->param('token') || '';
-    $self->stash(token=>$token);
-    #http://loginza.ru/api/authinfo?token=$token;
+    my $md5=Digest::MD5->new;
+    $md5->add($dbconf[5],$dbconf[6]);
+    my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token")->res->json;
+    my $email=$json->{'email'};
+    my $message='';
+    if(!$email){
+        $message='Авторизоваться не удалось.';
+    }
+    #return $self->render unless $email;
+    $self->stash(xjson=>$json);
 }=>'openid';
 
 get '/logout'=>sub{
@@ -615,7 +624,7 @@ get '/register'=>sub{
   my $pass=$self->param('pass') || undef;
   my $activation=$self->param('activation') || undef;
   my $message=undef;
-  my $data='';
+  my $text='';
   if(!$activation && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/ && $pass){
         $activation=$dbh->selectrow_array("SELECT PASS FROM USERS WHERE EMAIL='$email'");
         if(!$activation){
@@ -623,7 +632,7 @@ get '/register'=>sub{
                 $activation=$activation.int(rand($i));
             }
             #Generate activation code
-            $data="Поздравляем!\nВы получили доступ в StoResto.\n
+            $text="Поздравляем!\nВы получили доступ в StoResto.\n
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль:\t$pass\n
@@ -631,7 +640,7 @@ $subscribe";
             $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,PASS,QUERY) VALUES (NULL,\"$email\",\"$activation\",\"$pass\",NOW())");
             $self->mail(to=>$email,
             	subject=>'Приглашение в StoResto',
-            	data=>$data);
+            	data=>$text);
             $message='Приглашение отправлено на электронную почту.';
             $self->flash(message=>$message);
             return $self->redirect_to('login');
