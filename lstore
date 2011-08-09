@@ -605,7 +605,7 @@ post '/openid'=>sub{
     my $uid=0;
     my $message='Добро пожаловать';
     if(!$identity){
-        $message='Авторизоваться не удалось.';
+        $message='Авторизоваться не удалось.'.$json->{'error_type'}.$json->{'error_message'};
         my $url=uri_escape('http://www.storesto.ru/openid');
         $self->stash(url=>$url,
                message=>$message);
