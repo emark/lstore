@@ -607,6 +607,7 @@ post '/openid'=>sub{
     my $message='Добро пожаловать';
     if(!$identity){
         $message='Авторизоваться не удалось.';
+        $self->stash(message=>$message);
     }
     return $self->render unless $identity;
     $uid=$dbh->selectrow_array("SELECT ID FROM USERS WHERE OID='$identity'") || undef;
@@ -620,7 +621,8 @@ post '/openid'=>sub{
         $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
         $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
     }
-    $self->session(name=>'user',uid=>$uid,message=>$message);
+    $self->flash(message=>$message);
+    $self->session(name=>'user',uid=>$uid);
     return $self->redirect_to('kitchen');
 }=>'login';
 
