@@ -596,7 +596,7 @@ get '/login'=>sub{
   $self->redirect_to('kitchen');
 }=>'login';
 
-get '/openid'=>sub{
+post '/openid'=>sub{
     my $self=shift;
     my $token=$self->param('token') || '';
     my $md5=Digest::MD5->new;
