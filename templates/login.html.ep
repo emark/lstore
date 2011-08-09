@@ -18,7 +18,3 @@
     или пройдите <%= link_to регистрацию=>'register' %> за 5 секунд
 </td></tr>
 </table>
-<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
-<a href="http://loginza.ru/api/widget?token_url=<%=$url%>&providers_set=vkontakte,facebook,twitter" class="loginza">
-    <img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
-</a>
