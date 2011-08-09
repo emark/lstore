@@ -5,6 +5,7 @@ use Mojolicious::Lite;
 use Validator::Custom;
 use DBI;
 use utf8;
+use URI::Escape;
 plugin 'mail';
 
 open (DBCONF,"< db.conf") || die "Error open dbconfig file";
@@ -24,12 +25,12 @@ app->plugin(mail => {
   });
 
 my $vc=Validator::Custom->new;
-my $subscribe="Добавьте адрес notify\@storesto.ru в вашу адресную книгу и вы не пропустите ни одного сообщения.\nСлужба поддержки: support\@storesto.ru\nНаш блог http://blog.storesto.ru";
+my $subscribe="Добавьте адрес notify\@storesto.ru в вашу адресную книгу и вы не пропустите ни одного сообщения.\nСлужба поддержки: support\@storesto.ru\nhttp://www.storesto.ru - ваш домашний ресторан\nВидеожурнал http://tv.storesto.ru";
 
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -579,11 +580,23 @@ get '/login'=>sub{
   my $self=shift;
   my $email=$self->param('email') || '';
   my $pass=$self->param('pass') || '';
-  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'");
+  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'") || undef;
+  my $message='';
+  if(!$check && $email && $pass){
+    $message='Неудача, постарайтесь верно указать почту и пароль.';
+  }
+  my $url=uri_escape('http://www.storesto.ru/openid');
+  $self->stash(url=>$url,
+               message=>$message,
+               check=>$check);
   return $self->render unless $check;
   $self->session(name=>$email,uid=>$check);
   $self->flash(message => 'Добро пожаловать в StoResto');
   $self->redirect_to('kitchen');
+}=>'login';
+
+post '/openid'=>sub{
+    my $self=shift;
 }=>'login';
 
 get '/logout'=>sub{

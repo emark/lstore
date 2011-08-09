@@ -41,11 +41,10 @@
 		<%= content %>
 	    <div align=center>
 		  <P align=center><br/>
-		  <%= link_to 'Twitter'=>'http://twitter.com/storesto_RU'=>(target=>'blank') %> |
-		  <%= link_to 'Facebook'=>'http://www.facebook.com/groups/storesto/'=>(target=>'blank') %> |
+		  <%= link_to 'Блог'=>'http://www.facebook.com/groups/storesto/'=>(target=>'blank') %> |
 		  <%= link_to 'Видеожурнал'=>'http://tv.storesto.ru'=>(target=>'blank') %> |
 		  <%= link_to 'Отзывы и предложения'=>'http://storesto.reformal.ru'=>(target=>'blank') %>
-		  </P><P align=center>
+		  		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
 	    </div>
@@ -54,33 +53,6 @@
 		</div><!-- #partners-->
 	</div><!-- #content-->
 </div><!-- #wrapper -->
-
-<script type="text/javascript">
-reformal_wdg_w    = "713";
-reformal_wdg_h    = "460";
-reformal_wdg_domain    = "storesto";
-reformal_wdg_mode    = 0;
-reformal_wdg_title   = "StoResto - домашняя кухня";
-reformal_wdg_ltitle  = "Оставьте свой отзыв";
-reformal_wdg_lfont   = "";
-reformal_wdg_lsize   = "";
-reformal_wdg_color   = "#9e940b";
-reformal_wdg_bcolor  = "#9e940b";
-reformal_wdg_tcolor  = "#ffffff";
-reformal_wdg_align   = "left";
-reformal_wdg_charset = "utf-8";
-reformal_wdg_waction = 0;
-reformal_wdg_vcolor  = "#b2b84a";
-reformal_wdg_cmline  = "#E0E0E0";
-reformal_wdg_glcolor  = "#105895";
-reformal_wdg_tbcolor  = "#ffffff";
-reformal_wdg_tcolor_aw4  = "#3F4543";
- 
-reformal_wdg_bimage = "7688f5685f7701e97daa5497d3d9c745.png";
- 
-</script>
-
-<script type="text/javascript" language="JavaScript" src="http://reformal.ru/tabn2v4.js?charset=utf-8"></script><noscript><a href="http://storesto.reformal.ru">StoResto - домашняя кухня feedback</a> <a href="http://reformal.ru">на платформе <img src="http://widget.reformal.ru/i/reformal_ru.png" /></a></noscript>
 
 <!-- Yandex.Metrika counter -->
 <div style="display:none;"><script type="text/javascript">
