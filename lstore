@@ -6,6 +6,7 @@ use Validator::Custom;
 use DBI;
 use utf8;
 use URI::Escape;
+use Digest::MD5;
 plugin 'mail';
 
 open (DBCONF,"< db.conf") || die "Error open dbconfig file";
@@ -553,20 +554,20 @@ post '/cooking'=>sub{
   my @tag=$self->param('tag');
   my @measure=$self->param('measure');
   my @amount=$self->param('amount');
-  my $data='';
+  my $text='';
   my $position=0;
   if($email && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/){
 	       foreach(my $n=0;$n<@ingredient;$n++){
 			      if($amount[$n] && $amount[$n]>0){
 					     $position++;
-					     $data=$data."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
+					     $text=$text."$position. $ingredient[$n], $tag[$n] - $amount[$n] $measure[$n]\n";
 			      }
 	       }
-	       $data=$data."\nwww.storesto.ru - ваш домашний ресторан\n";
+	       $text=$text."\nwww.storesto.ru - ваш домашний ресторан\n";
 	       $self->mail(
 	         to      => $email,
 	         subject => "$menu, список продуктов",
-	         data    => $data,
+	         data    => $text,
 	       );
     $self->stash(message=>'Список продуктов отправлен на почту');
   }
@@ -580,15 +581,14 @@ get '/login'=>sub{
   my $self=shift;
   my $email=$self->param('email') || '';
   my $pass=$self->param('pass') || '';
-  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'") || undef;
+  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass' AND LENGTH(OID)=0") || undef;
   my $message='';
   if(!$check && $email && $pass){
     $message='Неудача, постарайтесь верно указать почту и пароль.';
   }
   my $url=uri_escape('http://www.storesto.ru/openid');
   $self->stash(url=>$url,
-               message=>$message,
-               check=>$check);
+               message=>$message);
   return $self->render unless $check;
   $self->session(name=>$email,uid=>$check);
   $self->flash(message => 'Добро пожаловать в StoResto');
@@ -597,6 +597,35 @@ get '/login'=>sub{
 
 post '/openid'=>sub{
     my $self=shift;
+    my $token=$self->param('token') || '';
+    my $md5=Digest::MD5->new;
+    $md5->add($token,$dbconf[6]);
+    my $digest = $md5->hexdigest;
+    my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token&id=$dbconf[5]&sig=$digest")->res->json;
+    my $identity=$json->{'identity'};
+    my $uid=0;
+    my $message='Добро пожаловать';
+    if(!$identity){
+        $message='Авторизоваться не удалось.';#.$json->{'error_type'}.$json->{'error_message'};
+        my $url=uri_escape('http://www.storesto.ru/openid');
+        $self->stash(url=>$url,
+               message=>$message);
+    }
+    return $self->render unless $identity;
+    $uid=$dbh->selectrow_array("SELECT ID FROM USERS WHERE OID='$identity'") || undef;
+    if(!$uid){
+        $dbh->do("INSERT INTO USERS(ID,OID,TIMEFLAG) VALUES(NULL,\"$identity\",NOW())") || $dbh->errstr; #Create new user
+        $uid=$dbh->last_insert_id('','','USERS','ID');
+        $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"Батон белый\",2,\"хлеб\",$uid,NOW())");#Create ingredients
+        my $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG,CATEGORYID) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW(),5)");#Create recipe
+        my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
+        $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
+        $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
+    }
+    $self->flash(message=>$message);
+    $self->session(name=>'user',uid=>$uid);
+    return $self->redirect_to('kitchen');
 }=>'login';
 
 get '/logout'=>sub{
@@ -612,7 +641,7 @@ get '/register'=>sub{
   my $pass=$self->param('pass') || undef;
   my $activation=$self->param('activation') || undef;
   my $message=undef;
-  my $data='';
+  my $text='';
   if(!$activation && $email=~/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/ && $pass){
         $activation=$dbh->selectrow_array("SELECT PASS FROM USERS WHERE EMAIL='$email'");
         if(!$activation){
@@ -620,7 +649,7 @@ get '/register'=>sub{
                 $activation=$activation.int(rand($i));
             }
             #Generate activation code
-            $data="Поздравляем!\nВы получили доступ в StoResto.\n
+            $text="Поздравляем!\nВы получили доступ в StoResto.\n
 Для завершения регистрации откройте ссылку http://www.storesto.ru/register?activation=$activation,
 если ссылка не открывается, скопируйте и вставьте в броузере.
 Ваш пароль:\t$pass\n
@@ -628,7 +657,7 @@ $subscribe";
             $dbh->do("INSERT INTO INVITE(ID,EMAIL,CODE,PASS,QUERY) VALUES (NULL,\"$email\",\"$activation\",\"$pass\",NOW())");
             $self->mail(to=>$email,
             	subject=>'Приглашение в StoResto',
-            	data=>$data);
+            	data=>$text);
             $message='Приглашение отправлено на электронную почту.';
             $self->flash(message=>$message);
             return $self->redirect_to('login');
@@ -655,8 +684,10 @@ $subscribe";
         $message='Код активации неверен';
     }
   }
+  my $url=uri_escape('http://www.storesto.ru/openid');
   $self->stash(message=>$message,
-               uid=>$uid);
+               uid=>$uid,
+               url=>$url);
 }=>'register';
 
 get '/lost_password'=>sub{
