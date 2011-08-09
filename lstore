@@ -684,8 +684,10 @@ $subscribe";
         $message='Код активации неверен';
     }
   }
+  my $url=uri_escape('http://www.storesto.ru/openid');
   $self->stash(message=>$message,
-               uid=>$uid);
+               uid=>$uid,
+               url=>$url);
 }=>'register';
 
 get '/lost_password'=>sub{
