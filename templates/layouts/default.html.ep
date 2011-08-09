@@ -41,9 +41,9 @@
 		<%= content %>
 	    <div align=center>
 		  <P align=center><br/>
-		  <%= link_to 'Блог'=>'http://www.facebook.com/groups/storesto/'=>(target=>'blank') %> |
-		  <%= link_to 'Видеожурнал'=>'http://tv.storesto.ru'=>(target=>'blank') %> |
-		  <%= link_to 'Отзывы и предложения'=>'http://feedback.storesto.ru'=>(target=>'blank') %>
+		  <%= link_to 'Блог'=>'http://www.facebook.com/groups/storesto/'%> |
+		  <%= link_to 'Видеожурнал'=>'http://tv.storesto.ru'%> |
+		  <%= link_to 'Отзывы и предложения'=>'http://feedback.storesto.ru'%>
 		  		  </P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
 		  </P>
