@@ -39,6 +39,10 @@ StoResto - место, где помнят и хранят все ваши ре�
 <span style="font-size:168px">0,00</span> <span style="font-size:88px">руб.</span>
 <br><br><br>
 StoResto полностью бесплатен для вас и ваших друзей. <br>А экономию времени и средств вы можете измерить сами.</i>
+<br><br><br>
+<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
+<a href="http://loginza.ru/api/widget?token_url=<%=$url%>&lang=ru&providers_set=vkontakte,facebook,twitter,yandex,mailruapi,odnoklassniki" class="loginza"><img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/></a>
+<br>
 </P>
 </div>
 

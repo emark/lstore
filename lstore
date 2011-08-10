@@ -721,6 +721,8 @@ get '/' => sub{
 };
 
 get '/welcome'=>sub{
+    my $url=uri_escape('http://www.storesto.ru/openid');
+    shift->stash(url=>$url);
 }=>'welcome';
 
 get '/cookbook/feed'=>sub{
