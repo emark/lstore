@@ -16,10 +16,9 @@
     <%= form_for 'register'=>begin %>
 <table border=0>
  <tr><td align=center>
-    <script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
-<a href="http://loginza.ru/api/widget?token_url=<%=$url%>&lang=ru&providers_set=vkontakte,facebook,twitter,yandex,mailruapi,odnoklassniki" class="loginza">
-    <img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
-</a><br><br>
+<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
+<a href="http://loginza.ru/api/widget?token_url=<%=$url%>&lang=ru&providers_set=vkontakte,facebook,twitter,yandex,mailruapi,odnoklassniki" class="loginza"><img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/></a>
+<br><br>
     </td></tr>
     <tr><td align=center>Электронная почта</td></tr>
     <tr><td align=center><%= text_field 'email' %></td></tr>
