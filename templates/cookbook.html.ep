@@ -3,7 +3,7 @@
 
 <%#=test%>
 %if(!$catslug){
-%title 'Поваренная книга';
+%title 'Каталог блюд';
     <table id=app border=0>
     %my $n=0;
     %foreach my $key(@{$catalog}){
@@ -19,7 +19,7 @@
     %}
     </table>
 %}else{
-%title $catslug.' | Поваренная книга';
+%title $catslug.' | Каталог блюд';
     <%= tag 'div'=>(align=>'left')=>begin %><%= link_to 'Все рецепты'=>'cookbook'=>(class=>'button') %><% end %><br/>
     %if(!%{$slugrecipes}){
     <P id=message align=center>Здесь пока ничего нет :(</P>
