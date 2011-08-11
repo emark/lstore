@@ -1,0 +1,63 @@
+%layout 'default',title 'О компании';
+<div align=center class='recipelist'>Информация о компании</div><br>
+<table id=app border=0>
+<tr align=center><td align=right><b>Юридическое лицо:</b></b></td><td>ООО "Электронный маркетинг"</td></tr>
+<tr align=center><td align=right><b>ИНН/КПП</b></b></td><td>2463213306 / 246301001</td></tr>
+<tr align=center><td align=right><b>ОГРН</b></b></td><td>1092468020743</td></tr>
+<tr align=center><td align=right><b>Юридический адрес:</b></b></td><td>660028, Красноярский край, Красноярск г, Телевизорная ул, д. 1, кор. 9, пом.31</td></tr>
+<tr align=center><td align=right><b>Местонахождение:</b></b></td><td>660028, Красноярский край, Красноярск г, Телевизорная ул, д. 1, кор. 9, пом.31</td></tr>
+<tr align=center><td align=right><b>Почтовый адрес:</b></b></td><td>660028, г. Красноярск, а/я 11939</td></tr>
+<tr align=center><td align=right><b>Директор:</b></b></td><td>Свириденко Максим Анатольевич</td></tr>
+<tr align=center><td align=right><b>Контактный телефон:</b></b></td><td>8 (391) 258-10-23</td></tr>
+<tr align=center><td align=right><b>Факс:</b></b></td><td>8 (391) 258-10-01</td></tr>
+<tr align=center><td align=right><b>GSM:</b></b></td><td>8-908-208-7328</td></tr>
+<tr align=center><td align=right><b>Email:</b></b></td><td><%= link_to 'hello@storesto.ru'=>'mailto:hello@storesto.ru'%></td></tr>
+<tr align=center><td align=right><b>Реквизиты:</b></b></td><td><%= link_to 'Банковские реквизиты'=>'/docs/companycard.pdf'%></td></tr>
+<tr align=center><td colspan=2>
+
+<!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту  (начало) -->
+<script src="http://api-maps.yandex.ru/1.1/?key=ABFzQ04BAAAAYMMLLgIAytOcaWwHI0vhU8_LB3683GAj4WoAAAAAAAAAAAA1k_IvJd1SErzW4P_gXYSfrZwIAw==&modules=pmap&wizard=constructor" type="text/javascript"></script>
+<script type="text/javascript">
+    YMaps.jQuery(window).load(function () {
+        var map = new YMaps.Map(YMaps.jQuery("#YMapsID-1550")[0]);
+        map.setCenter(new YMaps.GeoPoint(92.794314,56.022352), 15, YMaps.MapType.MAP);
+        map.addControl(new YMaps.Zoom());
+        map.addControl(new YMaps.ToolBar());
+        YMaps.MapType.PMAP.getName = function () { return "Народная"; };
+        map.addControl(new YMaps.TypeControl([
+            YMaps.MapType.MAP,
+            YMaps.MapType.SATELLITE,
+            YMaps.MapType.HYBRID,
+            YMaps.MapType.PMAP
+        ], [0, 1, 2, 3]));
+
+        YMaps.Styles.add("constructor#pmlbmPlacemark", {
+            iconStyle : {
+                href : "http://api-maps.yandex.ru/i/0.3/placemarks/pmlbm.png",
+                size : new YMaps.Point(28,29),
+                offset: new YMaps.Point(-8,-27)
+            }
+        });
+
+       map.addOverlay(createObject("Placemark", new YMaps.GeoPoint(92.794744,56.021703), "constructor#pmlbmPlacemark", "Наш офис"));
+        
+        function createObject (type, point, style, description) {
+            var allowObjects = ["Placemark", "Polyline", "Polygon"],
+                index = YMaps.jQuery.inArray( type, allowObjects),
+                constructor = allowObjects[(index == -1) ? 0 : index];
+                description = description || "";
+            
+            var object = new YMaps[constructor](point, {style: style, hasBalloon : !!description});
+            object.description = description;
+            
+            return object;
+        }
+    });
+</script>
+
+<div id="YMapsID-1550" style="width:450px;height:350px"></div>
+<div style="width:450px;text-align:right;font-family:Arial"><a href="http://api.yandex.ru/maps/tools/constructor/" style="color:#1A3DC1">Создано с помощью инструментов Яндекс.Карт</a></div>
+<!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
+
+</td></tr>
+</table>

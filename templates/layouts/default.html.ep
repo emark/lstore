@@ -46,7 +46,7 @@
 		  <%= link_to 'Отзывы и предложения'=>'http://feedback.storesto.ru'%> |
 		  <%= link_to 'Хотите спросить?'=>'http://tv.storesto.ru/ask'%>
 		  		  </P><P align=center>
-				<%= link_to 'ООО "Электронный маркетинг"'=>'mailto:team@storesto.ru' %>, 2011.
+				<%= link_to 'ООО "Электронный маркетинг"'=>'/company' %>, 2011.
 		  </P>
 	    </div>
 		<div class='partners'>

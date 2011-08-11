@@ -744,6 +744,9 @@ get '/cookbook/:slug'=>{slug=>''}=>sub{
                  catslug=>$catslug);
 }=>'cookbook';
 
+get '/company'=>sub{
+}=>'company';
+
 app->start;
 
 
