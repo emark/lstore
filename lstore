@@ -582,7 +582,7 @@ get '/login'=>sub{
   my $self=shift;
   my $email=$self->param('email') || '';
   my $pass=$self->param('pass') || '';
-  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass' AND LENGTH(OID)=0") || undef;
+  my $check=$dbh->selectrow_array("SELECT ID FROM USERS WHERE EMAIL='$email' AND PASS='$pass'") || undef;
   my $message='';
   if(!$check && $email && $pass){
     $message='Неудача, постарайтесь верно указать почту и пароль.';
