@@ -23,8 +23,8 @@
 <table id=app border=0>
 <tr><td align=left><i style="font-size:25px">Как готовить</i></td></tr>
 <tr><td class='instructions'><i><%== $instruction %></i></td></tr>
-<tr><td align=left><br/><i style="font-size:25px">Ингридиенты</i></td></tr>
-%	foreach (keys %{$ingredients}){
+<tr><td align=left><br/><i style="font-size:25px">Ингредиенты</i></td></tr>
+%foreach (keys %{$ingredients}){
 <tr><td class='ingredient'>
   <span class='name'><%= $ingredients->{$_}{'INGREDIENT'} %></span> -
     <span class='value'><%= $ingredients->{$_}{'QUANTITY'} %></span>
@@ -32,20 +32,27 @@
 </td></tr>
 %	}
 %if($recipe->[4]){
-<tr><td align=center><img class="photo" src="/media/photo/<%= $recipe->[4] %>"></td></tr>
+<tr><td align=center><br><img class="photo" src="/media/photo/<%= $recipe->[4] %>"></td></tr>
+%}
+%if($recipe->[9]){
+  <tr><td align=left><br><i>Источник рецепта:</i> <span class='author'><%= $recipe->[9] %></span></td></tr>
+%}else{
+  <tr><td align=left><br><i>Автор рецепта:</i> <span class="author vcard"><%= link_to $recipe->[10]=>"/user/$recipe->[10]"=>(class=>"fn url")%></span></td></tr>
 %}
 <tr><td align=center><br/><i style="font-size:15px">Приятного аппетита!</i></td></tr>
 </table><br/>
-%if($uid){
-  %if($recipe->[8]==$uid){
-    <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
-  %}else{
+%if($recipe->[8]==$uid){
+  <%= link_to 'Редактировать рецепт'=>"/recipe/edit/$recipeid"=>(class=>'button')%>
+%}else{
+  %if($uid){
     <%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
-    %if($likes){
-      , уже добавили <%= $likes %> раз
-    %}
+  %}else{
+    <%= link_to 'Добавить на кухню'=>"/help#add_recipe"=>(class=>'button')%>
+  %}
+  %if($likes){
+    , уже добавили <%= $likes %> раз
   %}
 <br/><br/>
 %}
-Прямая ссылка на этот рецепт <%= link_to "http://www.storesto.ru/recipe/view/$recipeid"=>"http://www.storesto.ru/recipe/view/$recipeid"=>(class=>'button')%>
 <% end %>
+<!--#HRecipe close-->

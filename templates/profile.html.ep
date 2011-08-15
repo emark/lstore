@@ -1,0 +1,32 @@
+%layout 'default', title 'Профиль пользователя';
+<%#=test%>
+%if(my $message = stash 'message'){
+  <table id='message'><tr><td><%= $message %></td><td align=right><a href="#1" onClick="HSLayer()"><img src="/media/closebut.png" border=0></a></td></tr></table>
+%}
+
+%if($profile){
+
+%if($profile->[0]){
+    <%= form_for 'user'=>(method=>'post')=>begin %>
+    <table id=app border=0>
+    <tr><td>Имя пользователя</td><td><%= text_field 'profile'=>($profile->[1]) %></td></tr>
+    <tr><td>Электронная почта</td><td><%= text_field 'email'=>($profile->[2]) %></td></tr>
+    <tr><td>Веб-сайт</td><td><%= text_field 'website'=>($profile->[3]) %></td></tr>
+    <tr><td>О себе</td><td><%= text_area 'bio'=>(cols=>40,rows=>5)=>begin%><%=$profile->[4]%><%end%></td></tr>
+    <tr><td>Сменить пароль входа</td><td><input type=text name=pass></td></tr>
+    <tr><td></td><td align=left><%= submit_button 'Сохранить' %><td></tr>
+    </table>
+    <%end%>
+%}else{
+    <table id=app border=0>
+    <tr><td><i>Имя пользователя</i> <%=$profile->[1]%></td></tr>
+    <tr><td><i>Веб-сайт</i> <%= link_to $profile->[2]=>"http://$profile->[2]"=>(target=>'_blank')%></td></tr>
+    <tr><td><i>О себе </i> <%=$profile->[3]%></td></tr>
+    <tr><td><i>Зарегистрирован</i> <%=$profile->[4]%></td></tr>
+    </table>
+%}
+%}else{
+    <table id=app border=0>
+    <tr><td align=center>Такого кулинара у нас нет :(</td></tr>
+    </table>
+%}

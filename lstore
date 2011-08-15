@@ -223,7 +223,7 @@ get '/recipe/view/:id'=>sub{
        my $err='';
        my $photo='';
        my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME,CATEGORY.SLUG FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
-       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY,CATEGORY.SLUG AS SLUG,ROUND((RECIPES.WEIGHT/RECIPES.CALCULATION)) AS AMOUNT,RECIPES.USERID AS USERID FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID WHERE RECIPES.ID=$recipeid");
+       my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,CATEGORY.NAME AS CATEGEORY,CATEGORY.SLUG AS SLUG,ROUND((RECIPES.WEIGHT/RECIPES.CALCULATION)) AS AMOUNT,RECIPES.USERID AS USERID,RECIPES.AUTHOR,USERS.LOGIN FROM RECIPES INNER JOIN CATEGORY ON RECIPES.CATEGORYID=CATEGORY.ID LEFT JOIN USERS ON RECIPES.USERID=USERS.ID WHERE RECIPES.ID=$recipeid");
        my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid",'ID');
        my $likes=$dbh->selectrow_array("SELECT COUNT(1) FROM ROUTER2 WHERE RECIPEID=$recipeid");
        my $instruction=$recipe->[3];
@@ -281,7 +281,7 @@ get '/recipe/:action/:id/:routerid'=>{routerid=>0}=>sub{
     }
   }
   my $category=$dbh->selectall_arrayref("SELECT CATEGORY.ID,CATEGORY.NAME FROM CATEGORY ORDER BY CATEGORY.PRIORITY");
-  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+  my $recipe=$dbh->selectrow_arrayref("SELECT RECIPES.NAME,RECIPES.WEIGHT,RECIPES.CALCULATION,RECIPES.INSTRUCTION,RECIPES.PHOTO,RECIPES.CATEGORYID,RECIPES.AUTHOR FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,ROUTER1.ID AS ROUTEID,ROUTER1.RECIPEID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE,ROUTER1.QUANTITY AS QUANTITY FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER1 ON INGREDIENTS.ID=ROUTER1.INGREDIENTID WHERE ROUTER1.RECIPEID=$recipeid AND INGREDIENTS.USERID=$uid",'ID');
   $recipeid=$dbh->selectrow_array("SELECT RECIPES.ID FROM RECIPES WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
   $self->stash(tags=>$tags,
@@ -305,6 +305,7 @@ post '/recipe'=>sub{
   my $calculation=$self->param('calculation') || 1;
   my $instruction=$self->param('instruction') || '';
   my $photo=$self->req->upload('photo') || '';
+  my $author=$self->param('author') || '';
   my $tags={};
   my $ingredients={};
   my $SQL='';
@@ -325,7 +326,7 @@ post '/recipe'=>sub{
         $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,MEASURE.NAME AS MEASURE FROM INGREDIENTS LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID WHERE ($SQL INGREDIENTS.TAG='') AND INGREDIENTS.USERID=$uid",'ID');
   
     }elsif($quantity_hook && $recipe && !$recipeid){#Create recipe,router1 if quantity>0
-        $dbh->do("INSERT INTO RECIPES(ID,NAME,CATEGORYID,WEIGHT,CALCULATION,USERID,TIMEFLAG) VALUES(NULL,\"$recipe\",$category,$weight,$calculation,$uid,NOW())");
+        $dbh->do("INSERT INTO RECIPES(ID,NAME,CATEGORYID,WEIGHT,CALCULATION,USERID,AUTHOR,TIMEFLAG) VALUES(NULL,\"$recipe\",$category,$weight,$calculation,$uid,\"$author\",NOW())");
         $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
             if($quantity[$n] && $quantity[$n]!=0){
@@ -346,7 +347,7 @@ post '/recipe'=>sub{
                 $photo=$filename;
                 $dbh->do("UPDATE RECIPES SET PHOTO=\"$photo\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             }
-            $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",CATEGORYID=$category,WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
+            $dbh->do("UPDATE RECIPES SET NAME=\"$recipe\",CATEGORYID=$category,WEIGHT=$weight,CALCULATION=$calculation,INSTRUCTION=\"$instruction\",AUTHOR=\"$author\" WHERE RECIPES.ID=$recipeid AND RECIPES.USERID=$uid");
             for(my $n=0;$n<@ingredientid;$n++){#Create SQL INSERT query for ROUTER1
                 if($quantity[$n] && $quantity[$n]!=0){
                     #Hook for checking true UPDATE
@@ -604,6 +605,7 @@ post '/openid'=>sub{
     my $json=$self->ua->get("http://loginza.ru/api/authinfo?token=$token&id=$dbconf[5]&sig=$digest")->res->json;
     my $identity=$json->{'identity'};
     my $uid=0;
+    my $name='cook';
     my $message='Добро пожаловать';
     if(!$identity){
         $message='Авторизоваться не удалось.';#.$json->{'error_type'}.$json->{'error_message'};
@@ -621,10 +623,12 @@ post '/openid'=>sub{
         $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG,CATEGORYID) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW(),5)");#Create recipe
         my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
+        $name=$name.$recipeid;
+        $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$name\" WHERE USERS.ID=$uid");
         $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
     }
     $self->flash(message=>$message);
-    $self->session(name=>'user',uid=>$uid);
+    $self->session(name=>$name,uid=>$uid);
     return $self->redirect_to('kitchen');
 }=>'login';
 
@@ -670,12 +674,12 @@ $subscribe";
     if($email){
         $dbh->do("INSERT INTO USERS(ID,EMAIL,PASS,TIMEFLAG) VALUES(NULL,\"$email\",\"$pass\",NOW())") || $dbh->errstr; #Create new user
         $uid=$dbh->last_insert_id('','','USERS','ID');
-        #$dbh->do("DELETE FROM INVITE WHERE CODE=\"$activation\"") || $dbh->errstr;
         $dbh->do("INSERT INTO INGREDIENTS(ID,NAME,MEASUREID,TAG,USERID,TIMEFLAG) VALUES(NULL,\"Батон белый\",2,\"хлеб\",$uid,NOW())");#Create ingredients
         my $ingredientid=$dbh->last_insert_id('','','INGREDIENTS','ID');
         $dbh->do("INSERT INTO RECIPES(ID,NAME,CALCULATION,INSTRUCTION,WEIGHT,USERID,TIMEFLAG,CATEGORYID) VALUES(NULL,\"Крутон за 8\$\",1,\"Это точно такой же поджаренный кусочек хлеба. Только он не может стоить 8 долларов, а крутон — может.\",65,$uid,NOW(),5)");#Create recipe
         my $recipeid=$dbh->last_insert_id('','','RECIPES','ID');
         $dbh->do("INSERT INTO ROUTER1(ID,RECIPEID,INGREDIENTID,QUANTITY) VALUES(NULL,$recipeid,$ingredientid,65)");#Create router
+        $dbh->do("UPDATE USERS SET USERS.LOGIN=\"cook$recipeid\" WHERE USERS.ID=$uid");
         $self->session(name=>$email,uid=>$uid);
         $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
         $self->flash(message=>$message);
@@ -744,8 +748,51 @@ get '/cookbook/:slug'=>{slug=>''}=>sub{
                  catslug=>$catslug);
 }=>'cookbook';
 
+get '/user/:login'=>{login=>''}=>sub{
+    my $self=shift;
+    my $uid=$self->session('uid');
+    my $login=$self->param('login');
+    my $profile=[];
+    if(!$login && $uid){
+        $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
+    }else{
+        $profile=$dbh->selectrow_arrayref("SELECT 0,USERS.LOGIN,USERS.WEBSITE,USERS.BIO,USERS.TIMEFLAG FROM USERS WHERE USERS.LOGIN=\"$login\"");
+    }
+    $self->stash(profile=>$profile);
+}=>'profile';
+
+post '/user'=>sub{
+    my $self=shift;
+    return $self->redirect_to('login') unless $self->session('name');
+    my $uid=$self->session('uid');
+    my $login=$self->param('profile');
+    my $pass=$self->param('pass');
+    my $email=$self->param('email');
+    my $website=$self->param('website');
+    $website=~s/http:\/\///;
+    my $bio=$self->param('bio');
+    $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\" WHERE USERS.ID=$uid");
+    if($pass){
+        $dbh->do("UPDATE USERS SET USERS.PASS=\"$pass\" WHERE USERS.ID=$uid");
+#        if($email){
+#            $self->mail(to=>$email,
+#                    subject=>'Изменение пароля в StoResto',
+#                    data=>"Ваш пароль изменен.
+#Новый пароль: $pass
+#$subscribe");
+#        }
+        $pass='';
+    }
+    my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
+    $self->stash(profile=>$profile,
+                 message=>'Информация профиля обновлена');
+}=>'profile';
+
 get '/company'=>sub{
 }=>'company';
+
+get '/help'=>sub{
+};
 
 app->start;
 

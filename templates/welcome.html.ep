@@ -10,7 +10,7 @@
 <table border=0 width=100%><tr>
     <td align=center class=indexcaption ><a href="#about" onClick="javascript:HideObject('what_can');HideObject('better_than');HideObject('cost');ShowObject('about');return false;" style="color:#193351">Что это такое?</a></td>
     <td align=center class=indexcaption ><a href="#better_than" onClick="javascript:ShowObject('better_than');HideObject('what_can');HideObject('cost');HideObject('about');return false;" style="color:#193351">Чем мы отличаемся?</a></td>
-    <td align=center class=indexcaption ><a href="#what_can" onClick="javascript:ShowObject('what_can');HideObject('better_than');HideObject('cost');HideObject('about');return false;" style="color:#193351">Что умеем?</a></td>
+    <td align=center class=indexcaption ><a href="#what_can" onClick="javascript:ShowObject('what_can');HideObject('better_than');HideObject('cost');HideObject('about');return false;" style="color:#193351">Как это работает?</a></td>
     <td align=center class=indexcaption ><a href="#cost" onClick="javascript:HideObject('what_can');ShowObject('cost');HideObject('better_than');HideObject('about');return false;" style="color:#193351">Сколько стоит?</a></td>
 </tr></table>
 </td></tr>

@@ -23,3 +23,12 @@ function ConfirmDelete($object)
         }
         return false;
 }
+function SelectOneLayer($div)
+{
+        if(document.getElementById([$div]).style.display == "none")
+        {
+                document.getElementById([$div]).style.display = "";
+        }else{
+                document.getElementById([$div]).style.display = "none"
+        }
+}

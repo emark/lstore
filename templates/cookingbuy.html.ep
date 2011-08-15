@@ -33,7 +33,7 @@
     <%= link_to 'Как готовить'=>"/cooking/how/$menuid"=>(class=>'button') %>
     <% end %><br/>
     <%= hidden_field 'menu'=>"$menu" %>
-    <%= text_field 'email'=>"$email" %>
+    <%= text_field 'email'=>"$email"=>(title=>'Укажите адрес электронной почты') %>
     <%= submit_button 'Отправить' %> список продуктов на почтовый ящик
     <% end %>
 
