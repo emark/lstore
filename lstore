@@ -628,7 +628,7 @@ post '/openid'=>sub{
         $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$name\" WHERE USERS.ID=$uid");
         $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
     }else{
-        @profile=$dbh->selectall_arrayref("SELECT USERS.LOGIN,USERS.EMAIL WHERE USERS.ID=$uid");
+        @profile=$dbh->selectall_arrayref("SELECT USERS.LOGIN,USERS.EMAIL FROM USERS WHERE USERS.ID=$uid");
     }
     $self->flash(message=>$message);
     $self->session(name=>$profile[0],
