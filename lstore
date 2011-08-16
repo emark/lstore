@@ -780,7 +780,7 @@ post '/user'=>sub{
     $website=~s/http:\/\///;
     my $bio=$self->param('bio');
     my $message='Информация профиля обновлена';
-    my $loginuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.LOGIN=\"$login\" AND USERS.ID!=$uid") || 0;
+    my $loginuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.LOGIN=\"$login\" OR USERS.EMAIL=\"$email\" AND USERS.ID!=$uid") || 0;
     if($loginuniq==0 && $login){
         $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\",USERS.PROMO=\"$promo\",USERS.FNAME=\"$fname\" WHERE USERS.ID=$uid");
         if($pass){
@@ -795,7 +795,7 @@ $subscribe");
             $pass='';
         }
     }else{
-        $message="Выберите другое имя профиля";
+        $message="Укажите другое имя профиля или email";
     }
     my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
     $self->session(email=>$email);
