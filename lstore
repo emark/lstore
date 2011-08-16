@@ -607,7 +607,7 @@ post '/openid'=>sub{
     my $uid=0;
     my $name='cook';
     my $message='Добро пожаловать';
-    my @profile=();
+    my $profile='';
     if(!$identity){
         $message='Авторизоваться не удалось.';#.$json->{'error_type'}.$json->{'error_message'};
         my $url=uri_escape('http://www.storesto.ru/openid');
@@ -628,11 +628,11 @@ post '/openid'=>sub{
         $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$name\" WHERE USERS.ID=$uid");
         $message='Добро пожаловать. Попробуйте приготовить крутон или заполните кладовую продуктами :)';
     }else{
-        @profile=$dbh->selectall_arrayref("SELECT USERS.LOGIN,USERS.EMAIL FROM USERS WHERE USERS.ID=$uid");
+        $profile=$dbh->selectrow_array("SELECT USERS.EMAIL FROM USERS WHERE USERS.ID=$uid");
     }
     $self->flash(message=>$message);
-    $self->session(name=>$profile[0]->[0],
-                   email=>$profile[0]->[1],
+    $self->session(name=>$profile,
+                   email=>$profile,
                    uid=>$uid);
     return $self->redirect_to('kitchen');
 }=>'login';
