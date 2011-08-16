@@ -11,7 +11,7 @@
     <table id=app border=0>
     <tr><td>Как Вас зовут?</td><td><%= text_field 'fname'=>($profile->[6]) %></td></tr>
     <tr><td>Имя профиля</td><td><input type=text name=profile value="<%=$profile->[1]%>"></td></tr>
-    <tr><td>Электронная почта</td><td><%= text_field 'email'=>($profile->[2]) %></td></tr>
+    <tr><td>Электронная почта</td><td><input type=text name=email value="<%=$profile->[2]%>"></td></tr>
     <tr><td>Веб-сайт</td><td><%= text_field 'website'=>($profile->[3]) %></td></tr>
     <tr><td>О себе</td><td><%= text_area 'bio'=>(cols=>40,rows=>5)=>begin%><%=$profile->[4]%><%end%></td></tr>
     <tr><td>Код приглашения</td><td><%= text_field 'promo'=>($profile->[5]) %></td></tr>
