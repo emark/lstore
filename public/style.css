@@ -276,7 +276,7 @@ select{
 		text-shadow: 1px 1px 1px #F0FFD3;
 		/*background-color:#567AA3;*/
 }
-.category{
+.categorytitle{
   font-size: 16px;
   line-height: 1.2;
   text-decoration: none;
@@ -302,4 +302,5 @@ select{
 	word-spacing: 0em;
 	line-height: 1.2;
 	color: #40541A;
+	width:170px;
 }

@@ -3,7 +3,8 @@
 
 <%#=test%>
 %if(!$catslug){
-%title 'Каталог блюд';
+%title 'Каталог рецептов';
+    <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin%>Каталог рецептов<%end%><br>
     <table id=app border=0>
     %my $n=0;
     %foreach my $key(@{$catalog}){
@@ -19,14 +20,14 @@
     %}
     </table>
 %}else{
-%title $catslug.' | Каталог блюд';
+%title $catslug.' | Каталог рецептов';
     <%= tag 'div'=>(align=>'left')=>begin %><%= link_to 'Все рецепты'=>'cookbook'=>(class=>'button') %><% end %><br/>
     %if(!%{$slugrecipes}){
     <P id=message align=center>Здесь пока ничего нет :(</P>
     <%= tag 'div'=>(align=>'center')=>begin %><%= link_to 'Создать рецепт'=>'recipe'=>(class=>'button') %><% end %><br/>
     %}else{
         <table id=app>
-        <tr><td align=center class=timeline><%= $catslug %></td></tr>
+        <tr><td align=center><span class=menulist><%= $catslug %></span></td></tr>
         %foreach my $key(keys %{$slugrecipes}){
             <tr><td class=recipelist><%= link_to $slugrecipes->{$key}{'RECIPE'}=>"/recipe/view/$slugrecipes->{$key}{'ID'}" %></td></tr>
         %}

@@ -9,7 +9,7 @@
 %#	Show ingredients for recipe
 <%= tag 'div'=>(class=>'hrecipe')=>begin %>
 <%= tag 'div'=>(class=>'category',align=>'center')=>begin %>
-<%= link_to $recipe->[5]=>"/cookbook/$recipe->[6]"=>(title=>'Посмотреть все рецепты из этого раздела') %>
+<%= link_to $recipe->[5]=>"/cookbook/$recipe->[6]"=>(title=>'Посмотреть все рецепты из этого раздела',class=>'button') %><br><br>
 <%#=$recipe->[5]%>
 <% end %>
 %# hRecipe microformat

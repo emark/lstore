@@ -14,7 +14,7 @@
 <table id=app border=0>
 %#Start category indexing
 %foreach my $category (@{$category}){
-    <tr><td colspan=2 align=center class=category><%= $category->[1]%></tr>
+    <tr><td colspan=2 align=center class=categorytitle><%= $category->[1]%></tr>
 %foreach my $key(keys %{$recipes}){
 %   if($category->[0]==$recipes->{$key}{'CATEGORYID'}){
   <tr><td><%= check_box 'recipeid'=>$recipes->{$key}{'ID'} %>&nbsp;
