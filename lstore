@@ -796,10 +796,10 @@ $subscribe");
             $pass='';
         }
     }else{
-        $message="Измените ";
-        $message=$message.'профиль' if $loginuniq;
-        $message=$message.', ' if ($loginuniq && $emailuniq);
-        $message=$message.'электронную почту' if $emailuniq;
+        $message="Извините, ";
+        $message=$message.'профиль занят' if $loginuniq;
+        $message=$message.' и ' if ($loginuniq && $emailuniq);
+        $message=$message.'почта занята' if $emailuniq;
     }
     my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
     $self->session(email=>$email);
