@@ -5,6 +5,9 @@
         <name><%=$recipes->{$recipeid}{'RECIPE'}%></name>
         <url>http://www.storesto.ru/recipe/view/<%=$recipes->{$recipeid}{'ID'}%>/</url>
         <type><%=$recipes->{$recipeid}{'CATEGORY'}%></type>
+        %my $author='http://www.storesto.ru/user/'.$recipes->{$recipeid}{'LOGIN'};
+        %$author=$recipes->{$recipeid}{'AUTHOR'} if($recipes->{$recipeid}{'AUTHOR'});
+        <author><%=$author%></author>
         %foreach my $ingredient(@{$ingredients}){
             %if($ingredient->[1]==$recipeid){
                 <ingredient>

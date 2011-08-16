@@ -285,3 +285,21 @@ select{
   text-shadow: 1px 1px 1px #F0FFD3;
   font-style: italic;
 }
+.cookbookbut{
+	background-color: #F5FF47;
+	padding: 10px 10px 10px 10px;
+	border:  hidden;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 400;
+	text-decoration: none;
+	text-transform: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+	line-height: 1.2;
+	color: #40541A;
+}

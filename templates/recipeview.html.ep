@@ -37,7 +37,10 @@
 %if($recipe->[9]){
   <tr><td align=left><br><i>Источник рецепта:</i> <span class='author'><%= $recipe->[9] %></span></td></tr>
 %}else{
-  <tr><td align=left><br><i>Автор рецепта:</i> <span class="author vcard"><%= link_to $recipe->[10]=>"/user/$recipe->[10]"=>(class=>"fn url")%></span></td></tr>
+  %my $author=$recipe->[10];
+  %$author=$recipe->[11] if($recipe->[11]);
+  <tr><td align=left><br><i>Автор рецепта:</i> <span class="author vcard"><%= link_to $author=>"/user/$recipe->[10]"=>(class=>"fn url")%>
+  </span></td></tr>
 %}
 <tr><td align=center><br/><i style="font-size:15px">Приятного аппетита!</i></td></tr>
 </table><br/>

@@ -9,7 +9,8 @@
 %if($profile->[0]){
     <%= form_for 'user'=>(method=>'post')=>begin %>
     <table id=app border=0>
-    <tr><td>Имя пользователя</td><td><%= text_field 'profile'=>($profile->[1]) %></td></tr>
+    <tr><td>Как Вас зовут?</td><td><%= text_field 'fname'=>($profile->[6]) %></td></tr>
+    <tr><td>Имя профиля</td><td><%= text_field 'profile'=>($profile->[1]) %></td></tr>
     <tr><td>Электронная почта</td><td><%= text_field 'email'=>($profile->[2]) %></td></tr>
     <tr><td>Веб-сайт</td><td><%= text_field 'website'=>($profile->[3]) %></td></tr>
     <tr><td>О себе</td><td><%= text_area 'bio'=>(cols=>40,rows=>5)=>begin%><%=$profile->[4]%><%end%></td></tr>
@@ -20,7 +21,8 @@
     <%end%>
 %}else{
     <table id=app border=0>
-    <tr><td><i>Имя пользователя</i> <%=$profile->[1]%></td></tr>
+    <tr><td><i>Профиль</i> <%=$profile->[1]%></td></tr>
+    <tr><td><i>Пользователь</i> <%=$profile->[5]%></td></tr>
     <tr><td><i>Веб-сайт</i> <%= link_to $profile->[2]=>"http://$profile->[2]"=>(target=>'_blank')%></td></tr>
     <tr><td><i>О себе </i> <%=$profile->[3]%></td></tr>
     <tr><td><i>Зарегистрирован</i> <%=$profile->[4]%></td></tr>
