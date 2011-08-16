@@ -287,12 +287,12 @@ select{
 }
 .cookbookbut{
 	background-color: #F5FF47;
-	padding: 10px 10px 10px 10px;
+	padding: 15px 15px 15px 15px;
 	border:  hidden;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 	font-size: 24px;
 	font-style: normal;
 	font-weight: 400;

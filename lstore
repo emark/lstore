@@ -480,7 +480,7 @@ get '/cooking/buy/:id'=>sub{
 	       menuid=>$menuid,
 	       ingredients=>$ingredients,
 	       tags=>$tags,
-	       email=>$self->session('name'));
+	       email=>$self->session('email'));
   $self->render('cookingbuy');
 };
 
@@ -591,7 +591,7 @@ get '/login'=>sub{
   $self->stash(url=>$url,
                message=>$message);
   return $self->render unless $check;
-  $self->session(name=>$email,uid=>$check);
+  $self->session(email=>$email,uid=>$check,name=>$email);
   $self->flash(message => 'Добро пожаловать в StoResto');
   $self->redirect_to('kitchen');
 }=>'login';
@@ -766,6 +766,7 @@ post '/user'=>sub{
     return $self->redirect_to('login') unless $self->session('name');
     my $uid=$self->session('uid');
     my $login=$self->param('profile');
+    $login=~s/(\.*)||(\/*)||(\,*)//g;
     my $pass=$self->param('pass');
     my $email=$self->param('email');
     my $website=$self->param('website');
@@ -773,21 +774,28 @@ post '/user'=>sub{
     my $fname=$self->param('fname');
     $website=~s/http:\/\///;
     my $bio=$self->param('bio');
-    $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\",USERS.PROMO=\"$promo\",USERS.FNAME=\"$fname\" WHERE USERS.ID=$uid");
-    if($pass){
-        $dbh->do("UPDATE USERS SET USERS.PASS=\"$pass\" WHERE USERS.ID=$uid");
-        if($email){
-            $self->mail(to=>$email,
-                    subject=>'Изменение пароля в StoResto',
-                    data=>"Ваш пароль изменен.
+    my $message='Информация профиля обновлена';
+    my $loginuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.LOGIN=\"$login\" AND USERS.ID!=$uid") || 0;
+    if($loginuniq==0 && $login){
+        $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\",USERS.PROMO=\"$promo\",USERS.FNAME=\"$fname\" WHERE USERS.ID=$uid");
+        if($pass){
+            $dbh->do("UPDATE USERS SET USERS.PASS=\"$pass\" WHERE USERS.ID=$uid");
+            if($email){
+                $self->mail(to=>$email,
+                        subject=>'Изменение пароля в StoResto',
+                        data=>"Ваш пароль изменен.
 Новый пароль: $pass
 $subscribe");
+            }
+            $pass='';
         }
-        $pass='';
+    }else{
+        $message="Выберите другое имя профиля";
     }
     my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
+    $self->session(email=>$email);
     $self->stash(profile=>$profile,
-                 message=>'Информация профиля обновлена');
+                 message=>$message);
 }=>'profile';
 
 get '/company'=>sub{
