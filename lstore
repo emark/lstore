@@ -754,7 +754,7 @@ get '/user/:login'=>{login=>''}=>sub{
     my $login=$self->param('login');
     my $profile=[];
     if(!$login && $uid){
-        $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
+        $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO,USERS.PROMO FROM USERS WHERE USERS.ID=$uid");
     }else{
         $profile=$dbh->selectrow_arrayref("SELECT 0,USERS.LOGIN,USERS.WEBSITE,USERS.BIO,USERS.TIMEFLAG FROM USERS WHERE USERS.LOGIN=\"$login\"");
     }
@@ -769,18 +769,19 @@ post '/user'=>sub{
     my $pass=$self->param('pass');
     my $email=$self->param('email');
     my $website=$self->param('website');
+    my $promo=$self->param('promo');
     $website=~s/http:\/\///;
     my $bio=$self->param('bio');
-    $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\" WHERE USERS.ID=$uid");
+    $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\",USERS.PROMO=\"$promo\" WHERE USERS.ID=$uid");
     if($pass){
         $dbh->do("UPDATE USERS SET USERS.PASS=\"$pass\" WHERE USERS.ID=$uid");
-#        if($email){
-#            $self->mail(to=>$email,
-#                    subject=>'Изменение пароля в StoResto',
-#                    data=>"Ваш пароль изменен.
-#Новый пароль: $pass
-#$subscribe");
-#        }
+        if($email){
+            $self->mail(to=>$email,
+                    subject=>'Изменение пароля в StoResto',
+                    data=>"Ваш пароль изменен.
+Новый пароль: $pass
+$subscribe");
+        }
         $pass='';
     }
     my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
