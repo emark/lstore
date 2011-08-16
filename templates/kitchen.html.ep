@@ -1,6 +1,6 @@
 % layout 'default', title 'На кухне есть все рецепты';
 <% content_for menuclass=>begin %>/kitchen<% end %>
-<%= test %>
+<%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to 'Редактировать профиль'=>'/user'=>(class=>'button') %> или <%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
 
 %my $message=stash 'message';
