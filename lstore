@@ -780,8 +780,9 @@ post '/user'=>sub{
     $website=~s/http:\/\///;
     my $bio=$self->param('bio');
     my $message='Информация профиля обновлена';
-    my $loginuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.LOGIN=\"$login\" OR USERS.EMAIL=\"$email\" AND USERS.ID!=$uid") || 0;
-    if($loginuniq==0 && $login){
+    my $loginuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.LOGIN=\"$login\" AND USERS.ID!=$uid") || 0;
+    my $emailuniq=$dbh->selectrow_array("SELECT 1 FROM USERS WHERE USERS.EMAIL=\"$email\" AND USERS.ID!=$uid") || 0;
+    if($loginuniq==0 && $login && $emailuniq==0){
         $dbh->do("UPDATE USERS SET USERS.LOGIN=\"$login\",USERS.EMAIL=\"$email\",USERS.WEBSITE=\"$website\",USERS.BIO=\"$bio\",USERS.PROMO=\"$promo\",USERS.FNAME=\"$fname\" WHERE USERS.ID=$uid");
         if($pass){
             $dbh->do("UPDATE USERS SET USERS.PASS=\"$pass\" WHERE USERS.ID=$uid");
@@ -795,7 +796,10 @@ $subscribe");
             $pass='';
         }
     }else{
-        $message="Укажите другое имя профиля или email";
+        $message="Измените ";
+        $message=$message.'профиль' if $loginuniq;
+        $message=$message.', ' if ($loginuniq && $emailuniq);
+        $message=$message.'электронную почту' if $emailuniq;
     }
     my $profile=$dbh->selectrow_arrayref("SELECT 1,USERS.LOGIN,USERS.EMAIL,USERS.WEBSITE,USERS.BIO FROM USERS WHERE USERS.ID=$uid");
     $self->session(email=>$email);
