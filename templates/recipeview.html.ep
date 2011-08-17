@@ -53,7 +53,7 @@
     <%= link_to 'Добавить на кухню'=>"/help#add_recipe"=>(class=>'button')%>
   %}
   %if($likes){
-    , уже добавили <%= $likes %> раз
+     <span class=button title='Уже добавили'>&nbsp;&nbsp;<%= $likes %>&nbsp;&nbsp;&nbsp;</span>
   %}
 <br/><br/>
 %}
