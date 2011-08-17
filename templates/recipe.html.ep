@@ -76,7 +76,7 @@
 <tr><td><b><i>Источник рецепта</i></b></td><td><%= text_field 'author'=>$recipe->[6]=>(size=>25)%></td></tr>
 %}
 <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %>
-<% end %><%#= end form %> или <%= link_to 'Закрыть'=>'kitchen'%></td></tr></table><br/>
+<% end %><%#= end form %> или <%= link_to 'Закрыть'=>'kitchen'=>(class=>'button')%></td></tr></table><br/>
 %if($recipeid){
   <%= tag 'P'=>begin %>
   <%= link_to 'Просмотр рецепта'=>"/recipe/view/$recipeid"=>(class=>'button')%>

@@ -29,7 +29,7 @@
       <tr class=temporary><td><%= hidden_field 'recipeid'=>$addrecipes->{$key}{'ID'} %><%= $addrecipes->{$key}{'RECIPE'}%></td><td align=left><input type=textfield size=5 name=amount value=""> порций</td></tr>
 %	}
 
-    <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'cooking'%><%# form finish%></td></tr></table><br/>
+    <tr><td colspan=2 align=left><br/><%= submit_button 'Сохранить' %><% end %> или <%= link_to 'Закрыть'=>'cooking'=>(class=>'button')%><%# form finish%></td></tr></table><br/>
 %if($menuid){
     <%= tag 'div'=>begin %>
 	<%= link_to 'Что купить'=>"/cooking/buy/$menuid"=>(class=>'button') %>

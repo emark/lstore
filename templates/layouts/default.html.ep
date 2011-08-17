@@ -44,9 +44,8 @@
 		  <%= link_to 'Facebook'=>'http://www.facebook.com/pages/storesto/265184173507018'=>(target=>'blank')%> |
 		  <%= link_to 'Twitter'=>'http://www.twitter.com/storesto_ru'=>(target=>'blank')%> |
 		  <%= link_to 'Видеожурнал'=>'http://tv.storesto.ru'%> |
-		  <%= link_to 'Отзывы и предложения'=>'http://feedback.storesto.ru'%> |
-		  <%= link_to 'Хотите спросить?'=>'http://tv.storesto.ru/ask'%>
-		  		  </P><P align=center>
+		  <%= link_to 'Вопросы и ответы'=>'/help'%>
+				</P><P align=center>
 				<%= link_to 'ООО "Электронный маркетинг"'=>'/company' %>, 2011.
 		  </P>
 	    </div>
