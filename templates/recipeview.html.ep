@@ -50,10 +50,10 @@
   %if($uid){
     <%= link_to 'Добавить на кухню'=>"/kitchen/like/$recipeid"=>(class=>'button')%>
   %}else{
-    <%= link_to 'Добавить на кухню'=>"/help#add_recipe"=>(class=>'button')%>
+    <%= link_to 'Добавить на кухню'=>"/help#q4"=>(class=>'button')%>
   %}
   %if($likes){
-     <span class=button title='Уже добавили'>&nbsp;&nbsp;<%= $likes %>&nbsp;&nbsp;&nbsp;</span>
+     <span class=button title='Уже добавили'>&nbsp;&nbsp;<%= $likes %>&nbsp;&nbsp;</span>
   %}
 <br/><br/>
 %}

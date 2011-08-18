@@ -41,7 +41,7 @@
 %}
 </select>
 </td></tr>
-<tr><td><b><i>Как назовём блюдо?</i></b></td><td align=left><input type=text name=recipe size=30 value="<%= $recipe->[0] %>"></td></tr>
+<tr><td><b><i>Как назовём блюдо?</i></b></td><td align=left><input type=text name=recipe size=25 value="<%= $recipe->[0] %>"></td></tr>
 <tr><td>&nbsp;</td><td>
   <div id=extoptions style="display:none">общий вес блюда <input type=text size=3 name=weight value="<%= $recipe->[1] %>"> грамм<br/>
   количество порций <input type=text size=2 name=calculation value="<%= $recipe->[2] %>"> шт.
@@ -63,12 +63,16 @@
 <td><input type=textfield size=3 name=quantity value=""> <%= $addingredients->{$_}{'MEASURE'} %></td></tr>
 %	}
 %if($recipeid){
-<tr><td><b><i>Как готовить рецепт?</i></b></td><td>
-                            <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %>
+<tr><td><b><i>Как готовить блюдо?</i></b></td><td>
+                            <%= text_area 'instruction'=>(cols=>40,rows=>5)=>begin %><%= $recipe->[3] %><% end %><br><br>
 </td></tr>
-<tr><td><b><i>Фотография блюда</i></b></td><td>
+<!--tr><td><b><i>Время готовки</i></b></td><td>
+<%= select_field duration => [['до 15 мин.' => 0],['от 15 до 30 мин.' => 1],['от 30 до 60 мин.' => 2],['свыше 60 мин.' => 3]]%>
+<%#=text_field 'hours'=>(size=>4)%><br><br>
+</td></tr-->
+<tr><td><b><i>Фотография</i></b></td><td>
 % if($recipe->[4]){
-  <%= link_to 'Заменить фото'=>"/recipe/change_photo/$recipeid",(class=>'button') %>
+  <%= link_to 'Заменить фото'=>"/recipe/change_photo/$recipeid",(class=>'button') %><br><br>
 %}else{  
   <%= file_field 'photo' %>
 %}

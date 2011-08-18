@@ -304,3 +304,8 @@ select{
 	color: #40541A;
 	width:170px;
 }
+.help{
+		font-size: 16px;
+		font-style: italic;
+		color: #40541A;
+}
