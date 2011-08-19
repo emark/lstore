@@ -1,6 +1,7 @@
 %layout 'default',title 'Результаты поиска | Каталог рецептов';
 <%#=test%>
 <%= tag 'div'=>(class=>'menulist',align=>'center')=>begin%>Вы искали "<%=$query%>"<%end%><br>
+<%= tag 'div'=>(align=>'left')=>begin %><%= link_to 'Каталог рецептов'=>'cookbook'=>(class=>'button') %><% end %><br/>
 %if(%{$recipes}){
 <P class=recipelist>Найдено в рецептах</P>
 <table id=app>

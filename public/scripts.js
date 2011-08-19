@@ -32,3 +32,7 @@ function SelectOneLayer($div)
                 document.getElementById([$div]).style.display = "none"
         }
 }
+function SearchItems($query)
+{
+        document.search.query.value=$query;
+}

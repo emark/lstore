@@ -4,7 +4,21 @@
 <br/><br/>
 <table background="/media/mainbg.jpg" height=400><tr><td style="font-size:34px;color:#FFF;text-shadow: 1px 1px 1px #000;" align=center><br/>
 Приготовь <%= link_to 'любой рецепт'=>'cookbook'=>(style=>'color:#FFF') %> или <%= link_to 'создай своё блюдо'=>'register'=>(style=>'color:#FFF') %>
-</td></table><br/>
+</td>
+</table><br/>
+
+<table id=app>
+<tr><td>
+<center>
+<%= form_for '/cookbook/search'=>(method=>'get',name=>'search')=>begin%>
+<%=text_field query=>'Я ищу...'=>(size=>20,style=>'font-size:30px')%>
+<%=submit_button 'Найти'=>(size=>30,style=>'font-size:30px')%>
+<%end%>
+<i class=timeline>например: <a href="#" onClick="javascript:SearchItems('чай, суп, рыба')">чай, суп, рыба</i>
+</center><br><br>
+</td></tr>
+</table><br/>
+
 <table width=100% background="/media/bg-howto.jpg">
 <tr><td>
 <table border=0 width=100%><tr>
