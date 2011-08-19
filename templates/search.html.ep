@@ -1,0 +1,21 @@
+%layout 'default',title 'Результаты поиска | Каталог рецептов';
+<%#=test%>
+<%= tag 'div'=>(class=>'menulist',align=>'center')=>begin%>Вы искали "<%=$query%>"<%end%><br>
+%if(%{$recipes}){
+<P class=recipelist>Найдено в рецептах</P>
+<table id=app>
+%foreach my $recipeid(keys %{$recipes}){
+    <tr><td><%= link_to "$recipes->{$recipeid}{'RECIPE'}"=>"/recipe/view/$recipes->{$recipeid}{'ID'}"=>(class=>'recipelist')%></td></tr>
+%}
+</table>
+%}
+
+%if(%{$ingredients}){
+<br>
+<P class=recipelist>Найдено в ингредиентах</P>
+<table id=app>
+%foreach my $ingredientid(keys %{$ingredients}){
+    <tr><td><%= link_to "$ingredients->{$ingredientid}{'RECIPE'}"=>"/recipe/view/$ingredients->{$ingredientid}{'ID'}"=>(class=>'recipelist')%></td></tr>
+%}
+</table>
+%}

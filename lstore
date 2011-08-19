@@ -31,7 +31,7 @@ my $subscribe="Добавьте адрес notify\@storesto.ru в вашу ад�
 app->secret('storestosecret');
 app->hook(before_dispatch => sub {
                my $self = shift;
-               $self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
+               #$self->req->url->base(Mojo::URL->new(q{http://www.storesto.ru/}))
 	       }
 	  );
 
@@ -458,6 +458,17 @@ post '/menu'=>sub{
     $self->render('menu');
 };
 
+post '/menu/:id/extendlist'=>sub{
+    my $self=shift;
+    return $self->redirect_to('login') unless $self->session('name');
+    my $uid=$self->session('uid');
+    my $menuid=$self->param('id');
+    my $extendlist=$self->param('extendlist');
+    if($extendlist){
+        $dbh->do("UPDATE MENU SET EXTENDLIST=\"$extendlist\" WHERE MENU.ID=$menuid AND MENU.USERID=$uid");
+    }
+};
+
 get '/cooking'=>sub{
   my $self=shift;
   return $self->redirect_to('login') unless $self->session('name');
@@ -473,7 +484,7 @@ get '/cooking/buy/:id'=>sub{
   return $self->redirect_to('login') unless $self->session('name');
   my $uid=$self->session('uid');
   my $menuid=$self->param('id');
-  my $menu=$dbh->selectrow_array("SELECT MENU.NAME FROM MENU WHERE MENU.USERID=$uid AND MENU.ID=$menuid");
+  my $menu=$dbh->selectrow_arrayref("SELECT MENU.NAME,MENU.EXTENDLIST FROM MENU WHERE MENU.USERID=$uid AND MENU.ID=$menuid");
   my $ingredients=$dbh->selectall_hashref("SELECT INGREDIENTS.ID,INGREDIENTS.NAME AS INGREDIENT,INGREDIENTS.TAG,MEASURE.NAME AS MEASURE,SUM(ROUND(ROUTER3.AMOUNT*(ROUTER1.QUANTITY/RECIPES.CALCULATION))) AS SUM FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ROUTER3.MENUID=$menuid AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid) GROUP BY INGREDIENTS.ID",'ID');
   my $tags=$dbh->selectcol_arrayref("SELECT INGREDIENTS.TAG FROM ROUTER3 LEFT JOIN RECIPES ON ROUTER3.RECIPEID=RECIPES.ID LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID LEFT JOIN MEASURE ON INGREDIENTS.MEASUREID=MEASURE.ID LEFT JOIN ROUTER2 ON RECIPES.ID=ROUTER2.RECIPEID WHERE ROUTER3.MENUID=$menuid AND (RECIPES.USERID=$uid OR ROUTER2.USERID=$uid) GROUP BY INGREDIENTS.TAG ORDER BY INGREDIENTS.TAG");
   $self->stash(menu=>$menu,
@@ -741,6 +752,34 @@ get '/cookbook/feed'=>sub{
     $self->stash(recipes=>$recipes,
                  ingredients=>$ingredients);
 }=>'feed';
+
+get '/cookbook/search'=>sub{
+    my $self=shift;
+    my $query=$self->param('query');
+    my @query=split(/,/,$query);
+    my $SQLrecipes='';
+    my $SQLingredients='';
+    foreach my $key(@query){
+        $key=~s/ //;
+        $SQLrecipes=$SQLrecipes."RECIPES.NAME LIKE \"%$key%\" OR ";
+    }
+    foreach my $key(@query){
+        $key=~s/ //;
+        $SQLingredients=$SQLingredients."INGREDIENTS.NAME LIKE \"%$key%\" OR ";
+    }
+    my $recipes=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE RECIPES.ENABLED=1 AND ($SQLrecipes RECIPES.ID=0)",'ID');
+    #$self->stash(sql1=>"SELECT RECIPES.ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE RECIPES.ENABLED=1 AND ($SQLrecipes RECIPES.ID=0)");
+    my $ingredients=$dbh->selectall_hashref("SELECT RECIPES.ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE RECIPES.ENABLED=1 AND ($SQLingredients INGREDIENTS.ID=0)",'ID');
+    #$self->stash(sql2=>"SELECT RECIPES.ID,RECIPES.NAME AS RECIPE FROM RECIPES LEFT JOIN ROUTER1 ON RECIPES.ID=ROUTER1.RECIPEID LEFT JOIN INGREDIENTS ON ROUTER1.INGREDIENTID=INGREDIENTS.ID WHERE RECIPES.ENABLED=1 AND ($SQLingredients INGREDIENTS.ID=0)");
+    if(!@query || (!%{$recipes} && !%{$ingredients})){
+        $self->flash(message=>'Ничего не найдено. Поищите в разделах.');
+        return $self->redirect_to('cookbook');
+    }
+    $self->stash(recipes=>$recipes,
+                 ingredients=>$ingredients,
+                 query=>$query);
+    $self->render('search');
+};
 
 get '/cookbook/:slug'=>{slug=>''}=>sub{
     my $self=shift;

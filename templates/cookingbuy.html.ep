@@ -2,7 +2,7 @@
 <% content_for menuclass=>begin %>/cooking<% end %>
 <%#= test %>
 <%= tag 'div'=>(align=>'right')=>begin %><%= link_to Выход=>'logout'=>(class=>'button') %><% end %>
-<%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu %><% end %>
+<%= tag 'div'=>(class=>'menulist',align=>'center')=>begin %><%= $menu->[0] %><% end %>
 <P align=center><i>список продуктов</i></P>
 <%= tag 'div'=>begin %>
 <%= link_to 'Распечатать'=>"/cooking/print/buy/$menuid"=>(class=>'button',target=>'_blank') %><br/><br/>
@@ -26,6 +26,8 @@
             %}
         %}
     %}
+    <!--tr><td colspan=2><br><a href="#extend-list" onClick="javascript:SelectOneLayer('extend-list')" style="font-size:18px">Дополнить список</a><br><br>
+    <div id='extend-list' style='display:none'><%=text_area 'extendlist'=>(cols=>60,rows=>5)=>begin%><%=$menu->[1]%><%end%>&nbsp;<a href="#" class=button onClick="javascript:SaveExtendList('<%=$menuid%>')">Сохранить дополнение</a></div></td></tr-->
     </table><br/>
 
     <%= tag 'div'=>begin %>
